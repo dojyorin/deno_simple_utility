@@ -1,4 +1,4 @@
-export {type JsonValue} from "https://deno.land/std@0.158.0/encoding/json/stream.ts";
+import {type JsonValue} from "https://deno.land/std@0.158.0/encoding/json/stream.ts";
 
 export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
 export type FetchResponseLabel = keyof FetchResponseMap;
