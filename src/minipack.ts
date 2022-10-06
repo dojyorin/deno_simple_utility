@@ -1,3 +1,8 @@
+// Header struct.
+//   [BodySize:   4-byte]
+//   [BodyHash:  32-byte]
+//   [FileName: 256-byte]
+// Total: 292-byte
 const HEADER_SIZE = 4;
 const HEADER_HASH = 32;
 const HEADER_NAME = 256;
@@ -11,6 +16,19 @@ function byteString(data:ArrayBuffer){
     return new Uint8Array(data).toString();
 }
 
+/**
+* Converts an array of file objects to the 'minipack' archive format.
+*
+* The structure of "minipack" is very simple, and it was inspired by "tar".
+*
+* The header consists of "4-byte size definition", "32-byte SHA256 hash" and "256-byte file name",
+* and the data body is embedded immediately after the header.
+*
+* This combination of header + body is repeated for the number of files.
+*
+* In favor of simplicity, advanced features such as directories and permissions are not supported.
+* @param files Array of file objects.
+**/
 export async function minipackEncode(files:File[]){
     if(files.some(({size, name}) => size > (0x100 ** HEADER_SIZE) || new TextEncoder().encode(name).byteLength > HEADER_NAME)){
         throw new Error();
@@ -39,6 +57,19 @@ export async function minipackEncode(files:File[]){
     return archive.buffer;
 }
 
+/**
+* Converts binary in "minipack" archive format to file object array.
+*
+* The structure of "minipack" is very simple, and it was inspired by "tar".
+*
+* The header consists of "4-byte size definition", "32-byte SHA256 hash" and "256-byte file name",
+* and the data body is embedded immediately after the header.
+*
+* This combination of header + body is repeated for the number of files.
+*
+* In favor of simplicity, advanced features such as directories and permissions are not supported.
+* @param archive The byte buffer.
+**/
 export async function minipackDecode(archive:ArrayBuffer){
     const files:File[] = [];
 
