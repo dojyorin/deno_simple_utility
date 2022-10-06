@@ -1,5 +1,8 @@
 import {type JsonValue} from "https://deno.land/std@0.158.0/encoding/json/stream.ts";
 
+// ==============================
+// = Type Definition
+// ==============================
 export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
 export type FetchResponseLabel = keyof FetchResponseMap;
 export type FetchResponseType<T extends FetchResponseLabel> = FetchResponseMap[T] extends infer U ? U : never;
@@ -17,6 +20,14 @@ interface FetchResponseMap{
     "ok": boolean;
 }
 
+// ==============================
+// = Runnable Code
+// ==============================
+/**
+* @param path Target URL. Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
+* @param type The type you want to receive in the response.
+* @param option Fetch option. `window` is removed from `RequestInit` and `query` is added to write the query string.
+**/
 export async function fetchExtend<T extends FetchResponseLabel>(path:string, type:T, option?:FetchInit){
     const {origin, pathname} = /^http(s|):\/\//i.test(path) ? new URL(path) : new URL(path, location.href);
     const query = new URLSearchParams(option?.query).toString();
