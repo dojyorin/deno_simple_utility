@@ -1,4 +1,4 @@
-import {type JsonValue} from "https://deno.land/std@0.158.0/encoding/json/stream.ts";
+import {type JsonValue} from "../deps.ts";
 
 // ==============================
 // = Type Definition
