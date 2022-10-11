@@ -1,4 +1,4 @@
-export * from "./test/base64.test.ts";
-export * from "./test/deflate.test.ts";
-export * from "./test/fetch_extend.test.ts";
-export * from "./test/minipack.test.ts";
+import "./test/base64.test.ts";
+import "./test/deflate.test.ts";
+import "./test/fetch_extend.test.ts";
+import "./test/minipack.test.ts";
