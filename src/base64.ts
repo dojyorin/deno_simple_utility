@@ -2,7 +2,7 @@
 * Convert base64 code to byte array.
 * @param data The byte array.
 **/
-export function base64encode(data:Uint8Array){
+export function base64Encode(data:Uint8Array){
     return btoa([...data].map(n => String.fromCharCode(n)).join(""));
 }
 
@@ -10,6 +10,6 @@ export function base64encode(data:Uint8Array){
 * Convert byte array to base64 code.
 * @param data The base64 code.
 **/
-export function base64decode(data:string){
+export function base64Decode(data:string){
     return new Uint8Array([...atob(data)].map(s => s.charCodeAt(0)));
 }
