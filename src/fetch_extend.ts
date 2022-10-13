@@ -1,7 +1,7 @@
 import {type JsonValue} from "../deps.ts";
 
 // ==============================
-// = Type Definition
+// > Type Definition
 // ==============================
 export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
 export type FetchResponseLabel = keyof FetchResponseMap;
@@ -21,7 +21,7 @@ interface FetchResponseMap{
 }
 
 // ==============================
-// = Runnable Code
+// > Runnable Code
 // ==============================
 /**
 * @param path Target URL. Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
