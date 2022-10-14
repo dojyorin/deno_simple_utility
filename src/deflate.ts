@@ -3,8 +3,8 @@
 * It does not include header information like "gzip" (RFC1952) or "zlib" (RFC1950) as it does purely "compression only".
 * @param data The byte buffer.
 **/
-export async function deflateEncode(data:ArrayBuffer){
-    return new Response(new Blob([data]).stream().pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer();
+export async function deflateEncode(data:Uint8Array){
+    return new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer());
 }
 
 /**
@@ -12,6 +12,6 @@ export async function deflateEncode(data:ArrayBuffer){
 * Binaries containing header information like "gzip" (RFC1952) or "zlib" (RFC1950) cannot be decompressed.
 * @param data The byte buffer.
 **/
-export async function deflateDecode(data:ArrayBuffer){
-    return new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer();
+export async function deflateDecode(data:Uint8Array){
+    return new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer());
 }

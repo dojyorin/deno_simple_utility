@@ -54,7 +54,7 @@ export async function minipackEncode(files:File[]){
         offset += file.size;
     }
 
-    return archive.buffer;
+    return archive;
 }
 
 /**
@@ -70,13 +70,13 @@ export async function minipackEncode(files:File[]){
 * In favor of simplicity, advanced features such as directories and permissions are not supported.
 * @param archive The byte buffer.
 **/
-export async function minipackDecode(archive:ArrayBuffer){
+export async function minipackDecode(archive:Uint8Array){
     const files:File[] = [];
 
     let offset = 0;
 
     while(offset < archive.byteLength){
-        const size = new DataView(archive.slice(offset, offset += HEADER_SIZE)).getUint32(0);
+        const size = new DataView(archive.slice(offset, offset += HEADER_SIZE).buffer).getUint32(0);
         const hash = archive.slice(offset, offset += HEADER_HASH);
         const name = new TextDecoder().decode(archive.slice(offset, offset += HEADER_NAME)).replace(/\0+$/, "");
         const data = archive.slice(offset, offset += size);
