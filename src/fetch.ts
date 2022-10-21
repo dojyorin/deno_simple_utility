@@ -11,8 +11,9 @@ export interface FetchInit extends Omit<RequestInit, "window">{
 interface FetchResponseMap{
     "text": string;
     "json": JsonValue;
+    "form": FormData;
     "byte": Uint8Array;
-    "arraybuffer": ArrayBuffer;
+    "buffer": ArrayBuffer;
     "blob": Blob;
     "ok": boolean;
     "response": Response;
@@ -52,11 +53,15 @@ export async function fetchExtend<T extends FetchResponseLabel>(path:string, typ
             return <FetchResponseType<T>>await response.json();
         }
 
+        case "form": {
+            return <FetchResponseType<T>>await response.formData();
+        }
+
         case "byte": {
             return <FetchResponseType<T>>new Uint8Array(await response.arrayBuffer());
         }
 
-        case "arraybuffer": {
+        case "buffer": {
             return <FetchResponseType<T>>await response.arrayBuffer();
         }
 
