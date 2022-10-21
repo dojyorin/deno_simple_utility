@@ -34,14 +34,14 @@ function byte2text(data:Uint8Array){
 * @param files Array of file objects.
 **/
 export async function minipackEncode(files:File[]){
-    const archive = new Uint8Array(HEADERS * files.length + files.reduce((a, {size}) => a + size, 0));
+    const archive = new Uint8Array(files.reduce((a, {size}) => a + size + HEADERS, 0));
 
     let offset = 0;
 
     for(const file of files){
         const data = new Uint8Array(await file.arrayBuffer());
 
-        archive.set(new Uint8Array(new Uint32Array([file.size]).buffer), offset);
+        new DataView(archive.buffer, offset).setUint32(0, file.size);
         offset += HEADER_SIZE;
         archive.set(await sha256(data), offset);
         offset += HEADER_HASH;
@@ -73,10 +73,10 @@ export async function minipackDecode(archive:Uint8Array){
     let offset = 0;
 
     while(offset < archive.byteLength){
-        const size = new Uint32Array(archive.slice(offset, offset += HEADER_SIZE).buffer).at(0) ?? 0;
-        const hash = archive.slice(offset, offset += HEADER_HASH);
-        const name = byte2text(archive.slice(offset, offset += HEADER_NAME)).replace(/\0+$/, "");
-        const data = archive.slice(offset, offset += size);
+        const size = new DataView(archive.buffer, offset).getUint32(0);
+        const hash = archive.subarray(offset += HEADER_SIZE, offset += HEADER_HASH);
+        const name = byte2text(archive.subarray(offset, offset += HEADER_NAME)).replace(/\0+$/, "");
+        const data = archive.subarray(offset, offset += size);
 
         if(hash.toString() !== (await sha256(data)).toString()){
             throw new Error();
