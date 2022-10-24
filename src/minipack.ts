@@ -11,15 +11,15 @@ const headerStruct = <const>{
 
 const headerTotal = Object.values(headerStruct).reduce((a, c) => a + c, 0);
 
-async function sha256(data:Uint8Array){
+async function sha2(data:Uint8Array){
     return new Uint8Array(await crypto.subtle.digest("SHA-256", data));
 }
 
-function text2byte(data:string){
+function s2b(data:string){
     return new TextEncoder().encode(data);
 }
 
-function byte2text(data:Uint8Array){
+function b2s(data:Uint8Array){
     return new TextDecoder().decode(data);
 }
 
@@ -46,9 +46,9 @@ export async function minipackEncode(files:File[]){
 
         new DataView(archive.buffer, offset).setUint32(0, file.size);
         offset += headerStruct.body;
-        archive.set(await sha256(data), offset);
+        archive.set(await sha2(data), offset);
         offset += headerStruct.hash;
-        archive.set(text2byte(file.name).subarray(0, headerStruct.name), offset);
+        archive.set(s2b(file.name).subarray(0, headerStruct.name), offset);
         offset += headerStruct.name;
         archive.set(data, offset);
         offset += file.size;
@@ -78,10 +78,10 @@ export async function minipackDecode(archive:Uint8Array){
     while(offset < archive.byteLength){
         const size = new DataView(archive.buffer, offset).getUint32(0);
         const hash = archive.subarray(offset += headerStruct.body, offset += headerStruct.hash);
-        const name = byte2text(archive.subarray(offset, offset += headerStruct.name)).replace(/\0+$/, "");
+        const name = b2s(archive.subarray(offset, offset += headerStruct.name)).replace(/\0+$/, "");
         const data = archive.subarray(offset, offset += size);
 
-        if(hash.toString() !== (await sha256(data)).toString()){
+        if(hash.toString() !== (await sha2(data)).toString()){
             throw new Error();
         }
 

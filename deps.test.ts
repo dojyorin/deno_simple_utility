@@ -1,2 +1,2 @@
-export {assertEquals} from "https://deno.land/std@0.159.0/testing/asserts.ts";
-export {serve} from "https://deno.land/std@0.159.0/http/mod.ts";
+export {assertEquals} from "https://deno.land/std@0.160.0/testing/asserts.ts";
+export {serve} from "https://deno.land/std@0.160.0/http/mod.ts";
