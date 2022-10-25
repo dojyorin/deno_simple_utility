@@ -43,5 +43,15 @@ const decoded = await minipackDecode(encoded); // Restored file array.
 ```
 
 # Details
+A collection of various standalone functions that can be combined to suit your needs.
+
+It's basically a thin wrapper around Deno's functions to improve usability, but some features are unique to this module.
+
+## Minipack
+Minipack is a file archive format specific to this module.
+
+It's structure is inspired by the famous "tar" archive.
+
+Designed as a bare-bones archive, the header consists only of "file size", "name" and "hash value", followed by the file body.
 
 # API
