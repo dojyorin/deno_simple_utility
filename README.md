@@ -2,7 +2,7 @@
 ![Actions-Test](https://github.com/dojyorin/deno_simple_utility/actions/workflows/test.yaml/badge.svg)
 ![Actions-Release](https://github.com/dojyorin/deno_simple_utility/actions/workflows/release.yaml/badge.svg)
 
-A small and handy utility collection.
+A handy utility collection.
 
 # Example
 **BASE64 Binary**
@@ -53,5 +53,14 @@ Minipack is a file archive format specific to this module.
 It's structure is inspired by the famous "tar" archive.
 
 Designed as a bare-bones archive, the header consists only of "file size", "name" and "hash value", followed by the file body.
+
+This header + body pair is daisy chained for the number of files.
+
+|Index|Type|Title|Size (Byte)|
+|:--|:--|:--|:--|
+|1|Header|FileSize|4|
+|2|Header|HashValue|32|
+|3|Header|FileName|256|
+|4|Body|Body|Max 4294967296|
 
 # API
