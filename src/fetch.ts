@@ -45,40 +45,14 @@ export async function fetchExtend<T extends FetchResponseLabel>(path:string, typ
     });
 
     switch(type){
-        case "text": {
-            return <FetchResponseType<T>>await response.text();
-        }
-
-        case "json": {
-            return <FetchResponseType<T>>await response.json();
-        }
-
-        case "form": {
-            return <FetchResponseType<T>>await response.formData();
-        }
-
-        case "byte": {
-            return <FetchResponseType<T>>new Uint8Array(await response.arrayBuffer());
-        }
-
-        case "buffer": {
-            return <FetchResponseType<T>>await response.arrayBuffer();
-        }
-
-        case "blob": {
-            return <FetchResponseType<T>>await response.blob();
-        }
-
-        case "ok": {
-            return <FetchResponseType<T>>response.ok;
-        }
-
-        case "response": {
-            return <FetchResponseType<T>>response;
-        }
-
-        default: {
-            throw new Error();
-        }
+        case "text": return <FetchResponseType<T>>await response.text();
+        case "json": return <FetchResponseType<T>>await response.json();
+        case "form": return <FetchResponseType<T>>await response.formData();
+        case "byte": return <FetchResponseType<T>>new Uint8Array(await response.arrayBuffer());
+        case "buffer": return <FetchResponseType<T>>await response.arrayBuffer();
+        case "blob": return <FetchResponseType<T>>await response.blob();
+        case "ok": return <FetchResponseType<T>>response.ok;
+        case "response": return <FetchResponseType<T>>response;
+        default: throw new Error();
     }
 }
