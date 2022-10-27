@@ -1,15 +1,10 @@
-// Header struct.
-//   [BodySize:   4-byte]
-//   [BodyHash:  32-byte]
-//   [FileName: 256-byte]
-// Total: 292-byte
-const headerStruct = <const>{
-    body: 4,
+const size = <const>{
     hash: 32,
-    name: 256
+    name: 1,
+    body: 4
 };
 
-const headerTotal = Object.values(headerStruct).reduce((a, c) => a + c, 0);
+const sizeTotal = Object.values(size).reduce((a, c) => a + c, 0);
 
 async function sha2(data:Uint8Array){
     return new Uint8Array(await crypto.subtle.digest("SHA-256", data));
@@ -37,21 +32,28 @@ function b2s(data:Uint8Array){
 * @param files Array of file objects.
 **/
 export async function minipackEncode(files:File[]){
-    const archive = new Uint8Array(files.reduce((a, {size}) => a + size + headerTotal, 0));
+    const archive = new Uint8Array(files.reduce((a, {size: s, name: n}) => a + sizeTotal + s2b(n).byteLength + s, 0));
 
     let offset = 0;
 
     for(const file of files){
-        const data = new Uint8Array(await file.arrayBuffer());
+        const name = s2b(file.name);
+        const body = new Uint8Array(await file.arrayBuffer());
 
-        new DataView(archive.buffer, offset).setUint32(0, file.size);
-        offset += headerStruct.body;
-        archive.set(await sha2(data), offset);
-        offset += headerStruct.hash;
-        archive.set(s2b(file.name).subarray(0, headerStruct.name), offset);
-        offset += headerStruct.name;
-        archive.set(data, offset);
-        offset += file.size;
+        archive.set(await sha2(body), offset);
+        offset += size.hash;
+
+        new DataView(archive.buffer, offset).setUint8(0, name.byteLength);
+        offset += size.name;
+
+        new DataView(archive.buffer, offset).setUint32(0, body.byteLength);
+        offset += size.body;
+
+        archive.set(name, offset);
+        offset += name.byteLength;
+
+        archive.set(body, offset);
+        offset += body.byteLength;
     }
 
     return archive;
@@ -76,16 +78,23 @@ export async function minipackDecode(archive:Uint8Array){
     let offset = 0;
 
     while(offset < archive.byteLength){
-        const size = new DataView(archive.buffer, offset).getUint32(0);
-        const hash = archive.subarray(offset += headerStruct.body, offset += headerStruct.hash);
-        const name = b2s(archive.subarray(offset, offset += headerStruct.name)).replace(/\0+$/, "");
-        const data = archive.subarray(offset, offset += size);
+        const hash = archive.subarray(offset, offset += size.hash);
 
-        if(hash.toString() !== (await sha2(data)).toString()){
+        const ns = new DataView(archive.buffer, offset).getUint8(0);
+        offset += size.name;
+
+        const bs = new DataView(archive.buffer, offset).getUint32(0);
+        offset += size.body;
+
+        const name = b2s(archive.subarray(offset, offset += ns));
+
+        const body = archive.subarray(offset, offset += bs);
+
+        if(hash.toString() !== (await sha2(body)).toString()){
             throw new Error();
         }
 
-        files.push(new File([data], name));
+        files.push(new File([body], name));
     }
 
     return files;
