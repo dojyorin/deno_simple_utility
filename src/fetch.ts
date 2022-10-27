@@ -10,11 +10,13 @@ export interface FetchInit extends Omit<RequestInit, "window">{
 
 interface FetchResponseMap{
     "text": string;
-    "arraybuffer": ArrayBuffer;
-    "blob": Blob;
     "json": JsonValue;
-    "response": Response;
+    "form": FormData;
+    "byte": Uint8Array;
+    "buffer": ArrayBuffer;
+    "blob": Blob;
     "ok": boolean;
+    "response": Response;
 }
 
 /**
@@ -43,28 +45,14 @@ export async function fetchExtend<T extends FetchResponseLabel>(path:string, typ
     });
 
     switch(type){
-        case "response": {
-            return <FetchResponseType<T>>response;
-        }
-
-        case "ok": {
-            return <FetchResponseType<T>>response.ok;
-        }
-
-        case "arraybuffer": {
-            return <FetchResponseType<T>>await response.arrayBuffer();
-        }
-
-        case "blob": {
-            return <FetchResponseType<T>>await response.blob();
-        }
-
-        case "text": {
-            return <FetchResponseType<T>>await response.text();
-        }
-
-        case "json": {
-            return <FetchResponseType<T>>await response.json();
-        }
+        case "text": return <FetchResponseType<T>>await response.text();
+        case "json": return <FetchResponseType<T>>await response.json();
+        case "form": return <FetchResponseType<T>>await response.formData();
+        case "byte": return <FetchResponseType<T>>new Uint8Array(await response.arrayBuffer());
+        case "buffer": return <FetchResponseType<T>>await response.arrayBuffer();
+        case "blob": return <FetchResponseType<T>>await response.blob();
+        case "ok": return <FetchResponseType<T>>response.ok;
+        case "response": return <FetchResponseType<T>>response;
+        default: throw new Error();
     }
 }
