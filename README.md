@@ -33,34 +33,60 @@ const bytes = await fetchExtend("https://path/to/get", "byte"); // Response as U
 **Minipack Archive**
 
 ```ts
-const files = [{
-    body: await Deno.readFile("/path/to/binary.bin"),
-    name: "binary.bin"
-}].map(({body, name}) => new File([body], name));
+const files = [
+    new File([await Deno.readFile("/path/to/binary.bin")], "binary.bin")
+];
 
 const encoded = await minipackEncode(files); // Minipack archived byte array.
-const decoded = await minipackDecode(encoded); // Restored file array.
+const decoded = await minipackDecode(encoded); // Restored file object array.
 ```
 
 # Details
-A collection of various standalone functions that can be combined to suit your needs.
+It's basically a thin wrapper around Deno's functions to improve usability, but some features are original to this module.
 
-It's basically a thin wrapper around Deno's functions to improve usability, but some features are unique to this module.
+This section describes the original features of this module.
 
 ## Minipack
-Minipack is a file archive format specific to this module.
+Minipack is a file archive format original to this module.
 
-It's structure is inspired by the famous "tar" archive.
+It's structure is inspired by the famous "tar" and is minimal as an archive.
 
-Designed as a bare-bones archive, the header consists only of "file size", "name" and "hash value", followed by the file body.
+Originally developed for browsers, the purpose was to aggregate multiple files input with the HTML File API into a single file.
 
-This header + body pair is daisy chained for the number of files.
+Therefore, there is no concept of directory or filesystem, and it's feature by simple structure that stores only the file body, file name, and hash value for verification.
+
+The actual binary structure looks like this:
 
 |Index|Type|Title|Size (Byte)|
 |:--|:--|:--|:--|
-|1|Header|FileSize|4|
-|2|Header|HashValue|32|
-|3|Header|FileName|256|
-|4|Body|Body|Max 4294967296|
+|1|Header|HashValue|32|
+|2|Header|NameSize|1|
+|3|Header|BodySize|4|
+|4|Body|FileName|Max 255 (Defined in NameSize)|
+|5|Body|FileBody|Max 4294967295 (Defined in BodySize)|
+
+This is for one file and repeats for the number of files.
 
 # API
+## `Uint8Array base64Encode(data)`
+- `data` ... The byte array.
+
+## `Uint8Array base64Decode(data)`
+- `data` ... The BASE64 code.
+
+## `Promise<Uint8Array> deflateEncode(data)`
+- `data` ... The byte array.
+
+## `Promise<Uint8Array> deflateDecode(data)`
+- `data` ... The deflate compressed byte array.
+
+## `<FetchResponseType<T>> fetchExtend<T>(path, type, option)`
+- `path` ... Target URL. Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
+- `type` ... The type you want to receive in the response.
+- `option` ... Fetch option. `window` is removed from `RequestInit` and `query` is added to write the query string.
+
+## `Promise<Uint8Array> minipackEncode(files)`
+- `files` ... Array of file object.
+
+## `Promise<File[]> minipackDecode(archive)`
+- `data` ... The minipack archived byte array.
