@@ -19,16 +19,8 @@ function b2s(data:Uint8Array){
 }
 
 /**
-* Converts an array of file objects to the 'minipack' archive format.
-*
-* The structure of "minipack" is very simple, and it was inspired by "tar".
-*
-* The header consists of "4-byte size definition", "32-byte SHA256 hash" and "256-byte file name",
-* and the data body is embedded immediately after the header.
-*
-* This combination of header + body is repeated for the number of files.
-*
-* In favor of simplicity, advanced features such as directories and permissions are not supported.
+* Convert from array of file object to "minipack" archive format.
+* @see [README.md](../README.md)
 * @param files Array of file objects.
 **/
 export async function minipackEncode(files:File[]){
@@ -60,17 +52,9 @@ export async function minipackEncode(files:File[]){
 }
 
 /**
-* Converts binary in "minipack" archive format to file object array.
-*
-* The structure of "minipack" is very simple, and it was inspired by "tar".
-*
-* The header consists of "4-byte size definition", "32-byte SHA256 hash" and "256-byte file name",
-* and the data body is embedded immediately after the header.
-*
-* This combination of header + body is repeated for the number of files.
-*
-* In favor of simplicity, advanced features such as directories and permissions are not supported.
-* @param archive The byte buffer.
+* Convert from binary in "minipack" archive format to file object array.
+* @see [README.md](../README.md)
+* @param archive The byte array.
 **/
 export async function minipackDecode(archive:Uint8Array){
     const files:File[] = [];
