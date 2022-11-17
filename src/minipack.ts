@@ -6,7 +6,7 @@ const size = <const>{
 
 const sizeTotal = Object.values(size).reduce((a, c) => a + c, 0);
 
-async function hash(data:Uint8Array){
+async function byte2hash(data:Uint8Array){
     return new Uint8Array(await crypto.subtle.digest("SHA-256", data));
 }
 
@@ -32,7 +32,7 @@ export async function minipackEncode(files:File[]){
         const name = text2byte(file.name);
         const body = new Uint8Array(await file.arrayBuffer());
 
-        archive.set(await hash(body), offset);
+        archive.set(await byte2hash(body), offset);
         offset += size.hash;
 
         new DataView(archive.buffer, offset).setUint8(0, name.byteLength);
@@ -74,7 +74,7 @@ export async function minipackDecode(archive:Uint8Array){
 
         const body = archive.subarray(offset, offset += bs);
 
-        if(hash.toString() !== (await hash(body)).toString()){
+        if(hash.toString() !== (await byte2hash(body)).toString()){
             throw new Error();
         }
 
