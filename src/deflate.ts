@@ -1,4 +1,4 @@
-async function transform(data:Uint8Array, ts:TransformStream<Uint8Array,Uint8Array>){
+async function convert(data:Uint8Array, ts:TransformStream<Uint8Array,Uint8Array>){
     return new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(ts)).arrayBuffer());
 }
 
@@ -8,7 +8,7 @@ async function transform(data:Uint8Array, ts:TransformStream<Uint8Array,Uint8Arr
 * @param data The byte array.
 **/
 export async function deflateEncode(data:Uint8Array){
-    return await transform(data, new CompressionStream("deflate-raw"));
+    return await convert(data, new CompressionStream("deflate-raw"));
 }
 
 /**
@@ -17,5 +17,5 @@ export async function deflateEncode(data:Uint8Array){
 * @param data The byte array.
 **/
 export async function deflateDecode(data:Uint8Array){
-    return await transform(data, new DecompressionStream("deflate-raw"));
+    return await convert(data, new DecompressionStream("deflate-raw"));
 }
