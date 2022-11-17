@@ -1,1 +1,1 @@
-export {type JsonValue} from "https://deno.land/std@0.160.0/encoding/json/stream.ts";
+export {type JsonValue} from "https://deno.land/std@0.165.0/encoding/json/stream.ts";

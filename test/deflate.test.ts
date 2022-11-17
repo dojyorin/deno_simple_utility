@@ -1,7 +1,7 @@
 import {assertEquals} from "../deps.test.ts";
 import {deflateEncode, deflateDecode} from "../src/deflate.ts";
 
-const randomSample = new Uint8Array([
+const sample = new Uint8Array([
     0x71, 0xD6, 0xFB, 0x3D, 0xF9, 0xD9, 0x41, 0x07,
     0x38, 0x4D, 0xC9, 0x72, 0xE4, 0xA5, 0x63, 0x37,
     0xD6, 0x8D, 0x12, 0x75, 0x08, 0x62, 0xA1, 0xB6,
@@ -20,7 +20,7 @@ const encodeResult = new Uint8Array([
 Deno.test({
     name: "Deflate: Encode.",
     async fn(){
-        const result = await deflateEncode(randomSample);
+        const result = await deflateEncode(sample);
 
         assertEquals(result, encodeResult);
     }
@@ -31,6 +31,6 @@ Deno.test({
     async fn(){
         const result = await deflateDecode(encodeResult);
 
-        assertEquals(result, randomSample);
+        assertEquals(result, sample);
     }
 });

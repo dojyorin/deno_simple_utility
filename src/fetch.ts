@@ -1,14 +1,12 @@
 import {type JsonValue} from "../deps.ts";
 
 export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
-export type FetchResponseLabel = keyof FetchResponseMap;
-export type FetchResponseType<T extends FetchResponseLabel> = FetchResponseMap[T] extends infer U ? U : never;
 
 export interface FetchInit extends Omit<RequestInit, "window">{
     query?: QueryInit;
 }
 
-interface FetchResponseMap{
+export interface FetchResponseType{
     "text": string;
     "json": JsonValue;
     "form": FormData;
@@ -24,7 +22,7 @@ interface FetchResponseMap{
 * @param type The type you want to receive in the response.
 * @param option Fetch option. `window` is removed from `RequestInit` and `query` is added to write the query string.
 **/
-export async function fetchExtend<T extends FetchResponseLabel>(path:string, type:T, option?:FetchInit){
+export async function fetchExtend<T extends keyof FetchResponseType>(path:string, type:T, option?:FetchInit){
     const {origin, pathname} = /^http(s|):\/\//i.test(path) ? new URL(path) : new URL(path, location.href);
     const query = new URLSearchParams(option?.query).toString();
 
@@ -45,14 +43,14 @@ export async function fetchExtend<T extends FetchResponseLabel>(path:string, typ
     });
 
     switch(type){
-        case "text": return <FetchResponseType<T>>await response.text();
-        case "json": return <FetchResponseType<T>>await response.json();
-        case "form": return <FetchResponseType<T>>await response.formData();
-        case "byte": return <FetchResponseType<T>>new Uint8Array(await response.arrayBuffer());
-        case "buffer": return <FetchResponseType<T>>await response.arrayBuffer();
-        case "blob": return <FetchResponseType<T>>await response.blob();
-        case "ok": return <FetchResponseType<T>>response.ok;
-        case "response": return <FetchResponseType<T>>response;
+        case "text": return <FetchResponseType[T]>await response.text();
+        case "json": return <FetchResponseType[T]>await response.json();
+        case "form": return <FetchResponseType[T]>await response.formData();
+        case "byte": return <FetchResponseType[T]>new Uint8Array(await response.arrayBuffer());
+        case "buffer": return <FetchResponseType[T]>await response.arrayBuffer();
+        case "blob": return <FetchResponseType[T]>await response.blob();
+        case "ok": return <FetchResponseType[T]>response.ok;
+        case "response": return <FetchResponseType[T]>response;
         default: throw new Error();
     }
 }
