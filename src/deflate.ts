@@ -1,4 +1,4 @@
-async function convert(data:Uint8Array, ts:TransformStream<Uint8Array,Uint8Array>){
+async function convert(data:Uint8Array, ts:TransformStream<Uint8Array, Uint8Array>){
     return new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(ts)).arrayBuffer());
 }
 
