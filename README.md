@@ -80,7 +80,7 @@ This is for one file and repeats for the number of files.
 ## `Promise<Uint8Array> deflateDecode(data)`
 - `data` ... The deflate compressed byte array.
 
-## `<FetchResponseType<T>> fetchExtend<T>(path, type, option)`
+## `<FetchResponseType[T]> fetchExtend<T>(path, type, option)`
 - `path` ... Target URL. Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
 - `type` ... The type you want to receive in the response.
 - `option` ... Fetch option. `window` is removed from `RequestInit` and `query` is added to write the query string.
