@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {textEncode, textDecode, trimExtend} from "../src/text.ts";
+import {trimExtend} from "../src/text.ts";
 
 const sample = "  Lorem ipsum\r dolor   sit \t  amet. ";
 
@@ -10,6 +10,6 @@ Deno.test({
     async fn(){
         const result = await trimExtend(sample);
 
-        assertEquals(result, trimResult);
+        assertEquals(result, encodeResult);
     }
 });
