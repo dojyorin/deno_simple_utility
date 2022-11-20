@@ -19,18 +19,18 @@ function byte2text(data:Uint8Array){
 }
 
 /**
-* Convert from array of file object to "minipack" archive format.
-* @see [README.md](../README.md)
-* @param files Array of file objects.
-**/
-export async function minipackEncode(files:File[]){
-    const archive = new Uint8Array(files.reduce((a, {size: s, name: n}) => a + sizeTotal + text2byte(n).byteLength + s, 0));
+* Convert from array of name and byte to "minipack" archive format.
+* @see https://deno.land/x/simple_utility
+* @param files Array of name and byte.
+*/
+export async function minipackEncode(files:[string, Uint8Array][]){
+    const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeTotal + text2byte(k).byteLength + v.byteLength, 0));
 
     let offset = 0;
 
-    for(const file of files){
-        const name = text2byte(file.name);
-        const body = new Uint8Array(await file.arrayBuffer());
+    for(const [k, v] of files){
+        const name = text2byte(k);
+        const body = v;
 
         archive.set(await byte2hash(body), offset);
         offset += size.hash;
@@ -52,12 +52,12 @@ export async function minipackEncode(files:File[]){
 }
 
 /**
-* Convert from binary in "minipack" archive format to file object array.
-* @see [README.md](../README.md)
-* @param archive The byte array.
-**/
+* Convert from binary in "minipack" archive format to array of name and byte.
+* @see https://deno.land/x/simple_utility
+* @param archive The byte.
+*/
 export async function minipackDecode(archive:Uint8Array){
-    const files:File[] = [];
+    const files:[string, Uint8Array][] = [];
 
     let offset = 0;
 
@@ -78,7 +78,7 @@ export async function minipackDecode(archive:Uint8Array){
             throw new Error();
         }
 
-        files.push(new File([body], name));
+        files.push([name, body]);
     }
 
     return files;

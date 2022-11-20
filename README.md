@@ -11,7 +11,16 @@ A handy utility collection.
 const file = await Deno.readFile("/path/to/binary.bin");
 
 const encoded = base64Encode(file); // BASE64 encoded string.
-const decoded = base64Decode(encoded); // Restored byte array.
+const decoded = base64Decode(encoded); // Restored byte.
+```
+
+**Date UnixTime**
+
+```ts
+const date = new Date();
+
+const encoded = await dateEncode(date); // UTC unix time.
+const decoded = await dateDecode(encoded); // Restored Date object.
 ```
 
 **DEFLATE Compress**
@@ -19,8 +28,8 @@ const decoded = base64Decode(encoded); // Restored byte array.
 ```ts
 const file = await Deno.readFile("/path/to/binary.bin");
 
-const encoded = await deflateEncode(file); // DEFLATE compressed byte array.
-const decoded = await deflateDecode(encoded); // Restored byte array.
+const encoded = await deflateEncode(file); // DEFLATE compressed byte.
+const decoded = await deflateDecode(encoded); // Restored byte.
 ```
 
 **Extended Fetch API**
@@ -34,11 +43,20 @@ const bytes = await fetchExtend("https://path/to/get", "byte"); // Response as U
 
 ```ts
 const files = [
-    new File([await Deno.readFile("/path/to/binary.bin")], "binary.bin")
+    ["binary.bin", Deno.readFileSync("/path/to/binary.bin")]
 ];
 
-const encoded = await minipackEncode(files); // Minipack archived byte array.
-const decoded = await minipackDecode(encoded); // Restored file object array.
+const encoded = await minipackEncode(files); // Minipack archived byte.
+const decoded = await minipackDecode(encoded); // Restored array of name and byte.
+```
+
+**Text Convert**
+
+```ts
+const text = "Lorem ipsum dolor sit amet.";
+
+const encoded = await textEncode(text); // UTF-8 byte.
+const decoded = await textDecode(encoded); // Restored string.
 ```
 
 # Details
@@ -68,25 +86,4 @@ The actual binary structure looks like this:
 This is for one file and repeats for the number of files.
 
 # API
-## `Uint8Array base64Encode(data)`
-- `data` ... The byte array.
-
-## `Uint8Array base64Decode(data)`
-- `data` ... The BASE64 code.
-
-## `Promise<Uint8Array> deflateEncode(data)`
-- `data` ... The byte array.
-
-## `Promise<Uint8Array> deflateDecode(data)`
-- `data` ... The deflate compressed byte array.
-
-## `<FetchResponseType<T>> fetchExtend<T>(path, type, option)`
-- `path` ... Target URL. Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
-- `type` ... The type you want to receive in the response.
-- `option` ... Fetch option. `window` is removed from `RequestInit` and `query` is added to write the query string.
-
-## `Promise<Uint8Array> minipackEncode(files)`
-- `files` ... Array of file object.
-
-## `Promise<File[]> minipackDecode(archive)`
-- `data` ... The minipack archived byte array.
+See [Deno Document](https://deno.land/x/simple_utility/mod.ts) for details.

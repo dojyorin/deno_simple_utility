@@ -1,4 +1,6 @@
-import {type JsonValue} from "../deps.ts";
+export type JsonStruct = string | number | boolean | null | JsonStruct[] | {
+    [key: string]: JsonStruct;
+};
 
 export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
 
@@ -8,7 +10,7 @@ export interface FetchInit extends Omit<RequestInit, "window">{
 
 export interface FetchResponseType{
     "text": string;
-    "json": JsonValue;
+    "json": JsonStruct;
     "form": FormData;
     "byte": Uint8Array;
     "buffer": ArrayBuffer;
@@ -21,7 +23,7 @@ export interface FetchResponseType{
 * @param path Target URL. Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
 * @param type The type you want to receive in the response.
 * @param option Fetch option. `window` is removed from `RequestInit` and `query` is added to write the query string.
-**/
+*/
 export async function fetchExtend<T extends keyof FetchResponseType>(path:string, type:T, option?:FetchInit){
     const {origin, pathname} = /^http(s|):\/\//i.test(path) ? new URL(path) : new URL(path, location.href);
     const query = new URLSearchParams(option?.query).toString();
