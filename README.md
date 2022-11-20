@@ -14,7 +14,7 @@ const encoded = base64Encode(file); // BASE64 encoded string.
 const decoded = base64Decode(encoded); // Restored byte array.
 ```
 
-**Date unix**
+**Date UnixTime**
 
 ```ts
 const date = new Date();
@@ -86,25 +86,4 @@ The actual binary structure looks like this:
 This is for one file and repeats for the number of files.
 
 # API
-## `Uint8Array base64Encode(data)`
-- `data` ... The byte array.
-
-## `Uint8Array base64Decode(data)`
-- `data` ... The BASE64 code.
-
-## `Promise<Uint8Array> deflateEncode(data)`
-- `data` ... The byte array.
-
-## `Promise<Uint8Array> deflateDecode(data)`
-- `data` ... The deflate compressed byte array.
-
-## `<FetchResponseType[T]> fetchExtend<T>(path, type, option)`
-- `path` ... Target URL. Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
-- `type` ... The type you want to receive in the response.
-- `option` ... Fetch option. `window` is removed from `RequestInit` and `query` is added to write the query string.
-
-## `Promise<Uint8Array> minipackEncode(files)`
-- `files` ... Array of file object.
-
-## `Promise<File[]> minipackDecode(archive)`
-- `data` ... The minipack archived byte array.
+See [Deno Document](https://deno.land/x/simple_utility/mod.ts) for details.
