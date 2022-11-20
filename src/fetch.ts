@@ -1,4 +1,6 @@
-import {type JsonValue} from "../deps.ts";
+export type JsonStruct = string | number | boolean | null | JsonStruct[] | {
+    [key: string]: JsonStruct;
+};
 
 export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
 
@@ -8,7 +10,7 @@ export interface FetchInit extends Omit<RequestInit, "window">{
 
 export interface FetchResponseType{
     "text": string;
-    "json": JsonValue;
+    "json": JsonStruct;
     "form": FormData;
     "byte": Uint8Array;
     "buffer": ArrayBuffer;

@@ -11,7 +11,7 @@ A handy utility collection.
 const file = await Deno.readFile("/path/to/binary.bin");
 
 const encoded = base64Encode(file); // BASE64 encoded string.
-const decoded = base64Decode(encoded); // Restored byte array.
+const decoded = base64Decode(encoded); // Restored byte.
 ```
 
 **Date UnixTime**
@@ -28,8 +28,8 @@ const decoded = await dateDecode(encoded); // Restored Date object.
 ```ts
 const file = await Deno.readFile("/path/to/binary.bin");
 
-const encoded = await deflateEncode(file); // DEFLATE compressed byte array.
-const decoded = await deflateDecode(encoded); // Restored byte array.
+const encoded = await deflateEncode(file); // DEFLATE compressed byte.
+const decoded = await deflateDecode(encoded); // Restored byte.
 ```
 
 **Extended Fetch API**
@@ -43,11 +43,11 @@ const bytes = await fetchExtend("https://path/to/get", "byte"); // Response as U
 
 ```ts
 const files = [
-    new File([await Deno.readFile("/path/to/binary.bin")], "binary.bin")
+    ["binary.bin", Deno.readFileSync("/path/to/binary.bin")]
 ];
 
-const encoded = await minipackEncode(files); // Minipack archived byte array.
-const decoded = await minipackDecode(encoded); // Restored file object array.
+const encoded = await minipackEncode(files); // Minipack archived byte.
+const decoded = await minipackDecode(encoded); // Restored array of name and byte.
 ```
 
 **Text Convert**
@@ -55,7 +55,7 @@ const decoded = await minipackDecode(encoded); // Restored file object array.
 ```ts
 const text = "Lorem ipsum dolor sit amet.";
 
-const encoded = await textEncode(text); // UTF-8 byte array.
+const encoded = await textEncode(text); // UTF-8 byte.
 const decoded = await textDecode(encoded); // Restored string.
 ```
 
