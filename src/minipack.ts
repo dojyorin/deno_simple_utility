@@ -1,3 +1,5 @@
+import {textEncode, textDecode} from "./text.ts";
+
 const size = <const>{
     hash: 32,
     name: 1,
@@ -6,16 +8,8 @@ const size = <const>{
 
 const sizeTotal = Object.values(size).reduce((a, c) => a + c, 0);
 
-async function byte2hash(data:Uint8Array){
+async function hashEncode(data:Uint8Array){
     return new Uint8Array(await crypto.subtle.digest("SHA-256", data));
-}
-
-function text2byte(data:string){
-    return new TextEncoder().encode(data);
-}
-
-function byte2text(data:Uint8Array){
-    return new TextDecoder().decode(data);
 }
 
 /**
@@ -24,15 +18,15 @@ function byte2text(data:Uint8Array){
 * @param files Array of file objects.
 */
 export async function minipackEncode(files:File[]){
-    const archive = new Uint8Array(files.reduce((a, {size: s, name: n}) => a + sizeTotal + text2byte(n).byteLength + s, 0));
+    const archive = new Uint8Array(files.reduce((a, {size: s, name: n}) => a + sizeTotal + textEncode(n).byteLength + s, 0));
 
     let offset = 0;
 
     for(const file of files){
-        const name = text2byte(file.name);
+        const name = textEncode(file.name);
         const body = new Uint8Array(await file.arrayBuffer());
 
-        archive.set(await byte2hash(body), offset);
+        archive.set(await hashEncode(body), offset);
         offset += size.hash;
 
         new DataView(archive.buffer, offset).setUint8(0, name.byteLength);
@@ -70,11 +64,11 @@ export async function minipackDecode(archive:Uint8Array){
         const bs = new DataView(archive.buffer, offset).getUint32(0);
         offset += size.body;
 
-        const name = byte2text(archive.subarray(offset, offset += ns));
+        const name = textDecode(archive.subarray(offset, offset += ns));
 
         const body = archive.subarray(offset, offset += bs);
 
-        if(hash.toString() !== (await byte2hash(body)).toString()){
+        if(hash.toString() !== (await hashEncode(body)).toString()){
             throw new Error();
         }
 
