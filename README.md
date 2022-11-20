@@ -14,6 +14,15 @@ const encoded = base64Encode(file); // BASE64 encoded string.
 const decoded = base64Decode(encoded); // Restored byte array.
 ```
 
+**Date unix**
+
+```ts
+const date = new Date();
+
+const encoded = await dateEncode(date); // UTC unix time.
+const decoded = await dateDecode(encoded); // Restored Date object.
+```
+
 **DEFLATE Compress**
 
 ```ts
@@ -39,6 +48,15 @@ const files = [
 
 const encoded = await minipackEncode(files); // Minipack archived byte array.
 const decoded = await minipackDecode(encoded); // Restored file object array.
+```
+
+**Text Convert**
+
+```ts
+const text = "Lorem ipsum dolor sit amet.";
+
+const encoded = await textEncode(text); // UTF-8 byte array.
+const decoded = await textDecode(encoded); // Restored string.
 ```
 
 # Details
