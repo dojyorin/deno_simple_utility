@@ -14,6 +14,15 @@ const encoded = base64Encode(file); // BASE64 encoded string.
 const decoded = base64Decode(encoded); // Restored byte array.
 ```
 
+**Date unix**
+
+```ts
+const date = new Date();
+
+const encoded = await dateEncode(date); // UTC unix time.
+const decoded = await dateDecode(encoded); // Restored Date object.
+```
+
 **DEFLATE Compress**
 
 ```ts
@@ -39,6 +48,15 @@ const files = [
 
 const encoded = await minipackEncode(files); // Minipack archived byte array.
 const decoded = await minipackDecode(encoded); // Restored file object array.
+```
+
+**Text Convert**
+
+```ts
+const text = "Lorem ipsum dolor sit amet.";
+
+const encoded = await textEncode(text); // UTF-8 byte array.
+const decoded = await textDecode(encoded); // Restored string.
 ```
 
 # Details
@@ -80,7 +98,7 @@ This is for one file and repeats for the number of files.
 ## `Promise<Uint8Array> deflateDecode(data)`
 - `data` ... The deflate compressed byte array.
 
-## `<FetchResponseType<T>> fetchExtend<T>(path, type, option)`
+## `<FetchResponseType[T]> fetchExtend<T>(path, type, option)`
 - `path` ... Target URL. Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
 - `type` ... The type you want to receive in the response.
 - `option` ... Fetch option. `window` is removed from `RequestInit` and `query` is added to write the query string.
