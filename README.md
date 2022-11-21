@@ -53,10 +53,12 @@ const decoded = await minipackDecode(encoded); // Restored array of name and byt
 **Text Convert**
 
 ```ts
-const text = "Lorem ipsum dolor sit amet.";
+const text = " Lorem ipsum  \t  dolor \r sit amet.";
 
-const encoded = await textEncode(text); // UTF-8 byte.
-const decoded = await textDecode(encoded); // Restored string.
+const encoded = await ucEncode(text); // UTF-8 byte.
+const decoded = await ucDecode(encoded); // Restored string.
+const trimmed = trimExtend(decoded); // Trimmed string.
+const hex = hexEncode(encoded); // Hex string.
 ```
 
 # Details

@@ -1,8 +1,4 @@
-export type JsonStruct = string | number | boolean | null | JsonStruct[] | {
-    [key: string]: JsonStruct;
-};
-
-export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
+import {JsonStruct, QueryInit} from "./web.d.ts";
 
 export interface FetchInit extends Omit<RequestInit, "window">{
     query?: QueryInit;
@@ -16,6 +12,8 @@ export interface FetchResponseType{
     "buffer": ArrayBuffer;
     "blob": Blob;
     "ok": boolean;
+    "code": number;
+    "header": Headers;
     "response": Response;
 }
 
@@ -52,6 +50,8 @@ export async function fetchExtend<T extends keyof FetchResponseType>(path:string
         case "buffer": return <FetchResponseType[T]>await response.arrayBuffer();
         case "blob": return <FetchResponseType[T]>await response.blob();
         case "ok": return <FetchResponseType[T]>response.ok;
+        case "code": return <FetchResponseType[T]>response.status;
+        case "header": return <FetchResponseType[T]>response.headers;
         case "response": return <FetchResponseType[T]>response;
         default: throw new Error();
     }

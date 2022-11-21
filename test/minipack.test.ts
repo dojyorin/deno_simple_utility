@@ -15,7 +15,7 @@ const encodeResult = new Uint8Array([
 ]);
 
 Deno.test({
-    name: "Minipack: Encode.",
+    name: "Minipack: Encode",
     async fn(){
         const result = await minipackEncode([
             [fileName, sample]
@@ -26,7 +26,7 @@ Deno.test({
 });
 
 Deno.test({
-    name: "Minipack: Decode.",
+    name: "Minipack: Decode",
     async fn(){
         const [[name, body]] = await minipackDecode(encodeResult);
 

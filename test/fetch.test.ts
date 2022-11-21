@@ -9,7 +9,7 @@ const sample = new Uint8Array([
 ]);
 
 Deno.test({
-    name: "Fetch: Get.",
+    name: "Fetch: Get",
     async fn(){
         const ac = new AbortController();
 

@@ -18,7 +18,7 @@ const encodeResult = new Uint8Array([
 ]);
 
 Deno.test({
-    name: "Deflate: Encode.",
+    name: "Deflate: Encode",
     async fn(){
         const result = await deflateEncode(sample);
 
@@ -27,7 +27,7 @@ Deno.test({
 });
 
 Deno.test({
-    name: "Deflate: Decode.",
+    name: "Deflate: Decode",
     async fn(){
         const result = await deflateDecode(encodeResult);
 

@@ -11,7 +11,7 @@ const sample = new Uint8Array([
 const encodeResult = "WA3HZCFCJ3Yupv6eWKOTmpoHV65OWy/Heu/Xr/UfKjo=";
 
 Deno.test({
-    name: "Base64: Encode.",
+    name: "Base64: Encode",
     fn(){
         const result = base64Encode(sample);
 
@@ -20,7 +20,7 @@ Deno.test({
 });
 
 Deno.test({
-    name: "Base64: Decode.",
+    name: "Base64: Decode",
     fn(){
         const result = base64Decode(encodeResult);
 
