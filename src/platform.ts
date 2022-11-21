@@ -1,3 +1,6 @@
+/**
+* @return `true` if running on Windows.
+*/
 export function isWin(){
     const os = Deno?.build.os;
 
@@ -8,6 +11,9 @@ export function isWin(){
     return os === "windows";
 }
 
+/**
+* @return `"C:/Windows/Temp"` if running on Windows, or `"/tmp"` if running on Linux or Mac.
+*/
 export function tmpPath(){
     switch(Deno?.build.os){
         case "windows": return "C:/Windows/Temp";

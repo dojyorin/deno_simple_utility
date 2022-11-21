@@ -10,9 +10,9 @@ const sizeOf = <const>{
 const sizeTotal = Object.values(sizeOf).reduce((a, c) => a + c, 0);
 
 /**
-* Convert from array of name and byte to "minipack" archive format.
+* @param files array of pair of name and byte array.
+* @return byte array in "minipack" format.
 * @see https://deno.land/x/simple_utility
-* @param files Array of name and byte.
 */
 export async function minipackEncode(files:[string, Uint8Array][]){
     const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeTotal + ucEncode(k).byteLength + v.byteLength, 0));
@@ -43,9 +43,9 @@ export async function minipackEncode(files:[string, Uint8Array][]){
 }
 
 /**
-* Convert from binary in "minipack" archive format to array of name and byte.
+* @param archive byte array in "minipack" format.
+* @return array of pair of name and byte array.
 * @see https://deno.land/x/simple_utility
-* @param archive The byte.
 */
 export async function minipackDecode(archive:Uint8Array){
     const files:[string, Uint8Array][] = [];
