@@ -6,7 +6,7 @@ const sample = "  Lorem ipsum\r dolor   sit \t  amet. ";
 const encodeResult = "Lorem ipsum dolor sit amet.";
 
 Deno.test({
-    name: "Text: Trim.",
+    name: "Text: Trim",
     async fn(){
         const result = await trimExtend(sample);
 

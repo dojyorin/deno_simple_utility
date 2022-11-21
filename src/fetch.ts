@@ -1,8 +1,4 @@
-export type JsonStruct = string | number | boolean | null | JsonStruct[] | {
-    [key: string]: JsonStruct;
-};
-
-export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
+import {JsonStruct, QueryInit} from "./web.d.ts";
 
 export interface FetchInit extends Omit<RequestInit, "window">{
     query?: QueryInit;
@@ -16,13 +12,16 @@ export interface FetchResponseType{
     "buffer": ArrayBuffer;
     "blob": Blob;
     "ok": boolean;
+    "code": number;
+    "header": Headers;
     "response": Response;
 }
 
 /**
-* @param path Target URL. Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
+* @param path Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
 * @param type The type you want to receive in the response.
-* @param option Fetch option. `window` is removed from `RequestInit` and `query` is added to write the query string.
+* @param option `window` is removed from `RequestInit` and `query` is added to write the query string.
+* @return response from the server specified by `type`.
 */
 export async function fetchExtend<T extends keyof FetchResponseType>(path:string, type:T, option?:FetchInit){
     const {origin, pathname} = /^http(s|):\/\//i.test(path) ? new URL(path) : new URL(path, location.href);
@@ -52,6 +51,8 @@ export async function fetchExtend<T extends keyof FetchResponseType>(path:string
         case "buffer": return <FetchResponseType[T]>await response.arrayBuffer();
         case "blob": return <FetchResponseType[T]>await response.blob();
         case "ok": return <FetchResponseType[T]>response.ok;
+        case "code": return <FetchResponseType[T]>response.status;
+        case "header": return <FetchResponseType[T]>response.headers;
         case "response": return <FetchResponseType[T]>response;
         default: throw new Error();
     }

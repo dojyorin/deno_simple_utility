@@ -6,7 +6,7 @@ const sample = new Date(2000, 0, 1, 0, 0, 0, 0);
 const encodeResult = 946684800;
 
 Deno.test({
-    name: "Date: Encode.",
+    name: "Date: Encode",
     async fn(){
         const result = await dateEncode(sample);
 
@@ -15,7 +15,7 @@ Deno.test({
 });
 
 Deno.test({
-    name: "Date: Decode.",
+    name: "Date: Decode",
     async fn(){
         const result = await dateDecode(encodeResult);
 
