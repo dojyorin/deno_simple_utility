@@ -5,6 +5,12 @@
 A handy utility collection.
 
 # Example
+
+<p>
+<details>
+<summary>Show more details...</summary>
+<p>
+
 **BASE64 Binary**
 
 ```ts
@@ -68,6 +74,10 @@ const hexadecimal = hexEncode(encoded); // hexadecimal string.
 const formatted = trimExtend(decoded); // formatted string.
 ```
 
+</p>
+</details>
+</p>
+
 # Details
 It's basically a thin wrapper around Deno's functions to improve usability, but some features are original to this module.
 
@@ -93,6 +103,23 @@ The actual binary structure looks like this:
 |5|Body|FileBody|Max 4294967295 (Defined in BodySize)|
 
 This is for one file and repeats for the number of files.
+
+# Tips
+This section is not directly related to this module, but provides a few line snippets to help you implement your application.
+
+<p>
+<details>
+<summary>Show more details...</summary>
+<p>
+
+**JSON Import**
+```ts
+const {default: config} = await import("./config.json", {assert: {type: "json"}});
+```
+
+</p>
+</details>
+</p>
 
 # API
 See [Deno Document](https://deno.land/x/simple_utility/mod.ts) for details.
