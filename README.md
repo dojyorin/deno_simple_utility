@@ -25,8 +25,9 @@ const decoded = base64Decode(encoded); // Restored.
 ```ts
 const date = new Date();
 
-const encoded = await dateEncode(date); // unixtime in seconds.
-const decoded = await dateDecode(encoded); // Restored.
+const encoded = dateEncode(date); // unixtime in seconds.
+const decoded = dateDecode(encoded); // Restored.
+const unixtime = dateParse(date.toISOString()); // unixtime in seconds.
 ```
 
 **DEFLATE Compress**
@@ -68,8 +69,8 @@ const tmp = tmpPath(); // "C:/Windows/Temp" if running on Windows, or "/tmp" if 
 ```ts
 const text = " Lorem ipsum  \t  dolor \r sit amet.";
 
-const encoded = await ucEncode(text); // byte array in UTF-8 format.
-const decoded = await ucDecode(encoded); // Restored.
+const encoded = ucEncode(text); // byte array in UTF-8 format.
+const decoded = ucDecode(encoded); // Restored.
 const hexadecimal = hexEncode(encoded); // hexadecimal string.
 const formatted = trimExtend(decoded); // formatted string.
 ```
