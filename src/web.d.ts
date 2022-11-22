@@ -1,9 +1,7 @@
 /**
 * Possible types of JSON.
 */
-export type JsonStruct = string | number | boolean | null | JsonStruct[] | {
-    [key: string]: JsonStruct;
-};
+export type JsonStruct = string | number | boolean | null | JsonStruct[] | {[key: string]: JsonStruct;};
 
 /**
 * Possible input types for `URLSearchParams`.

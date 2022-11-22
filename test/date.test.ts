@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {dateEncode, dateDecode} from "../src/date.ts";
+import {dateEncode, dateDecode, dateParse} from "../src/date.ts";
 
 const sample = new Date(2000, 0, 1, 0, 0, 0, 0);
 
@@ -18,6 +18,15 @@ Deno.test({
     name: "Date: Decode",
     async fn(){
         const result = await dateDecode(encodeResult);
+
+        assertEquals(result.toISOString(), sample.toISOString());
+    }
+});
+
+Deno.test({
+    name: "Date: Parse",
+    async fn(){
+        const result = await dateParse(sample.toISOString());
 
         assertEquals(result.toISOString(), sample.toISOString());
     }

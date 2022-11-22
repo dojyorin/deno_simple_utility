@@ -15,3 +15,14 @@ export function dateEncode(date?:Date){
 export function dateDecode(time:number){
     return new Date(time * 1000);
 }
+
+/**
+* Convert formatted datetime string such as ISO8601 to unixtime.
+* @param dt formatted datetime string.
+* @return unixtime in seconds.
+*/
+export function dateParse(dt:string){
+    const [y, mo, d, h, mi, s] = dt.split(/[/ :TZ_.-]/i).map(s => Number(s));
+
+    return dateEncode(new Date(y, (mo ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0));
+}
