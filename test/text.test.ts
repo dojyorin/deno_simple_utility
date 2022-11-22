@@ -8,7 +8,7 @@ const encodeResult = "Lorem ipsum dolor sit amet.";
 Deno.test({
     name: "Text: Trim",
     async fn(){
-        const result = await trimExtend(sample);
+        const result = trimExtend(sample);
 
         assertEquals(result, encodeResult);
     }
