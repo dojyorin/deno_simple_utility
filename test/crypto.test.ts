@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {deriveHash, generateKeyPair, cryptoEncrypt, cryptoDecrypt, cryptoSign, cryptoVerify} from "../src/crypto.ts";
+import {cryptoHash, cryptoGenerateKey, cryptoEncrypt, cryptoDecrypt, cryptoSign, cryptoVerify} from "../src/crypto.ts";
 
 const sample = new Uint8Array([0x02, 0xF2, 0x5D, 0x1F, 0x1C, 0x34, 0xB9, 0x2F]);
 
@@ -17,7 +17,7 @@ const hashResult = new Uint8Array([
 Deno.test({
     name: "Crypto: Hash",
     async fn(){
-        const hash = await deriveHash(false, sample);
+        const hash = await cryptoHash(false, sample);
 
         assertEquals(hash, hashResult);
     }
@@ -26,8 +26,8 @@ Deno.test({
 Deno.test({
     name: "Crypto: Encrypt and Decrypt",
     async fn(){
-        const key1 = await generateKeyPair(false);
-        const key2 = await generateKeyPair(false);
+        const key1 = await cryptoGenerateKey(false);
+        const key2 = await cryptoGenerateKey(false);
 
         const encrypt = await cryptoEncrypt({
             publicKey: key1.publicKey,
@@ -46,7 +46,7 @@ Deno.test({
 Deno.test({
     name: "Crypto: Sign and Verify",
     async fn(){
-        const key = await generateKeyPair(true);
+        const key = await cryptoGenerateKey(true);
 
         const signature = await cryptoSign(key.privateKey, sample);
         const verify = await cryptoVerify(signature, key.publicKey, sample);
