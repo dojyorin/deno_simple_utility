@@ -115,7 +115,7 @@ This section is not directly related to this module, but provides a few line sni
 
 **JSON Import**
 ```ts
-const {default: config} = await import("./config.json", {assert: {type: "json"}});
+const {default: data} = await import("./data.json", {assert: {type: "json"}});
 ```
 
 </p>

@@ -1,3 +1,5 @@
+import {dirname, fromFileUrl} from "../deps.ts";
+
 /**
 * @return `true` if running on Windows.
 */
@@ -21,4 +23,17 @@ export function tmpPath(){
         case "darwin": return "/tmp";
         default: throw new Error();
     }
+}
+
+/**
+* Move current directory to `Deno.mainModule`.
+*/
+export function cwdMain(){
+    const ep = Deno?.mainModule;
+
+    if(!ep){
+        throw new Error();
+    }
+
+    Deno?.chdir(fromFileUrl(dirname(ep)));
 }
