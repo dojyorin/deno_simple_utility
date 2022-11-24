@@ -1,11 +1,11 @@
 import {deriveHash} from "./crypto.ts";
 import {ucEncode, ucDecode, hexEncode} from "./text.ts";
 
-const sizeOf = <const>{
+const sizeOf = Object.freeze({
     hash: 32,
     name: 1,
     body: 4
-};
+});
 
 const sizeTotal = Object.values(sizeOf).reduce((a, c) => a + c, 0);
 

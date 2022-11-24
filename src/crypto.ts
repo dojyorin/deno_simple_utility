@@ -6,10 +6,7 @@ export type PortableCryptoKey = Uint8Array;
 /**
 * Each is `PortableCryptoKey` public/private key pair.
 */
-export interface PortableCryptoKeyPair{
-    privateKey: PortableCryptoKey;
-    publicKey: PortableCryptoKey;
-}
+export type PortableCryptoKeyPair = Record<keyof CryptoKeyPair, PortableCryptoKey>;
 
 async function parseCommonKey(kp:PortableCryptoKeyPair){
     const ec:EcKeyAlgorithm = {
