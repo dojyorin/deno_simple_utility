@@ -1,11 +1,11 @@
-import {deriveHash} from "./crypto.ts";
+import {cryptoHash} from "./crypto.ts";
 import {ucEncode, ucDecode, hexEncode} from "./text.ts";
 
-const sizeOf = <const>{
+const sizeOf = Object.freeze({
     hash: 32,
     name: 1,
     body: 4
-};
+});
 
 const sizeTotal = Object.values(sizeOf).reduce((a, c) => a + c, 0);
 
@@ -23,7 +23,7 @@ export async function minipackEncode(files:[string, Uint8Array][]){
         const name = ucEncode(k);
         const body = v;
 
-        archive.set(await deriveHash(true, body), offset);
+        archive.set(await cryptoHash(true, body), offset);
         offset += sizeOf.hash;
 
         new DataView(archive.buffer, offset).setUint8(0, name.byteLength);
@@ -65,7 +65,7 @@ export async function minipackDecode(archive:Uint8Array){
 
         const body = archive.subarray(offset, offset += bs);
 
-        if(hexEncode(hash) !== hexEncode(await deriveHash(true, body))){
+        if(hexEncode(hash) !== hexEncode(await cryptoHash(true, body))){
             throw new Error();
         }
 

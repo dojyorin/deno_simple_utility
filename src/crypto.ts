@@ -6,15 +6,17 @@ export type PortableCryptoKey = Uint8Array;
 /**
 * Each is `PortableCryptoKey` public/private key pair.
 */
-export interface PortableCryptoKeyPair{
-    privateKey: PortableCryptoKey;
-    publicKey: PortableCryptoKey;
-}
+export type PortableCryptoKeyPair = Record<keyof CryptoKeyPair, PortableCryptoKey>;
 
-async function parseCommonKey(kp:PortableCryptoKeyPair){
+async function deriveSecretKey(kp:PortableCryptoKeyPair){
     const ec:EcKeyAlgorithm = {
-        namedCurve: "P-384",
-        name: "ECDH"
+        name: "ECDH",
+        namedCurve: "P-384"
+    };
+
+    const aes:AesDerivedKeyParams = {
+        name: "AES-GCM",
+        length: 256
     };
 
     const publicKey = await crypto.subtle.importKey("spki", kp.publicKey, ec, false, []);
@@ -25,34 +27,17 @@ async function parseCommonKey(kp:PortableCryptoKeyPair){
         public: publicKey
     };
 
-    const aes:AesDerivedKeyParams = {
-        name: "AES-GCM",
-        length: 256
-    };
-
     return await crypto.subtle.deriveKey(dh, privateKey, aes, false, ["encrypt", "decrypt"]);
-}
-
-async function parseSignKey(k:PortableCryptoKey, isPrivate:boolean){
-    const format:KeyFormat = isPrivate ? "pkcs8" : "spki";
-    const usage:KeyUsage[] = isPrivate ? ["sign"] : ["verify"];
-
-    const ec:EcKeyAlgorithm = {
-        namedCurve: "P-384",
-        name: "ECDSA"
-    };
-
-    return await crypto.subtle.importKey(format, k, ec, false, usage);
 }
 
 /**
 * Derive SHA2 hash value from byte array.
-* @param isHalf Use the hash length 256 bits if `true`, 512 bits if `false`.
+* @param is256 Use the hash length 256 bits if `true`, 512 bits if `false`.
 * @param data byte array.
 * @return byte array of hash value.
 */
-export async function deriveHash(isHalf:boolean, data:Uint8Array){
-    const sha = isHalf ? "SHA-256" : "SHA-512";
+export async function cryptoHash(is256:boolean, data:Uint8Array){
+    const sha = is256 ? "SHA-256" : "SHA-512";
 
     return new Uint8Array(await crypto.subtle.digest(sha, data));
 }
@@ -62,12 +47,12 @@ export async function deriveHash(isHalf:boolean, data:Uint8Array){
 * @param isDsa Outputs the key for ECDSA if `true`, for ECDH if `false`.
 * @return public/private key pair, each in byte array.
 */
-export async function generateKeyPair(isDsa:boolean){
+export async function cryptoGenerateKey(isDsa:boolean){
     const usage:KeyUsage[] = isDsa ? ["sign", "verify"] : ["deriveKey", "deriveBits"];
 
     const ec:EcKeyAlgorithm = {
-        namedCurve: "P-384",
-        name: isDsa ? "ECDSA" : "ECDH"
+        name: isDsa ? "ECDSA" : "ECDH",
+        namedCurve: "P-384"
     };
 
     const {publicKey, privateKey} = await crypto.subtle.generateKey(ec, true, usage);
@@ -95,11 +80,11 @@ export async function cryptoEncrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
         iv: crypto.getRandomValues(new Uint8Array(sizeIv))
     };
 
-    const commonKey = await parseCommonKey(kp);
+    const secretKey = await deriveSecretKey(kp);
 
     const output = new Uint8Array(sizeTag + sizeIv + data.byteLength);
     output.set(<Uint8Array>gcm.iv, 0);
-    output.set(new Uint8Array(await crypto.subtle.encrypt(gcm, commonKey, data)), gcm.iv.byteLength);
+    output.set(new Uint8Array(await crypto.subtle.encrypt(gcm, secretKey, data)), gcm.iv.byteLength);
 
     return output;
 }
@@ -121,7 +106,7 @@ export async function cryptoDecrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
         iv: data.subarray(0, sizeIv)
     };
 
-    const commonKey = await parseCommonKey(kp);
+    const commonKey = await deriveSecretKey(kp);
 
     return new Uint8Array(await crypto.subtle.decrypt(gcm, commonKey, data.subarray(sizeIv)));
 }
@@ -133,6 +118,11 @@ export async function cryptoDecrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
 * @return signature byte array.
 */
 export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
+    const ec:EcKeyAlgorithm = {
+        name: "ECDSA",
+        namedCurve: "P-384"
+    };
+
     const dsa:EcdsaParams = {
         name: "ECDSA",
         hash: {
@@ -140,7 +130,7 @@ export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
         }
     };
 
-    const privateKey = await parseSignKey(k, true);
+    const privateKey = await crypto.subtle.importKey("pkcs8", k, ec, false, ["sign"]);
 
     return new Uint8Array(await crypto.subtle.sign(dsa, privateKey, data));
 }
@@ -153,6 +143,11 @@ export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
 * @return `true` if correct.
 */
 export async function cryptoVerify(signature:Uint8Array, k:PortableCryptoKey, data:Uint8Array){
+    const ec:EcKeyAlgorithm = {
+        name: "ECDSA",
+        namedCurve: "P-384"
+    };
+
     const dsa:EcdsaParams = {
         name: "ECDSA",
         hash: {
@@ -160,7 +155,7 @@ export async function cryptoVerify(signature:Uint8Array, k:PortableCryptoKey, da
         }
     };
 
-    const publicKey = await parseSignKey(k, false);
+    const publicKey = await crypto.subtle.importKey("spki", k, ec, false, ["verify"]);
 
     return await crypto.subtle.verify(dsa, publicKey, signature, data);
 }
