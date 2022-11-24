@@ -25,9 +25,9 @@ const decoded = base64Decode(encoded); // Restored.
 ```ts
 const file = await Deno.readFile("/path/to/binary.bin");
 
-const hash = await deriveHash(false, file); // byte array of hash value.
-const keyEcdh = await generateKeyPair(false); // public/private key pair for ECDH, each in byte array.
-const keyEcdsa = await generateKeyPair(true); // public/private key pair for ECDSA, each in byte array.
+const hash = await cryptoHash(false, file); // byte array of hash value.
+const keyEcdh = await cryptoGenerateKey(false); // public/private key pair for ECDH, each in byte array.
+const keyEcdsa = await cryptoGenerateKey(true); // public/private key pair for ECDSA, each in byte array.
 const encrypted = await cryptoEncrypt(keyEcdh, file); // encrypted byte array.
 const decrypted = await cryptoDecrypt(keyEcdh, encrypted); // Restored.
 const signature = await cryptoSign(keyEcdsa.privateKey, data); // signature byte array.
