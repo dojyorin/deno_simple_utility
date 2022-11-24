@@ -97,7 +97,7 @@ export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
     const dsa:EcdsaParams = {
         name: "ECDSA",
         hash: {
-            name: "SHA-512"
+            name: "SHA-384"
         }
     };
 
@@ -110,7 +110,7 @@ export async function cryptoVerify(signature:Uint8Array, k:PortableCryptoKey, da
     const dsa:EcdsaParams = {
         name: "ECDSA",
         hash: {
-            name: "SHA-512"
+            name: "SHA-384"
         }
     };
 
