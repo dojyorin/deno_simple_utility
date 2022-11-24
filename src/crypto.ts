@@ -1,5 +1,11 @@
+/**
+* Means the byte array after exporting `CryptoKey`.
+*/
 export type PortableCryptoKey = Uint8Array;
 
+/**
+* Each is `PortableCryptoKey` public/private key pair.
+*/
 export interface PortableCryptoKeyPair{
     privateKey: PortableCryptoKey;
     publicKey: PortableCryptoKey;
@@ -39,10 +45,23 @@ async function parseSignKey(k:PortableCryptoKey, isPrivate:boolean){
     return await crypto.subtle.importKey(format, k, ec, false, usage);
 }
 
-export async function deriveHash(data:Uint8Array){
-    return new Uint8Array(await crypto.subtle.digest("SHA-512", data));
+/**
+* Derive SHA2 hash value from byte array.
+* @param isHalf Use the hash length 256 bits if `true`, 512 bits if `false`.
+* @param data byte array.
+* @return byte array of hash value.
+*/
+export async function deriveHash(isHalf:boolean, data:Uint8Array){
+    const sha = isHalf ? "SHA-256" : "SHA-512";
+
+    return new Uint8Array(await crypto.subtle.digest(sha, data));
 }
 
+/**
+* Generate and export public/private key pair as a portable byte array.
+* @param isDsa Outputs the key for ECDSA if `true`, for ECDH if `false`.
+* @return public/private key pair, each in byte array.
+*/
 export async function generateKeyPair(isDsa:boolean){
     const usage:KeyUsage[] = isDsa ? ["sign", "verify"] : ["deriveKey", "deriveBits"];
 
@@ -59,6 +78,13 @@ export async function generateKeyPair(isDsa:boolean){
     };
 }
 
+/**
+* Encrypt byte array using AES-GCM with 256 bits key, 128 bits tag and 96 bits IV.
+* The IV is prepended to the byte array.
+* @param kp public/private key pair, each in byte array.
+* @param data byte array.
+* @return encrypted byte array.
+*/
 export async function cryptoEncrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
     const sizeTag = 16;
     const sizeIv = 12;
@@ -78,6 +104,13 @@ export async function cryptoEncrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
     return output;
 }
 
+/**
+* Decrypt encrypted byte array using AES-GCM with 256 bits key 128 bits tag and 96 bits IV.
+* Read the IV prepended to the byte array.
+* @param kp public/private key pair, each in byte array.
+* @param data encrypted byte array.
+* @return byte array.
+*/
 export async function cryptoDecrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
     const sizeTag = 16;
     const sizeIv = 12;
@@ -93,6 +126,12 @@ export async function cryptoDecrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
     return new Uint8Array(await crypto.subtle.decrypt(gcm, commonKey, data.subarray(sizeIv)));
 }
 
+/**
+* Create byte array signature using the private key and SHA384 hash algorithm.
+* @param k private key.
+* @param data byte array.
+* @return signature byte array.
+*/
 export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
     const dsa:EcdsaParams = {
         name: "ECDSA",
@@ -106,6 +145,13 @@ export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
     return new Uint8Array(await crypto.subtle.sign(dsa, privateKey, data));
 }
 
+/**
+* Verifies the correct signature of a byte array using the public key and SHA384 hash algorithm.
+* @param signature signature byte array.
+* @param k public key.
+* @param data byte array.
+* @return `true` if correct.
+*/
 export async function cryptoVerify(signature:Uint8Array, k:PortableCryptoKey, data:Uint8Array){
     const dsa:EcdsaParams = {
         name: "ECDSA",

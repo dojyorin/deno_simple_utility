@@ -1,4 +1,6 @@
-import {streamConvert} from "./_utility.ts";
+async function streamConvert(data:Uint8Array, ts:TransformStream<Uint8Array, Uint8Array>){
+    return new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(ts)).arrayBuffer());
+}
 
 /**
 * Compress binary in "deflate" format (RFC1951).
