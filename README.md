@@ -137,5 +137,18 @@ const {default: data} = await import("./data.json", {assert: {type: "json"}});
 </details>
 </p>
 
+# Browser Compatible
+Some methods and classes in this module don't use Deno objects internally and are browser compatible.
+
+I have prepared browser compatible code only export as [mod.compatible.ts](./mod.compatible.ts).
+
+By bundling this, you can easily create universal utility scripts.
+
+```sh
+deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts | esbuild --minify | head -c -1 | tee ./simple_utility.esm.min.js
+```
+
+The example uses [esbuild](https://esbuild.github.io) to minify.
+
 # API
 See [Deno Document](https://deno.land/x/simple_utility/mod.ts) for details.
