@@ -20,6 +20,20 @@ const encoded = base64Encode(file); // base64 code.
 const decoded = base64Decode(encoded); // Restored.
 ```
 
+**Easy WebCrypto**
+
+```ts
+const file = await Deno.readFile("/path/to/binary.bin");
+
+const hash = await deriveHash(false, file); // byte array of hash value.
+const keyEcdh = await generateKeyPair(false); // public/private key pair for ECDH, each in byte array.
+const keyEcdsa = await generateKeyPair(true); // public/private key pair for ECDSA, each in byte array.
+const encrypted = await cryptoEncrypt(keyEcdh, file); // encrypted byte array.
+const decrypted = await cryptoDecrypt(keyEcdh, encrypted); // Restored.
+const signature = await cryptoSign(keyEcdsa.privateKey, data); // signature byte array.
+const verify = await cryptoVerify(signature, keyEcdsa.publicKey, data); // `true` if correct.
+```
+
 **Date UnixTime**
 
 ```ts
@@ -57,13 +71,6 @@ const encoded = await minipackEncode(files); // byte array in "minipack" format.
 const decoded = await minipackDecode(encoded); // Restored.
 ```
 
-**Platform Specific**
-
-```ts
-const win = isWin(); // "true" if running on Windows.
-const tmp = tmpPath(); // "C:/Windows/Temp" if running on Windows, or "/tmp" if running on Linux or Mac.
-```
-
 **Text Convert**
 
 ```ts
@@ -73,6 +80,14 @@ const encoded = ucEncode(text); // byte array in UTF-8 format.
 const decoded = ucDecode(encoded); // Restored.
 const hexadecimal = hexEncode(encoded); // hexadecimal string.
 const formatted = trimExtend(decoded); // formatted string.
+```
+
+**Platform Specific**
+
+```ts
+const win = isWin(); // "true" if running on Windows.
+const tmp = tmpPath(); // "C:/Windows/Temp" if running on Windows, or "/tmp" if running on Linux or Mac.
+cwdMain(); // Move current directory to `Deno.mainModule`.
 ```
 
 </p>
