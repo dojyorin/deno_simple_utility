@@ -1,9 +1,15 @@
 import {JsonStruct, QueryInit} from "./web.d.ts";
 
+/**
+* Option to remove `window` from `RequestInit` and add `query` for query string.
+*/
 export interface FetchInit extends Omit<RequestInit, "window">{
     query?: QueryInit;
 }
 
+/**
+* A map of fetch response types and strings specifying them.
+*/
 export interface FetchResponseType{
     "text": string;
     "json": JsonStruct;
