@@ -26,7 +26,7 @@ Deno.test({
 
         cwdMain();
 
-        assertEquals(fromFileUrl(dirname(Deno.mainModule), Deno.cwd()));
+        assertEquals(fromFileUrl(dirname(Deno.mainModule)), Deno.cwd());
 
         Deno.chdir(backup);
     }
