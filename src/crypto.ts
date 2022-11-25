@@ -8,15 +8,22 @@ export type PortableCryptoKey = Uint8Array;
 */
 export type PortableCryptoKeyPair = Record<keyof CryptoKeyPair, PortableCryptoKey>;
 
+const sizeKey = 32;
+const sizeTag = 16;
+const sizeIv = 12;
+
+const nameEc = "P-384";
+const nameMac = "SHA-384";
+
 async function deriveSecretKey(kp:PortableCryptoKeyPair){
     const ec:EcKeyAlgorithm = {
         name: "ECDH",
-        namedCurve: "P-384"
+        namedCurve: nameEc
     };
 
     const aes:AesDerivedKeyParams = {
         name: "AES-GCM",
-        length: 256
+        length: sizeKey * 8
     };
 
     const publicKey = await crypto.subtle.importKey("spki", kp.publicKey, ec, false, []);
@@ -32,27 +39,27 @@ async function deriveSecretKey(kp:PortableCryptoKeyPair){
 
 /**
 * Derive SHA2 hash value from byte array.
-* @param is256 Use the hash length 256 bits if `true`, 512 bits if `false`.
+* @param is512 Use the hash length 512 bits if `true`, 256 bits if `false`.
 * @param data byte array.
 * @return byte array of hash value.
 */
-export async function cryptoHash(is256:boolean, data:Uint8Array){
-    const sha = is256 ? "SHA-256" : "SHA-512";
+export async function cryptoHash(is512:boolean, data:Uint8Array){
+    const sha = is512 ? "SHA-512" : "SHA-256";
 
     return new Uint8Array(await crypto.subtle.digest(sha, data));
 }
 
 /**
 * Generate and export public/private key pair as a portable byte array.
-* @param isDsa Outputs the key for ECDSA if `true`, for ECDH if `false`.
+* @param isECDH Outputs the key for ECDH if `true`, for ECDSA if `false`.
 * @return public/private key pair, each in byte array.
 */
-export async function cryptoGenerateKey(isDsa:boolean){
-    const usage:KeyUsage[] = isDsa ? ["sign", "verify"] : ["deriveKey", "deriveBits"];
+export async function cryptoGenerateKey(isECDH:boolean){
+    const usage:KeyUsage[] = isECDH ? ["deriveKey", "deriveBits"] : ["sign", "verify"];
 
     const ec:EcKeyAlgorithm = {
-        name: isDsa ? "ECDSA" : "ECDH",
-        namedCurve: "P-384"
+        name: isECDH ? "ECDH" : "ECDSA",
+        namedCurve: nameEc
     };
 
     const {publicKey, privateKey} = await crypto.subtle.generateKey(ec, true, usage);
@@ -71,9 +78,6 @@ export async function cryptoGenerateKey(isDsa:boolean){
 * @return encrypted byte array.
 */
 export async function cryptoEncrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
-    const sizeTag = 16;
-    const sizeIv = 12;
-
     const gcm:AesGcmParams = {
         name: "AES-GCM",
         tagLength: sizeTag * 8,
@@ -97,9 +101,6 @@ export async function cryptoEncrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
 * @return byte array.
 */
 export async function cryptoDecrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
-    const sizeTag = 16;
-    const sizeIv = 12;
-
     const gcm:AesGcmParams = {
         name: "AES-GCM",
         tagLength: sizeTag * 8,
@@ -120,13 +121,13 @@ export async function cryptoDecrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
 export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
     const ec:EcKeyAlgorithm = {
         name: "ECDSA",
-        namedCurve: "P-384"
+        namedCurve: nameEc
     };
 
     const dsa:EcdsaParams = {
         name: "ECDSA",
         hash: {
-            name: "SHA-384"
+            name: nameMac
         }
     };
 
@@ -145,13 +146,13 @@ export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
 export async function cryptoVerify(signature:Uint8Array, k:PortableCryptoKey, data:Uint8Array){
     const ec:EcKeyAlgorithm = {
         name: "ECDSA",
-        namedCurve: "P-384"
+        namedCurve: nameEc
     };
 
     const dsa:EcdsaParams = {
         name: "ECDSA",
         hash: {
-            name: "SHA-384"
+            name: nameMac
         }
     };
 

@@ -6,13 +6,10 @@ import {ucEncode, ucDecode, hexEncode} from "./text.ts";
 */
 export type FileInit = [string, Uint8Array];
 
-const sizeOf = Object.freeze({
-    hash: 32,
-    name: 1,
-    body: 4
-});
-
-const sizeTotal = Object.values(sizeOf).reduce((a, c) => a + c, 0);
+const sizeHash = 32;
+const sizeName = 1;
+const sizeBody = 4;
+const sizeTotal = sizeHash + sizeName + sizeBody;
 
 /**
 * Encode data into a byte array in "minipack" format.
@@ -29,14 +26,14 @@ export async function minipackEncode(files:FileInit[]){
         const name = ucEncode(k);
         const body = v;
 
-        archive.set(await cryptoHash(true, body), offset);
-        offset += sizeOf.hash;
+        archive.set(await cryptoHash(false, body), offset);
+        offset += sizeHash;
 
         new DataView(archive.buffer, offset).setUint8(0, name.byteLength);
-        offset += sizeOf.name;
+        offset += sizeName;
 
         new DataView(archive.buffer, offset).setUint32(0, body.byteLength);
-        offset += sizeOf.body;
+        offset += sizeBody;
 
         archive.set(name, offset);
         offset += name.byteLength;
@@ -60,19 +57,19 @@ export async function minipackDecode(archive:Uint8Array){
     let offset = 0;
 
     while(offset < archive.byteLength){
-        const hash = archive.subarray(offset, offset += sizeOf.hash);
+        const hash = archive.subarray(offset, offset += sizeHash);
 
         const ns = new DataView(archive.buffer, offset).getUint8(0);
-        offset += sizeOf.name;
+        offset += sizeName;
 
         const bs = new DataView(archive.buffer, offset).getUint32(0);
-        offset += sizeOf.body;
+        offset += sizeBody;
 
         const name = ucDecode(archive.subarray(offset, offset += ns));
 
         const body = archive.subarray(offset, offset += bs);
 
-        if(hexEncode(hash) !== hexEncode(await cryptoHash(true, body))){
+        if(hexEncode(hash) !== hexEncode(await cryptoHash(false, body))){
             throw new Error();
         }
 

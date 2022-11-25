@@ -17,7 +17,7 @@ const hashResult = new Uint8Array([
 Deno.test({
     name: "Crypto: Hash",
     async fn(){
-        const hash = await cryptoHash(false, sample);
+        const hash = await cryptoHash(true, sample);
 
         assertEquals(hash, hashResult);
     }
@@ -26,8 +26,8 @@ Deno.test({
 Deno.test({
     name: "Crypto: Encrypt and Decrypt",
     async fn(){
-        const key1 = await cryptoGenerateKey(false);
-        const key2 = await cryptoGenerateKey(false);
+        const key1 = await cryptoGenerateKey(true);
+        const key2 = await cryptoGenerateKey(true);
 
         const encrypt = await cryptoEncrypt({
             publicKey: key1.publicKey,
@@ -46,7 +46,7 @@ Deno.test({
 Deno.test({
     name: "Crypto: Sign and Verify",
     async fn(){
-        const key = await cryptoGenerateKey(true);
+        const key = await cryptoGenerateKey(false);
 
         const signature = await cryptoSign(key.privateKey, sample);
         const verify = await cryptoVerify(signature, key.publicKey, sample);
