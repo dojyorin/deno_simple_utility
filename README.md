@@ -128,7 +128,8 @@ This section is not directly related to this module, but provides a few line sni
 <summary>Show more details...</summary>
 <p>
 
-**JSON Import**
+**JSON Import with Type**
+
 ```ts
 const {default: data} = await import("./data.json", {assert: {type: "json"}});
 ```

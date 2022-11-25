@@ -1,6 +1,11 @@
 import {cryptoHash} from "./crypto.ts";
 import {ucEncode, ucDecode, hexEncode} from "./text.ts";
 
+/**
+* The file name and byte array pairs that make up the basic file.
+*/
+export type FileInit = [string, Uint8Array];
+
 const sizeOf = Object.freeze({
     hash: 32,
     name: 1,
@@ -15,7 +20,7 @@ const sizeTotal = Object.values(sizeOf).reduce((a, c) => a + c, 0);
 * @return byte array in "minipack" format.
 * @see https://deno.land/x/simple_utility
 */
-export async function minipackEncode(files:[string, Uint8Array][]){
+export async function minipackEncode(files:FileInit[]){
     const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeTotal + ucEncode(k).byteLength + v.byteLength, 0));
 
     let offset = 0;
@@ -50,7 +55,7 @@ export async function minipackEncode(files:[string, Uint8Array][]){
 * @see https://deno.land/x/simple_utility
 */
 export async function minipackDecode(archive:Uint8Array){
-    const files:[string, Uint8Array][] = [];
+    const files:FileInit[] = [];
 
     let offset = 0;
 
