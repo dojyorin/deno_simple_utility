@@ -25,9 +25,9 @@ const decoded = base64Decode(encoded); // Restored.
 ```ts
 const file = await Deno.readFile("/path/to/binary.bin");
 
-const hash = await cryptoHash(false, file); // byte array of hash value.
-const keyEcdh = await cryptoGenerateKey(false); // public/private key pair for ECDH, each in byte array.
-const keyEcdsa = await cryptoGenerateKey(true); // public/private key pair for ECDSA, each in byte array.
+const hash = await cryptoHash(true, file); // byte array of SHA2 512 bits hash value.
+const keyEcdh = await cryptoGenerateKey(true); // public/private key pair for ECDH, each in byte array.
+const keyEcdsa = await cryptoGenerateKey(false); // public/private key pair for ECDSA, each in byte array.
 const encrypted = await cryptoEncrypt(keyEcdh, file); // encrypted byte array.
 const decrypted = await cryptoDecrypt(keyEcdh, encrypted); // Restored.
 const signature = await cryptoSign(keyEcdsa.privateKey, data); // signature byte array.
@@ -78,7 +78,7 @@ const text = " Lorem ipsum  \t  dolor \r sit amet.";
 
 const encoded = ucEncode(text); // byte array in UTF-8 format.
 const decoded = ucDecode(encoded); // Restored.
-const hexadecimal = hexEncode(encoded); // hexadecimal string.
+const hexadecimal = hexEncode(encoded); // HEX string.
 const formatted = trimExtend(decoded); // formatted string.
 ```
 
@@ -128,7 +128,8 @@ This section is not directly related to this module, but provides a few line sni
 <summary>Show more details...</summary>
 <p>
 
-**JSON Import**
+**JSON Import with Type**
+
 ```ts
 const {default: data} = await import("./data.json", {assert: {type: "json"}});
 ```
@@ -138,17 +139,17 @@ const {default: data} = await import("./data.json", {assert: {type: "json"}});
 </p>
 
 # Browser Compatible
-Some methods and classes in this module don't use Deno objects internally and are browser compatible.
+Some methods and classes in this module don't use `globalThis.Deno` internally and are browser compatible.
 
 I have prepared browser compatible code only export as [mod.compatible.ts](./mod.compatible.ts).
 
 By bundling this, you can easily create universal utility scripts.
 
 ```sh
-deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts | esbuild --minify | head -c -1 | tee ./simple_utility.esm.min.js
+deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts > ./simple_utility.esm.js
 ```
 
-The example uses [esbuild](https://esbuild.github.io) to minify.
+This section may eventually be automated with GitHub Actions, in which case the bundled scripts will be merged into GitHub Releases, making this step unnecessary.
 
 # API
 See [Deno Document](https://deno.land/x/simple_utility/mod.ts) for details.

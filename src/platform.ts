@@ -1,6 +1,7 @@
 import {dirname, fromFileUrl} from "../deps.ts";
 
 /**
+* Check if it's running on Windows.
 * @return `true` if running on Windows.
 */
 export function isWin(){
@@ -8,6 +9,7 @@ export function isWin(){
 }
 
 /**
+* Returns the system wide temporary directory path for each platform.
 * @return `"C:/Windows/Temp"` if running on Windows, or `"/tmp"` if running on Linux or Mac.
 */
 export function tmpPath(){
