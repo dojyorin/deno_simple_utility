@@ -146,12 +146,10 @@ I have prepared browser compatible code only export as [mod.compatible.ts](./mod
 By bundling this, you can easily create universal utility scripts.
 
 ```sh
-deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts | esbuild --minify > ./simple_utility.esm.min.js
+deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts > ./simple_utility.esm.js
 ```
 
-The example uses [esbuild](https://esbuild.github.io) to minify.
-
-This section will eventually be automated with GitHub Actions and may not be needed in the future.
+This section may eventually be automated with GitHub Actions, in which case the bundled scripts will be merged into GitHub Releases, making this step unnecessary.
 
 # API
 See [Deno Document](https://deno.land/x/simple_utility/mod.ts) for details.
