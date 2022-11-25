@@ -78,7 +78,7 @@ const text = " Lorem ipsum  \t  dolor \r sit amet.";
 
 const encoded = ucEncode(text); // byte array in UTF-8 format.
 const decoded = ucDecode(encoded); // Restored.
-const hexadecimal = hexEncode(encoded); // hexadecimal string.
+const hexadecimal = hexEncode(encoded); // HEX string.
 const formatted = trimExtend(decoded); // formatted string.
 ```
 
@@ -149,6 +149,8 @@ deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts | esb
 ```
 
 The example uses [esbuild](https://esbuild.github.io) to minify.
+
+This section will eventually be automated with GitHub Actions and may not be needed in the future.
 
 # API
 See [Deno Document](https://deno.land/x/simple_utility/mod.ts) for details.

@@ -1,4 +1,5 @@
 /**
+* Convert from byte array to base64 code.
 * @param data byte array.
 * @return base64 code.
 */
@@ -7,6 +8,7 @@ export function base64Encode(data:Uint8Array){
 }
 
 /**
+* Convert from base64 code to byte array.
 * @param data base64 code.
 * @return byte array.
 */
