@@ -38,6 +38,15 @@ async function deriveSecretKey(kp:PortableCryptoKeyPair){
 }
 
 /**
+* Returns random byte array with the specified number of bytes.
+* @param size number of bytes.
+* @return random byte array.
+*/
+export async function cryptoRandom(size:number){
+    return await new Promise<Uint8Array>(done => done(crypto.getRandomValues(new Uint8Array(size))));
+}
+
+/**
 * Derive SHA2 hash value from byte array.
 * @param is512 Use the hash length 512 bits if `true`, 256 bits if `false`.
 * @param data byte array.
@@ -81,7 +90,7 @@ export async function cryptoEncrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
     const gcm:AesGcmParams = {
         name: "AES-GCM",
         tagLength: sizeTag * 8,
-        iv: crypto.getRandomValues(new Uint8Array(sizeIv))
+        iv: await cryptoRandom(sizeIv)
     };
 
     const secretKey = await deriveSecretKey(kp);
