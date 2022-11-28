@@ -116,9 +116,9 @@ export async function cryptoDecrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
         iv: data.subarray(0, sizeIv)
     };
 
-    const commonKey = await deriveSecretKey(kp);
+    const secretKey = await deriveSecretKey(kp);
 
-    return new Uint8Array(await crypto.subtle.decrypt(gcm, commonKey, data.subarray(sizeIv)));
+    return new Uint8Array(await crypto.subtle.decrypt(gcm, secretKey, data.subarray(sizeIv)));
 }
 
 /**
