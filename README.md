@@ -121,6 +121,19 @@ The actual binary structure looks like this:
 
 This is for one file and repeats for the number of files.
 
+# Browser Compatible
+Some methods and classes in this module don't use `globalThis.Deno` internally and are browser compatible.
+
+I have prepared browser compatible code only export as [mod.compatible.ts](./mod.compatible.ts).
+
+By bundling this, you can easily create universal utility scripts.
+
+```sh
+deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts > ./simple_utility.esm.js
+```
+
+This section may eventually be automated with GitHub Actions, in which case the bundled scripts will be merged into GitHub Releases, making this step unnecessary.
+
 # Tips
 This section is not directly related to this module, but provides a few line snippets to help you implement your application.
 
@@ -138,19 +151,6 @@ const {default: data} = await import("./data.json", {assert: {type: "json"}});
 </p>
 </details>
 </p>
-
-# Browser Compatible
-Some methods and classes in this module don't use `globalThis.Deno` internally and are browser compatible.
-
-I have prepared browser compatible code only export as [mod.compatible.ts](./mod.compatible.ts).
-
-By bundling this, you can easily create universal utility scripts.
-
-```sh
-deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts > ./simple_utility.esm.js
-```
-
-This section may eventually be automated with GitHub Actions, in which case the bundled scripts will be merged into GitHub Releases, making this step unnecessary.
 
 # API
 See [Deno Document](https://deno.land/x/simple_utility/mod.ts) for details.
