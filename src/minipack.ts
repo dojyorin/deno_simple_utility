@@ -5,7 +5,6 @@ import {ucEncode, ucDecode, hexEncode} from "./text.ts";
 const sizeHash = 32;
 const sizeName = 1;
 const sizeBody = 4;
-const sizeTotal = sizeHash + sizeName + sizeBody;
 
 /**
 * Encode data into a byte array in "minipack" format.
@@ -14,7 +13,7 @@ const sizeTotal = sizeHash + sizeName + sizeBody;
 * @see https://deno.land/x/simple_utility
 */
 export async function minipackEncode(files:FileInit[]){
-    const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeTotal + ucEncode(k).byteLength + v.byteLength, 0));
+    const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeHash + sizeName + sizeBody + ucEncode(k).byteLength + v.byteLength, 0));
 
     let offset = 0;
 
