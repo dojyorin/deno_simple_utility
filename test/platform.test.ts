@@ -1,21 +1,23 @@
 import {assertEquals, dirname, fromFileUrl} from "../deps.test.ts";
-import {isWin, tmpPath, cwdMain} from "../src/platform.ts";
+import {posixSep, isWin, tmpPath, homePath, cwdMain} from "../src/platform.ts";
 
 Deno.test({
     ignore: Deno.build.os !== "windows",
-    name: "Platform: Temporary (Windows)",
+    name: "Platform: Directory (Windows)",
     async fn(){
         assertEquals(isWin(), true);
         assertEquals(tmpPath(), "C:/Windows/Temp");
+        assertEquals(homePath(), posixSep(Deno.env.toObject().USERPROFILE));
     }
 });
 
 Deno.test({
     ignore: Deno.build.os === "windows",
-    name: "Platform: Temporary (Linux & Mac)",
+    name: "Platform: Directory (Linux & Mac)",
     async fn(){
         assertEquals(isWin(), false);
         assertEquals(tmpPath(), "/tmp");
+        assertEquals(homePath(), Deno.env.toObject().HOME);
     }
 });
 
