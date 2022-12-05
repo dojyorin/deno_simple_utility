@@ -86,11 +86,12 @@ const formatted = trimExtend(decoded); // formatted string.
 **Platform Specific**
 
 ```ts
-const posix = posixSep("C:\\Users"); // POSIX style (slash) path string.
-const win = isWin(); // "true" if running on Windows.
+const posix = posixSep("C:\\Users\\Administrator"); // POSIX style (slash) path string.
+const win = winSep("C:/Users/Administrator"); // Windows style (backslash) path string.
+const iswin = isWin(); // "true" if running on Windows.
 const tmp = tmpPath(); // `/tmp` if running on Linux or Mac, `C:/Windows/Temp` if running on Windows.
 const home = homePath(); // `$HOME` if running on Linux or Mac, `%USERPROFILE%` if running on Windows.
-cwdMain(); // Move current directory to `Deno.mainModule`.
+const main = mainPath(); // Returns the directory of `Deno.mainModule`.
 ```
 
 </p>

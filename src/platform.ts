@@ -10,6 +10,15 @@ export function posixSep(path:string){
 }
 
 /**
+* Convert from slash to backslash.
+* @param path POSIX style (slash) path string.
+* @return Windows style (backslash) path string.
+*/
+export function winSep(path:string){
+    return path.replaceAll("/", "\\");
+}
+
+/**
 * Check if it's running on Windows.
 * @return `true` if running on Windows.
 */
@@ -46,8 +55,15 @@ export function homePath(){
 }
 
 /**
-* Move current directory to `Deno.mainModule`.
+* Returns the directory of `Deno.mainModule`.
 */
-export function cwdMain(){
-    Deno.chdir(fromFileUrl(dirname(Deno.mainModule)));
+export function mainPath(){
+    const path = fromFileUrl(dirname(Deno.mainModule));
+
+    switch(Deno.build.os){
+        case "linux": return path;
+        case "darwin": return path;
+        case "windows": return posixSep(path);
+        default: throw new Error();
+    }
 }
