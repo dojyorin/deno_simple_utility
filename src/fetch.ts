@@ -1,4 +1,5 @@
-import {JsonStruct, QueryInit} from "./web.d.ts";
+import {type JsonStruct} from "./core.d.ts";
+import {type QueryInit} from "./web.d.ts";
 
 /**
 * Option to remove `window` from `RequestInit` and add `query` for query string.
