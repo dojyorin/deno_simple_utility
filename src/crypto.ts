@@ -8,26 +8,42 @@ export type PortableCryptoKey = Uint8Array;
 */
 export type PortableCryptoKeyPair = Record<keyof CryptoKeyPair, PortableCryptoKey>;
 
-const sizeKey = 32;
 const sizeTag = 16;
 const sizeIv = 12;
 
-const nameEc = "P-384";
-const nameMac = "SHA-384";
+function generateAesGcmConfig(tag:number, iv:Uint8Array){
+    return <AesGcmParams>{
+        name: "AES-GCM",
+        tagLength: tag * 8,
+        iv: iv
+    };
+}
+
+function generateEcKeyConfig(isECDH:boolean){
+    return <EcKeyAlgorithm>{
+        name: isECDH ? "ECDH" : "ECDSA",
+        namedCurve: "P-521"
+    };
+}
+
+function generateEcDsaConfig(){
+    return <EcdsaParams>{
+        name: "ECDSA",
+        hash: {
+            name: "SHA-512"
+        }
+    };
+}
 
 async function deriveSecretKey(kp:PortableCryptoKeyPair){
-    const ec:EcKeyAlgorithm = {
-        name: "ECDH",
-        namedCurve: nameEc
-    };
+    const ec = generateEcKeyConfig(true);
+    const publicKey = await crypto.subtle.importKey("spki", kp.publicKey, ec, false, []);
+    const privateKey = await crypto.subtle.importKey("pkcs8", kp.privateKey, ec, false, ["deriveKey", "deriveBits"]);
 
     const aes:AesDerivedKeyParams = {
         name: "AES-GCM",
-        length: sizeKey * 8
+        length: 256
     };
-
-    const publicKey = await crypto.subtle.importKey("spki", kp.publicKey, ec, false, []);
-    const privateKey = await crypto.subtle.importKey("pkcs8", kp.privateKey, ec, false, ["deriveKey", "deriveBits"]);
 
     const dh:EcdhKeyDeriveParams = {
         name: "ECDH",
@@ -38,12 +54,20 @@ async function deriveSecretKey(kp:PortableCryptoKeyPair){
 }
 
 /**
+* Returns random UUID.
+* @return random UUID.
+*/
+export function cryptoUuid(){
+    return crypto.randomUUID();
+}
+
+/**
 * Returns random byte array with the specified number of bytes.
 * @param size number of bytes.
 * @return random byte array.
 */
-export async function cryptoRandom(size:number){
-    return await new Promise<Uint8Array>(done => done(crypto.getRandomValues(new Uint8Array(size))));
+export function cryptoRandom(size:number){
+    return crypto.getRandomValues(new Uint8Array(size));
 }
 
 /**
@@ -65,12 +89,7 @@ export async function cryptoHash(is512:boolean, data:Uint8Array){
 */
 export async function cryptoGenerateKey(isECDH:boolean){
     const usage:KeyUsage[] = isECDH ? ["deriveKey", "deriveBits"] : ["sign", "verify"];
-
-    const ec:EcKeyAlgorithm = {
-        name: isECDH ? "ECDH" : "ECDSA",
-        namedCurve: nameEc
-    };
-
+    const ec = generateEcKeyConfig(isECDH);
     const {publicKey, privateKey} = await crypto.subtle.generateKey(ec, true, usage);
 
     return <PortableCryptoKeyPair>{
@@ -87,15 +106,10 @@ export async function cryptoGenerateKey(isECDH:boolean){
 * @return encrypted byte array.
 */
 export async function cryptoEncrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
-    const gcm:AesGcmParams = {
-        name: "AES-GCM",
-        tagLength: sizeTag * 8,
-        iv: await cryptoRandom(sizeIv)
-    };
-
+    const gcm = generateAesGcmConfig(sizeTag, cryptoRandom(sizeIv));
     const secretKey = await deriveSecretKey(kp);
-
     const output = new Uint8Array(sizeTag + sizeIv + data.byteLength);
+
     output.set(<Uint8Array>gcm.iv, 0);
     output.set(new Uint8Array(await crypto.subtle.encrypt(gcm, secretKey, data)), gcm.iv.byteLength);
 
@@ -110,12 +124,7 @@ export async function cryptoEncrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
 * @return byte array.
 */
 export async function cryptoDecrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
-    const gcm:AesGcmParams = {
-        name: "AES-GCM",
-        tagLength: sizeTag * 8,
-        iv: data.subarray(0, sizeIv)
-    };
-
+    const gcm = generateAesGcmConfig(sizeTag, data.subarray(0, sizeIv));
     const secretKey = await deriveSecretKey(kp);
 
     return new Uint8Array(await crypto.subtle.decrypt(gcm, secretKey, data.subarray(sizeIv)));
@@ -128,18 +137,8 @@ export async function cryptoDecrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
 * @return signature byte array.
 */
 export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
-    const ec:EcKeyAlgorithm = {
-        name: "ECDSA",
-        namedCurve: nameEc
-    };
-
-    const dsa:EcdsaParams = {
-        name: "ECDSA",
-        hash: {
-            name: nameMac
-        }
-    };
-
+    const ec = generateEcKeyConfig(false);
+    const dsa = generateEcDsaConfig();
     const privateKey = await crypto.subtle.importKey("pkcs8", k, ec, false, ["sign"]);
 
     return new Uint8Array(await crypto.subtle.sign(dsa, privateKey, data));
@@ -153,18 +152,8 @@ export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
 * @return `true` if correct.
 */
 export async function cryptoVerify(signature:Uint8Array, k:PortableCryptoKey, data:Uint8Array){
-    const ec:EcKeyAlgorithm = {
-        name: "ECDSA",
-        namedCurve: nameEc
-    };
-
-    const dsa:EcdsaParams = {
-        name: "ECDSA",
-        hash: {
-            name: nameMac
-        }
-    };
-
+    const ec = generateEcKeyConfig(false);
+    const dsa = generateEcDsaConfig();
     const publicKey = await crypto.subtle.importKey("spki", k, ec, false, ["verify"]);
 
     return await crypto.subtle.verify(dsa, publicKey, signature, data);
