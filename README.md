@@ -25,7 +25,7 @@ const decoded = base64Decode(encoded); // Restored.
 ```ts
 const file = await Deno.readFile("/path/to/binary.bin");
 
-const random = await cryptoRandom(16); // random byte array.
+const random = cryptoRandom(16); // random byte array.
 const hash = await cryptoHash(true, file); // byte array of SHA2 512 bits hash value.
 const keyEcdh = await cryptoGenerateKey(true); // public/private key pair for ECDH, each in byte array.
 const keyEcdsa = await cryptoGenerateKey(false); // public/private key pair for ECDSA, each in byte array.
@@ -132,7 +132,7 @@ I have prepared browser compatible code only export as [mod.compatible.ts](./mod
 By bundling this, you can easily create universal utility scripts.
 
 ```sh
-deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts > ./simple_utility.esm.js
+deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts > ./simple_utility.js
 ```
 
 This section may eventually be automated with GitHub Actions, in which case the bundled scripts will be merged into GitHub Releases, making this step unnecessary.

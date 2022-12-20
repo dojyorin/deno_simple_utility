@@ -47,9 +47,9 @@ export function homePath(){
     const {HOME, USERPROFILE} = Deno.env.toObject();
 
     switch(Deno.build.os){
-        case "linux": return `${HOME}`;
-        case "darwin": return `${HOME}`;
-        case "windows": return posixSep(`${USERPROFILE}`);
+        case "linux": return HOME;
+        case "darwin": return HOME;
+        case "windows": return posixSep(USERPROFILE);
         default: throw new Error();
     }
 }
