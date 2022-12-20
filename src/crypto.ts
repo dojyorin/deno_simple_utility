@@ -54,6 +54,14 @@ async function deriveSecretKey(kp:PortableCryptoKeyPair){
 }
 
 /**
+* Returns random UUID.
+* @return random UUID.
+*/
+export function cryptoUuid(){
+    return crypto.randomUUID();
+}
+
+/**
 * Returns random byte array with the specified number of bytes.
 * @param size number of bytes.
 * @return random byte array.

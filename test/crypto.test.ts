@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {cryptoRandom, cryptoHash, cryptoGenerateKey, cryptoEncrypt, cryptoDecrypt, cryptoSign, cryptoVerify} from "../src/crypto.ts";
+import {cryptoUuid, cryptoRandom, cryptoHash, cryptoGenerateKey, cryptoEncrypt, cryptoDecrypt, cryptoSign, cryptoVerify} from "../src/crypto.ts";
 
 const sample = new Uint8Array([0x02, 0xF2, 0x5D, 0x1F, 0x1C, 0x34, 0xB9, 0x2F]);
 
@@ -13,6 +13,15 @@ const hashResult = new Uint8Array([
     0x02, 0xFD, 0xB1, 0xC0, 0x9C, 0xCA, 0x1D, 0xD2,
     0x0D, 0xE6, 0x31, 0xDA, 0x4B, 0xBD, 0xD4, 0x58
 ]);
+
+Deno.test({
+    name: "Crypto: UUID",
+    fn(){
+        const uuid = cryptoUuid();
+
+        assertEquals(uuid.length, 36);
+    }
+});
 
 Deno.test({
     name: "Crypto: Random",
