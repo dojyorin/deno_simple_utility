@@ -8,5 +8,4 @@ export * from "./src/text.ts";
 
 export * from "./src/platform.ts";
 
-export * from "./src/core.d.ts";
-export * from "./src/web.d.ts";
+export * from "./src/type.d.ts";

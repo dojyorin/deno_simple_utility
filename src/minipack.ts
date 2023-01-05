@@ -1,10 +1,14 @@
-import {type FileInit} from "./core.d.ts";
 import {cryptoHash} from "./crypto.ts";
 import {ucEncode, ucDecode, hexEncode} from "./text.ts";
 
 const sizeHash = 32;
 const sizeName = 1;
 const sizeBody = 4;
+
+/**
+* The file name and byte array pairs that make up the basic file.
+*/
+export type FileInit = [string, Uint8Array];
 
 /**
 * Encode data into a byte array in "minipack" format.
