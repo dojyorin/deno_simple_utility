@@ -56,6 +56,7 @@ export function homePath(){
 
 /**
 * Returns the directory of `Deno.mainModule`.
+* @return entry point path.
 */
 export function mainPath(){
     const path = fromFileUrl(dirname(Deno.mainModule));

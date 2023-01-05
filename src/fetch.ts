@@ -1,5 +1,9 @@
-import {type JsonStruct} from "./core.d.ts";
-import {type QueryInit} from "./web.d.ts";
+import {type JsonStruct} from "./type.d.ts";
+
+/**
+* Possible input types for `URLSearchParams`.
+*/
+export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
 
 /**
 * Option to remove `window` from `RequestInit` and add `query` for query string.
