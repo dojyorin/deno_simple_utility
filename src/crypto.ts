@@ -131,7 +131,7 @@ export async function cryptoDecrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
 }
 
 /**
-* Create byte array signature using the private key and SHA384 hash algorithm.
+* Create byte array signature using the private key and SHA2 hash algorithm.
 * @param k private key.
 * @param data byte array.
 * @return signature byte array.
@@ -145,7 +145,7 @@ export async function cryptoSign(k:PortableCryptoKey, data:Uint8Array){
 }
 
 /**
-* Verifies the correct signature of a byte array using the public key and SHA384 hash algorithm.
+* Verifies the correct signature of a byte array using the public key and SHA2 hash algorithm.
 * @param signature signature byte array.
 * @param k public key.
 * @param data byte array.
