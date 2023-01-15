@@ -1,5 +1,5 @@
 import {cryptoHash} from "./crypto.ts";
-import {ucEncode, ucDecode, hexEncode} from "./text.ts";
+import {utfEncode, utfDecode, hexEncode} from "./text.ts";
 
 const sizeHash = 32;
 const sizeName = 1;
@@ -17,12 +17,12 @@ export type FileInit = [string, Uint8Array];
 * @see https://deno.land/x/simple_utility
 */
 export async function minipackEncode(files:FileInit[]){
-    const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeHash + sizeName + sizeBody + ucEncode(k).byteLength + v.byteLength, 0));
+    const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeHash + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
 
     let offset = 0;
 
     for(const [k, v] of files){
-        const name = ucEncode(k);
+        const name = utfEncode(k);
         const body = v;
 
         archive.set(await cryptoHash(false, body), offset);
@@ -64,7 +64,7 @@ export async function minipackDecode(archive:Uint8Array){
         const bs = new DataView(archive.buffer, offset).getUint32(0);
         offset += sizeBody;
 
-        const name = ucDecode(archive.subarray(offset, offset += ns));
+        const name = utfDecode(archive.subarray(offset, offset += ns));
 
         const body = archive.subarray(offset, offset += bs);
 
