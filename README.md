@@ -78,21 +78,26 @@ const decoded = await minipackDecode(encoded); // Restored.
 ```ts
 const text = " Lorem ipsum  \t  dolor \r sit amet.";
 
-const encoded = ucEncode(text); // byte array in UTF-8 format.
-const decoded = ucDecode(encoded); // Restored.
+const encoded = utfEncode(text); // byte array in UTF-8 format.
+const decoded = utfDecode(encoded); // Restored.
 const hexadecimal = hexEncode(encoded); // HEX string.
 const formatted = trimExtend(decoded); // formatted string.
 ```
 
-**Platform Specific**
+**Path Operation (Deno Only)**
 
 ```ts
 const posix = posixSep("C:\\Users\\Administrator"); // POSIX style (slash) path string.
 const win = winSep("C:/Users/Administrator"); // Windows style (backslash) path string.
-const iswin = isWin(); // "true" if running on Windows.
 const tmp = tmpPath(); // `/tmp` if running on Linux or Mac, `C:/Windows/Temp` if running on Windows.
 const home = homePath(); // `$HOME` if running on Linux or Mac, `%USERPROFILE%` if running on Windows.
 const main = mainPath(); // Returns the directory of `Deno.mainModule`.
+```
+
+**Platform Specific (Deno Only)**
+
+```ts
+const iswin = isWin(); // "true" if running on Windows.
 ```
 
 </p>
@@ -128,28 +133,12 @@ This is for one file and repeats for the number of files.
 # Browser Compatible
 Some methods and classes in this module don't use `globalThis.Deno` internally and are browser compatible.
 
-I have prepared browser compatible code only export as [mod.compatible.ts](./mod.compatible.ts).
+I have prepared browser compatible code only export as [mod.universal.ts](./mod.universal.ts).
 
 By bundling this, you can easily create universal utility scripts.
 
 ```sh
-deno bundle https://deno.land/x/simple_utility@(version)/mod.compatible.ts > ./simple_utility.js
-```
-
-This section may eventually be automated with GitHub Actions, in which case the bundled scripts will be merged into GitHub Releases, making this step unnecessary.
-
-# Tips
-This section is not directly related to this module, but provides a few line snippets to help you implement your application.
-
-<p>
-<details>
-<summary>Show more details...</summary>
-<p>
-
-**JSON Import with Type**
-
-```ts
-const {default: data} = await import("./data.json", {assert: {type: "json"}});
+deno bundle https://deno.land/x/simple_utility@(version)/mod.universal.ts > ./simple_utility.js
 ```
 
 </p>
