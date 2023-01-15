@@ -3,7 +3,7 @@
 * @param data unicode string.
 * @return byte array in UTF-8 format.
 */
-export function ucEncode(data:string){
+export function utfEncode(data:string){
     return new TextEncoder().encode(data);
 }
 
@@ -12,7 +12,7 @@ export function ucEncode(data:string){
 * @param data byte array in UTF-8 format.
 * @return unicode string.
 */
-export function ucDecode(data:Uint8Array){
+export function utfDecode(data:Uint8Array){
     return new TextDecoder().decode(data);
 }
 
