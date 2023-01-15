@@ -1,8 +1,8 @@
 import {assertEquals, dirname, fromFileUrl} from "../deps.test.ts";
-import {posixSep, winSep, isWin, tmpPath, homePath, mainPath} from "../src/platform.ts";
+import {posixSep, winSep, tmpPath, homePath, mainPath} from "../src/path.deno.ts";
 
 Deno.test({
-    name: "Platform: Separator.",
+    name: "Path: Separator",
     async fn(){
         const samplePosix = "C:/Windows/System32/cmd.exe";
         const sampleWin = "C:\\Windows\\System32\\cmd.exe";
@@ -14,9 +14,8 @@ Deno.test({
 
 Deno.test({
     ignore: Deno.build.os !== "windows",
-    name: "Platform: Directory (Windows)",
+    name: "Path: Windows",
     async fn(){
-        assertEquals(isWin(), true);
         assertEquals(tmpPath(), "C:/Windows/Temp");
         assertEquals(homePath(), posixSep(Deno.env.toObject().USERPROFILE));
         assertEquals(mainPath(), posixSep(fromFileUrl(dirname(Deno.mainModule))));
@@ -25,9 +24,8 @@ Deno.test({
 
 Deno.test({
     ignore: Deno.build.os === "windows",
-    name: "Platform: Directory (Linux & Mac)",
+    name: "Path: Posix",
     async fn(){
-        assertEquals(isWin(), false);
         assertEquals(tmpPath(), "/tmp");
         assertEquals(homePath(), Deno.env.toObject().HOME);
         assertEquals(mainPath(), fromFileUrl(dirname(Deno.mainModule)));

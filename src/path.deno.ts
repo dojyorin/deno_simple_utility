@@ -19,14 +19,6 @@ export function winSep(path:string){
 }
 
 /**
-* Check if it's running on Windows.
-* @return `true` if running on Windows.
-*/
-export function isWin(){
-    return Deno.build.os === "windows";
-}
-
-/**
 * Returns the system wide temporary directory path for each platform.
 * @return `/tmp` if running on Linux or Mac, `C:/Windows/Temp` if running on Windows.
 */
