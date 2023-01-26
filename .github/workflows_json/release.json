@@ -22,17 +22,14 @@
                 "name": "install esbuild",
                 "run": "curl -L `curl -L https://esbuild.github.io/dl/latest | grep -o -E 'https:.+?linux-x64.+?-[0-9]+\\.[0-9]+\\.[0-9]+\\.tgz'` | tar x -z --strip-components 2"
             }, {
-                "name": "bundle deno module",
-                "run": "deno bundle ./mod.ts | ./esbuild --minify | head -c -1 > ./deno.min.js"
-            }, {
                 "name": "bundle universal module",
-                "run": "deno bundle ./mod.universal.ts | ./esbuild --minify | head -c -1 > ./universal.min.js"
+                "run": "deno bundle ./mod.universal.ts | ./esbuild --minify | head -c -1 > ./mod.universal.min.js"
             }, {
                 "name": "dispatch release",
                 "uses": "softprops/action-gh-release@v1",
                 "with": {
                     "generate_release_notes": true,
-                    "files": "./deno.min.js\n./universal.min.js"
+                    "files": "./mod.universal.min.js"
                 }
             }]
         }
