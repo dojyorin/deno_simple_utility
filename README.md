@@ -36,16 +36,6 @@ const signature = await cryptoSign(keyEcdsa.privateKey, data); // signature byte
 const verify = await cryptoVerify(signature, keyEcdsa.publicKey, data); // `true` if correct.
 ```
 
-**Date UnixTime**
-
-```ts
-const date = new Date();
-
-const encoded = dateEncode(date); // unixtime in seconds.
-const decoded = dateDecode(encoded); // Restored.
-const unixtime = dateParse(date.toISOString()); // unixtime in seconds.
-```
-
 **DEFLATE Compress**
 
 ```ts
@@ -82,6 +72,16 @@ const encoded = utfEncode(text); // byte array in UTF-8 format.
 const decoded = utfDecode(encoded); // Restored.
 const hexadecimal = hexEncode(encoded); // HEX string.
 const formatted = trimExtend(decoded); // formatted string.
+```
+
+**UnixTime Date**
+
+```ts
+const date = new Date();
+
+const encoded = unixtimeEncode(date); // unixtime in seconds.
+const decoded = unixtimeDecode(encoded); // Restored.
+const unixtime = unixtimeParse(date.toISOString()); // unixtime in seconds.
 ```
 
 **Path Operation (Deno Only)**
