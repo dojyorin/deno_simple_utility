@@ -99,8 +99,7 @@ export async function cryptoGenerateKey(isECDH:boolean){
 }
 
 /**
-* Encrypt byte array using AES-GCM with 256 bits key, 128 bits tag and 96 bits IV.
-* The IV is prepended to the byte array.
+* Encrypt byte array using AES, the IV is prepended to the byte array.
 * @param kp public/private key pair, each in byte array.
 * @param data byte array.
 * @return encrypted byte array.
@@ -117,8 +116,7 @@ export async function cryptoEncrypt(kp:PortableCryptoKeyPair, data:Uint8Array){
 }
 
 /**
-* Decrypt encrypted byte array using AES-GCM with 256 bits key 128 bits tag and 96 bits IV.
-* Read the IV prepended to the byte array.
+* Decrypt encrypted byte array using AES, read the IV prepended to the byte array.
 * @param kp public/private key pair, each in byte array.
 * @param data encrypted byte array.
 * @return byte array.
