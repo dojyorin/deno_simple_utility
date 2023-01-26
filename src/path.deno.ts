@@ -32,6 +32,19 @@ export function tmpPath(){
 }
 
 /**
+* Returns the system wide application data directory path for each platform.
+* @return `/var` if running on Linux or Mac, `C:/ProgramData` if running on Windows.
+*/
+export function dataPath(){
+    switch(Deno.build.os){
+        case "linux": return "/var";
+        case "darwin": return  "/var";
+        case "windows": return "C:/ProgramData";
+        default: throw new Error();
+    }
+}
+
+/**
 * Returns the system wide user directory path for each platform.
 * @return `$HOME` if running on Linux or Mac, `%USERPROFILE%` if running on Windows.
 */
