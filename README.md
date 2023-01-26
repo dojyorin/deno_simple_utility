@@ -90,6 +90,7 @@ const unixtime = unixtimeParse(date.toISOString()); // unixtime in seconds.
 const posix = posixSep("C:\\Users\\Administrator"); // POSIX style (slash) path string.
 const win = winSep("C:/Users/Administrator"); // Windows style (backslash) path string.
 const tmp = tmpPath(); // `/tmp` if running on Linux or Mac, `C:/Windows/Temp` if running on Windows.
+const data = dataPath(); // `/var` if running on Linux or Mac, `C:/ProgramData` if running on Windows.
 const home = homePath(); // `$HOME` if running on Linux or Mac, `%USERPROFILE%` if running on Windows.
 const main = mainPath(); // Returns the directory of `Deno.mainModule`.
 ```
