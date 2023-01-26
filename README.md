@@ -136,11 +136,7 @@ Some methods and classes in this module don't use `globalThis.Deno` internally a
 
 I have prepared browser compatible code only export as [mod.universal.ts](./mod.universal.ts).
 
-By bundling this, you can easily create universal utility scripts.
-
-```sh
-deno bundle https://deno.land/x/simple_utility@(version)/mod.universal.ts > ./simple_utility.js
-```
+You can get bundled script in [releases](https://github.com/dojyorin/deno_simple_utility/releases).
 
 </p>
 </details>
