@@ -16,8 +16,8 @@ A handy utility collection.
 ```ts
 const file = await Deno.readFile("/path/to/binary.bin");
 
-const encoded = base64Encode(file); // base64 code.
-const decoded = base64Decode(encoded); // Restored.
+const base64text = base64Encode(file);
+const binary = base64Decode(base64text);
 ```
 
 **Easy WebCrypto**
@@ -25,15 +25,15 @@ const decoded = base64Decode(encoded); // Restored.
 ```ts
 const file = await Deno.readFile("/path/to/binary.bin");
 
-const uuid = cryptoUuid(); // random UUID.
-const random = cryptoRandom(16); // random byte array.
-const hash = await cryptoHash(true, file); // byte array of SHA2 512 bits hash value.
-const keyEcdh = await cryptoGenerateKey(true); // public/private key pair for ECDH, each in byte array.
-const keyEcdsa = await cryptoGenerateKey(false); // public/private key pair for ECDSA, each in byte array.
-const encrypted = await cryptoEncrypt(keyEcdh, file); // encrypted byte array.
-const decrypted = await cryptoDecrypt(keyEcdh, encrypted); // Restored.
-const signature = await cryptoSign(keyEcdsa.privateKey, data); // signature byte array.
-const verify = await cryptoVerify(signature, keyEcdsa.publicKey, data); // `true` if correct.
+const uuid = cryptoUuid();
+const random = cryptoRandom(16);
+const hash = await cryptoHash(true, file);
+const keyEcdh = await cryptoGenerateKey(true);
+const keyEcdsa = await cryptoGenerateKey(false);
+const encrypted = await cryptoEncrypt(keyEcdh, file);
+const decrypted = await cryptoDecrypt(keyEcdh, encrypted);
+const signature = await cryptoSign(keyEcdsa.privateKey, data);
+const verify = await cryptoVerify(signature, keyEcdsa.publicKey, data);
 ```
 
 **DEFLATE Compress**
@@ -41,15 +41,15 @@ const verify = await cryptoVerify(signature, keyEcdsa.publicKey, data); // `true
 ```ts
 const file = await Deno.readFile("/path/to/binary.bin");
 
-const encoded = await deflateEncode(file); // "deflate" compressed byte array.
-const decoded = await deflateDecode(encoded); // Restored.
+const deflated = await deflateEncode(file);
+const inflated = await deflateDecode(deflated);
 ```
 
 **Extended Fetch API**
 
 ```ts
-const json = await fetchExtend("https://path/to/get", "json"); // response as JSON.
-const bytes = await fetchExtend("https://path/to/get", "byte"); // response as Uint8Array.
+const json = await fetchExtend("https://path/to/get", "json");
+const binary = await fetchExtend("https://path/to/get", "byte");
 ```
 
 **Minipack Archive**
@@ -59,8 +59,8 @@ const files = [
     ["binary.bin", Deno.readFileSync("/path/to/binary.bin")]
 ];
 
-const encoded = await minipackEncode(files); // byte array in "minipack" format.
-const decoded = await minipackDecode(encoded); // Restored.
+const packed = await minipackEncode(files);
+const unpacked = await minipackDecode(packed);
 ```
 
 **Text Convert**
@@ -68,37 +68,36 @@ const decoded = await minipackDecode(encoded); // Restored.
 ```ts
 const text = " Lorem ipsum  \t  dolor \r sit amet.";
 
-const encoded = utfEncode(text); // byte array in UTF-8 format.
-const decoded = utfDecode(encoded); // Restored.
-const hexadecimal = hexEncode(encoded); // HEX string.
-const formatted = trimExtend(decoded); // formatted string.
+const binary1 = utfEncode(text);
+const original = utfDecode(binary1);
+const hextext = hexEncode(binary1);
+const binary2 = hexDecode(hextext);
+const formatted = trimExtend(text);
 ```
 
 **UnixTime Date**
 
 ```ts
-const date = new Date();
-
-const encoded = unixtimeEncode(date); // unixtime in seconds.
-const decoded = unixtimeDecode(encoded); // Restored.
-const unixtime = unixtimeParse(date.toISOString()); // unixtime in seconds.
+const time1 = unixtimeEncode();
+const date = unixtimeDecode(time1);
+const time2 = unixtimeParse(date.toISOString());
 ```
 
 **Path Operation (Deno Only)**
 
 ```ts
-const posix = posixSep("C:\\Users\\Administrator"); // POSIX style (slash) path string.
-const win = winSep("C:/Users/Administrator"); // Windows style (backslash) path string.
-const tmp = tmpPath(); // `/tmp` if running on Linux or Mac, `C:/Windows/Temp` if running on Windows.
-const data = dataPath(); // `/var` if running on Linux or Mac, `C:/ProgramData` if running on Windows.
-const home = homePath(); // `$HOME` if running on Linux or Mac, `%USERPROFILE%` if running on Windows.
-const main = mainPath(); // Returns the directory of `Deno.mainModule`.
+const slash = unixSep("C:\\Users\\Administrator");
+const backslash = windowsSep("C:/Users/Administrator");
+const tmpdir = tmpPath();
+const datadir = dataPath();
+const homedir = homePath();
+const maindir = mainPath();
 ```
 
 **Platform Specific (Deno Only)**
 
 ```ts
-const iswin = isWin(); // "true" if running on Windows.
+const iswindows = isWindows();
 ```
 
 </p>
