@@ -26,6 +26,15 @@ export function hexEncode(data:Uint8Array){
 }
 
 /**
+* Convert from HEX string to byte array.
+* @param data HEX string.
+* @return byte array.
+*/
+export function hexDecode(data:string){
+    return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(s => parseInt(s, 16)) ?? []);
+}
+
+/**
 * In addition to leading and trailing spaces, tabs, carriage returns, and two or more consecutive spaces are converted to a single space.
 * @param data messy string.
 * @return formatted string.
