@@ -1,14 +1,14 @@
 import {assertEquals, dirname, fromFileUrl} from "../deps.test.ts";
-import {posixSep, winSep, tmpPath, dataPath, homePath, mainPath} from "../src/path.deno.ts";
+import {unixSep, windowsSep, tmpPath, dataPath, homePath, mainPath} from "../src/path.deno.ts";
 
 Deno.test({
     name: "Path: Separator",
     async fn(){
-        const samplePosix = "C:/Windows/System32/cmd.exe";
-        const sampleWin = "C:\\Windows\\System32\\cmd.exe";
+        const sampleUnix = "C:/Windows/System32/cmd.exe";
+        const sampleWindows = "C:\\Windows\\System32\\cmd.exe";
 
-        assertEquals(posixSep(sampleWin), samplePosix);
-        assertEquals(winSep(samplePosix), sampleWin);
+        assertEquals(unixSep(sampleWindows), sampleUnix);
+        assertEquals(windowsSep(sampleUnix), sampleWindows);
     }
 });
 
@@ -18,14 +18,14 @@ Deno.test({
     async fn(){
         assertEquals(tmpPath(), "C:/Windows/Temp");
         assertEquals(dataPath(), "C:/ProgramData");
-        assertEquals(homePath(), posixSep(Deno.env.toObject().USERPROFILE));
-        assertEquals(mainPath(), posixSep(fromFileUrl(dirname(Deno.mainModule))));
+        assertEquals(homePath(), unixSep(Deno.env.toObject().USERPROFILE));
+        assertEquals(mainPath(), unixSep(fromFileUrl(dirname(Deno.mainModule))));
     }
 });
 
 Deno.test({
     ignore: Deno.build.os === "windows",
-    name: "Path: Linux and Mac",
+    name: "Path: Unix",
     async fn(){
         assertEquals(tmpPath(), "/tmp");
         assertEquals(dataPath(), "/var");

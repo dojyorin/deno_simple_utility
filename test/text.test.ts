@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {utfEncode, utfDecode, hexEncode, trimExtend} from "../src/text.ts";
+import {utfEncode, utfDecode, hexEncode, hexDecode, trimExtend} from "../src/text.ts";
 
 const sample = "  Lorem ipsum\r dolor   sit \t  amet. ";
 const sampleHEX = "20204C6F72656D20697073756D0D20646F6C6F7220202073697420092020616D65742E20";
@@ -37,6 +37,15 @@ Deno.test({
         const result = hexEncode(sampleUTF8);
 
         assertEquals(result, sampleHEX);
+    }
+});
+
+Deno.test({
+    name: "Text: HEX Decode",
+    async fn(){
+        const result = hexDecode(sampleHEX);
+
+        assertEquals(result, sampleUTF8);
     }
 });
 
