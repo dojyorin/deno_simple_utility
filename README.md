@@ -73,6 +73,7 @@ const original = utfDecode(binary1);
 const hextext = hexEncode(binary1);
 const binary2 = hexDecode(hextext);
 const formatted = trimExtend(text);
+const emojis = accurateSegment("😄😁😆😅😂");
 ```
 
 **UnixTime Date**

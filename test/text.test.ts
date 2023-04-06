@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {utfEncode, utfDecode, hexEncode, hexDecode, trimExtend} from "../src/text.ts";
+import {utfEncode, utfDecode, hexEncode, hexDecode, trimExtend, accurateSegment} from "../src/text.ts";
 
 const sample = "  Lorem ipsum\r dolor   sit \t  amet. ";
 const sampleHEX = "20204C6F72656D20697073756D0D20646F6C6F7220202073697420092020616D65742E20";
@@ -55,5 +55,14 @@ Deno.test({
         const result = trimExtend(sample);
 
         assertEquals(result, encodeResult);
+    }
+});
+
+Deno.test({
+    name: "Text: Segment",
+    async fn(){
+        const result = accurateSegment("😄😁😆😅😂");
+
+        assertEquals(result.length, 5);
     }
 });
