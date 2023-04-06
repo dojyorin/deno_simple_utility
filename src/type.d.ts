@@ -1,7 +1,7 @@
 /**
 * Possible types of JSON.
 */
-export type JsonStruct = string | number | boolean | null | JsonStruct[] | {[key in string]: JsonStruct};
+export type JsonStruct = string | number | boolean | null | JsonStruct[] | {[key: string]: JsonStruct};
 
 /**
 * ECMAScript primitive types.
