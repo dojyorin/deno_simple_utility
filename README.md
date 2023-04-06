@@ -1,6 +1,6 @@
 # **Simple Utility for Deno**
-![Actions-Test](https://github.com/dojyorin/deno_simple_utility/actions/workflows/test.yaml/badge.svg)
-![Actions-Release](https://github.com/dojyorin/deno_simple_utility/actions/workflows/release.yaml/badge.svg)
+![actions:test](https://github.com/dojyorin/deno_simple_utility/actions/workflows/test.yaml/badge.svg)
+![actions:release](https://github.com/dojyorin/deno_simple_utility/actions/workflows/release.yaml/badge.svg)
 
 A handy utility collection.
 
