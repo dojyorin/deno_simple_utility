@@ -19,26 +19,26 @@ export type FileInit = [string, Uint8Array];
 export async function minipackEncode(files:FileInit[]){
     const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeHash + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
 
-    let offset = 0;
+    let i = 0;
 
     for(const [k, v] of files){
         const name = utfEncode(k);
         const body = v;
 
-        archive.set(await cryptoHash(false, body), offset);
-        offset += sizeHash;
+        archive.set(await cryptoHash(false, body), i);
+        i += sizeHash;
 
-        new DataView(archive.buffer, offset).setUint8(0, name.byteLength);
-        offset += sizeName;
+        new DataView(archive.buffer, i).setUint8(0, name.byteLength);
+        i += sizeName;
 
-        new DataView(archive.buffer, offset).setUint32(0, body.byteLength);
-        offset += sizeBody;
+        new DataView(archive.buffer, i).setUint32(0, body.byteLength);
+        i += sizeBody;
 
-        archive.set(name, offset);
-        offset += name.byteLength;
+        archive.set(name, i);
+        i += name.byteLength;
 
-        archive.set(body, offset);
-        offset += body.byteLength;
+        archive.set(body, i);
+        i += body.byteLength;
     }
 
     return archive;
@@ -53,20 +53,18 @@ export async function minipackEncode(files:FileInit[]){
 export async function minipackDecode(archive:Uint8Array){
     const files:FileInit[] = [];
 
-    let offset = 0;
+    for(let i = 0; i < archive.byteLength; false){
+        const hash = archive.subarray(i, i += sizeHash);
 
-    while(offset < archive.byteLength){
-        const hash = archive.subarray(offset, offset += sizeHash);
+        const ns = new DataView(archive.buffer, i).getUint8(0);
+        i += sizeName;
 
-        const ns = new DataView(archive.buffer, offset).getUint8(0);
-        offset += sizeName;
+        const bs = new DataView(archive.buffer, i).getUint32(0);
+        i += sizeBody;
 
-        const bs = new DataView(archive.buffer, offset).getUint32(0);
-        offset += sizeBody;
+        const name = utfDecode(archive.subarray(i, i += ns));
 
-        const name = utfDecode(archive.subarray(offset, offset += ns));
-
-        const body = archive.subarray(offset, offset += bs);
+        const body = archive.subarray(i, i += bs);
 
         if(hexEncode(hash) !== hexEncode(await cryptoHash(false, body))){
             throw new Error();
