@@ -117,17 +117,16 @@ It's structure is inspired by the famous "tar" and is minimal as an archive.
 
 Originally developed for web browser, the purpose was to aggregate multiple files input with the HTML File API into a single binary.
 
-Therefore, there is no concept of directory or filesystem, and it's feature by simple structure that stores only the file body, file name, and hash value for verification.
+Therefore, there is no concept of directory or filesystem, and it's feature by simple structure that stores only the file body and file name.
 
 The actual binary structure looks like this:
 
 |Index|Type|Title|Size (Byte)|
 |:--|:--|:--|:--|
-|1|Header|HashValue|32|
-|2|Header|NameSize|1|
-|3|Header|BodySize|4|
-|4|Body|FileName|Max 255 (Defined in NameSize)|
-|5|Body|FileBody|Max 4294967295 (Defined in BodySize)|
+|1|Header|NameSize|1|
+|2|Header|BodySize|4|
+|3|Body|FileName|Max 255 (Defined in NameSize)|
+|4|Body|FileBody|Max 4294967295 (Defined in BodySize)|
 
 This is for one file and repeats for the number of files.
 
