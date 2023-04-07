@@ -1,7 +1,5 @@
-import {cryptoHash} from "./crypto.ts";
-import {utfEncode, utfDecode, hexEncode} from "./text.ts";
+import {utfEncode, utfDecode} from "./text.ts";
 
-const sizeHash = 32;
 const sizeName = 1;
 const sizeBody = 4;
 
@@ -17,28 +15,25 @@ export type FileInit = [string, Uint8Array];
 * @see https://deno.land/x/simple_utility
 */
 export async function minipackEncode(files:FileInit[]){
-    const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeHash + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
+    const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
 
-    let offset = 0;
+    let i = 0;
 
     for(const [k, v] of files){
         const name = utfEncode(k);
         const body = v;
 
-        archive.set(await cryptoHash(false, body), offset);
-        offset += sizeHash;
+        new DataView(archive.buffer, i).setUint8(0, name.byteLength);
+        i += sizeName;
 
-        new DataView(archive.buffer, offset).setUint8(0, name.byteLength);
-        offset += sizeName;
+        new DataView(archive.buffer, i).setUint32(0, body.byteLength);
+        i += sizeBody;
 
-        new DataView(archive.buffer, offset).setUint32(0, body.byteLength);
-        offset += sizeBody;
+        archive.set(name, i);
+        i += name.byteLength;
 
-        archive.set(name, offset);
-        offset += name.byteLength;
-
-        archive.set(body, offset);
-        offset += body.byteLength;
+        archive.set(body, i);
+        i += body.byteLength;
     }
 
     return archive;
@@ -53,24 +48,15 @@ export async function minipackEncode(files:FileInit[]){
 export async function minipackDecode(archive:Uint8Array){
     const files:FileInit[] = [];
 
-    let offset = 0;
+    for(let i = 0; i < archive.byteLength; false){
+        const ns = new DataView(archive.buffer, i).getUint8(0);
+        i += sizeName;
 
-    while(offset < archive.byteLength){
-        const hash = archive.subarray(offset, offset += sizeHash);
+        const bs = new DataView(archive.buffer, i).getUint32(0);
+        i += sizeBody;
 
-        const ns = new DataView(archive.buffer, offset).getUint8(0);
-        offset += sizeName;
-
-        const bs = new DataView(archive.buffer, offset).getUint32(0);
-        offset += sizeBody;
-
-        const name = utfDecode(archive.subarray(offset, offset += ns));
-
-        const body = archive.subarray(offset, offset += bs);
-
-        if(hexEncode(hash) !== hexEncode(await cryptoHash(false, body))){
-            throw new Error();
-        }
+        const name = utfDecode(archive.subarray(i, i += ns));
+        const body = archive.subarray(i, i += bs);
 
         files.push([name, body]);
     }

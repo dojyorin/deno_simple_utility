@@ -42,3 +42,12 @@ export function hexDecode(data:string){
 export function trimExtend(data:string){
     return data.trim().replace(/\r/g, "").replace(/\t/g, " ").replace(/ +/g, " ").replace(/ +$/mg, "");
 }
+
+/**
+* Accurately count Unicode above `0x010000` and array them character by character.
+* @param data any string.
+* @return Array of one character.
+*/
+export function accurateSegment(data:string){
+    return [...new Intl.Segmenter().segment(data)].map(({segment}) => segment);
+}

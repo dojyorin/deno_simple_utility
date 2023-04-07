@@ -1,4 +1,4 @@
-import {type JsonStruct} from "./type.d.ts";
+import {type JsonStruct} from "./core.d.ts";
 
 /**
 * Possible input types for `URLSearchParams`.
