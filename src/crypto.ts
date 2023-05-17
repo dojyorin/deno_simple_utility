@@ -4,7 +4,7 @@
 export type PortableCryptoKey = Uint8Array;
 
 /**
-* `PortableCryptoKey` pair.
+* After exporting public key pair.
 */
 export type PortableCryptoKeyPair = Record<keyof CryptoKeyPair, PortableCryptoKey>;
 
@@ -46,16 +46,16 @@ async function deriveSecretKey({publicKey, privateKey}:PortableCryptoKeyPair){
 /**
 * Generate UUIDv4 string.
 * @example
-* const uuid = cryptoUuid(); // "xxxxxxxx-xxxx-4xxx-(89AB)xxx-xxxxxxxxxxxx"
+* const uuid = cryptoUuid();
 */
 export function cryptoUuid(){
     return crypto.randomUUID();
 }
 
 /**
-* Generate random number byte array with the specified number of bytes.
+* Generate random number byte array with specified number of bytes.
 * @example
-* const random = cryptoRandom(16); // Output 16 bytes.
+* const random = cryptoRandom(16);
 */
 export function cryptoRandom(n:number){
     return crypto.getRandomValues(new Uint8Array(n));
@@ -64,17 +64,17 @@ export function cryptoRandom(n:number){
 /**
 * Derive SHA2 hash value from byte array.
 * @example
-* const hash = await cryptoHash(256, await Deno.readFile("/path/to/file"));
+* const hash = await cryptoHash(256, await Deno.readFile("./file"));
 */
 export async function cryptoHash(bit:256|384|512, data:Uint8Array){
     return new Uint8Array(await crypto.subtle.digest(`SHA-${bit}`, data));
 }
 
 /**
-* Generate and export public/private key pair as a portable byte array.
+* Generate and export public key pair.
 * @example
-* const keyForECDH = await cryptoGenerateKey(true); // Key for ECDH.
-* const keyForECDSA = await cryptoGenerateKey(false); // Key for ECDSA.
+* const keyForECDH = await cryptoGenerateKey(true);
+* const keyForECDSA = await cryptoGenerateKey(false);
 */
 export async function cryptoGenerateKey(isECDH:boolean):Promise<PortableCryptoKeyPair>{
     const {publicKey, privateKey} = await crypto.subtle.generateKey(isECDH ? dhKey : dsaKey, true, isECDH ? ["deriveKey", "deriveBits"] : ["sign", "verify"]);
@@ -86,14 +86,15 @@ export async function cryptoGenerateKey(isECDH:boolean):Promise<PortableCryptoKe
 }
 
 /**
-* Encrypt byte array using AES, the IV is prepended to the byte array.
+* Encrypt data using AES.
+* IV is prepended to the result.
 * @example
 * const key1 = await cryptoGenerateKey(true);
 * const key2 = await cryptoGenerateKey(true);
 * const encrypt = await cryptoEncrypt({
 *     publicKey: key1.publicKey,
 *     privateKey: key2.privateKey
-* }, await Deno.readFile("/path/to/file"));
+* }, await Deno.readFile("./file"));
 * const decrypt = await cryptoDecrypt({
 *     publicKey: key2.publicKey,
 *     privateKey: key1.privateKey
@@ -109,14 +110,15 @@ export async function cryptoEncrypt({publicKey, privateKey}:PortableCryptoKeyPai
 }
 
 /**
-* Decrypt encrypted byte array using AES, read the IV prepended to the byte array.
+* Decrypt data using AES.
+* Read IV prepended to the data.
 * @example
 * const key1 = await cryptoGenerateKey(true);
 * const key2 = await cryptoGenerateKey(true);
 * const encrypt = await cryptoEncrypt({
 *     publicKey: key1.publicKey,
 *     privateKey: key2.privateKey
-* }, await Deno.readFile("/path/to/file"));
+* }, await Deno.readFile("./file"));
 * const decrypt = await cryptoDecrypt({
 *     publicKey: key2.publicKey,
 *     privateKey: key1.privateKey
@@ -129,9 +131,9 @@ export async function cryptoDecrypt({publicKey, privateKey}:PortableCryptoKeyPai
 }
 
 /**
-* Create byte array signature using the private key and SHA2 hash algorithm.
+* Create signature using the private key.
 * @example
-* const file = await Deno.readFile("/path/to/file");
+* const file = await Deno.readFile("./file");
 * const key = await cryptoGenerateKey(false);
 * const signature = await cryptoSign(key.privateKey, file);
 * const result = await cryptoVerify(key.publicKey, signature, file);
@@ -141,9 +143,9 @@ export async function cryptoSign(privateKey:PortableCryptoKey, data:Uint8Array){
 }
 
 /**
-* Verifies the correct signature of a byte array using the public key and SHA2 hash algorithm.
+* Verification the correct signature of data using the public key.
 * @example
-* const file = await Deno.readFile("/path/to/file");
+* const file = await Deno.readFile("./file");
 * const key = await cryptoGenerateKey(false);
 * const signature = await cryptoSign(key.privateKey, file);
 * const result = await cryptoVerify(key.publicKey, signature, file);

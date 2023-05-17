@@ -1,8 +1,10 @@
 import {dirname, fromFileUrl} from "../deps.ts";
-import {isWindows} from "./platform.deno.ts";
+import {isWin} from "./platform.deno.ts";
 
 /**
 * Convert from backslash to slash.
+* @example
+* const path = unixSlash("C:\\file");
 */
 export function unixSlash(path:string){
     return path.replaceAll("\\", "/");
@@ -10,6 +12,8 @@ export function unixSlash(path:string){
 
 /**
 * Convert from slash to backslash.
+* @example
+* const path = windowsSlash("C:/file");
 */
 export function windowsSlash(path:string){
     return path.replaceAll("/", "\\");
@@ -17,32 +21,40 @@ export function windowsSlash(path:string){
 
 /**
 * Returns the system wide temporary directory path for each platform.
+* @example
+* const path = tmpPath();
 */
 export function tmpPath(){
-    return isWindows() ? "C:/Windows/Temp" : "/tmp";
+    return isWin() ? "C:/Windows/Temp" : "/tmp";
 }
 
 /**
 * Returns the system wide application data directory path for each platform.
+* @example
+* const path = dataPath();
 */
 export function dataPath(){
-    return isWindows() ? "C:/ProgramData" : "/var";
+    return isWin() ? "C:/ProgramData" : "/var";
 }
 
 /**
 * Returns the system wide user directory path for each platform.
+* @example
+* const path = homePath();
 */
 export function homePath(){
     const {HOME, USERPROFILE} = Deno.env.toObject();
 
-    return isWindows() ? unixSlash(USERPROFILE) : HOME;
+    return isWin() ? unixSlash(USERPROFILE) : HOME;
 }
 
 /**
 * Returns the directory of `Deno.mainModule`.
+* @example
+* const path = mainPath();
 */
 export function mainPath(){
     const path = fromFileUrl(dirname(Deno.mainModule));
 
-    return isWindows() ? unixSlash(path) : path;
+    return isWin() ? unixSlash(path) : path;
 }

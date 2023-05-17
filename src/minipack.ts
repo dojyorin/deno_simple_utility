@@ -9,10 +9,16 @@ const sizeBody = 4;
 export type FileInit = [string, Uint8Array];
 
 /**
-* Encode data into a byte array in "minipack" format.
+* Encode files in "minipack" format.
 * @see https://deno.land/x/simple_utility
+* @example
+* const minipack = minipackEncode([
+*     ["file1.txt", await Deno.readFile("./file1")],
+*     ["file2.txt", await Deno.readFile("./file2")]
+* ]);
+* const files = minipackDecode(minipack);
 */
-export async function minipackEncode(files:FileInit[]){
+export function minipackEncode(files:FileInit[]){
     const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
 
     let i = 0;
@@ -41,7 +47,7 @@ export async function minipackEncode(files:FileInit[]){
 * Decode byte array in "minipack" format.
 * @see https://deno.land/x/simple_utility
 */
-export async function minipackDecode(archive:Uint8Array){
+export function minipackDecode(archive:Uint8Array){
     const files:FileInit[] = [];
 
     for(let i = 0; i < archive.byteLength; false){
