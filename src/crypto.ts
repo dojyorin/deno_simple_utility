@@ -8,16 +8,6 @@ export type PortableCryptoKey = Uint8Array;
 */
 export type PortableCryptoKeyPair = Record<keyof CryptoKeyPair, PortableCryptoKey>;
 
-/**
-* Hash length of SHA2 algorithm.
-*/
-export type HashMethod = "SHA-256" | "SHA-384" | "SHA-512";
-
-/**
-* Curve usage, key derivation or signature verification.
-*/
-export type CurveMethod = "ECDH" | "ECDSA";
-
 const sizeIv = 12;
 
 const dhKey = Object.freeze(<EcKeyAlgorithm>{
@@ -74,10 +64,10 @@ export function cryptoRandom(n:number){
 /**
 * Derive SHA2 hash value from byte array.
 * @example
-* const hash = await cryptoHash("SHA-256", await Deno.readFile("/path/to/file"));
+* const hash = await cryptoHash(256, await Deno.readFile("/path/to/file"));
 */
-export async function cryptoHash(type:HashMethod, data:Uint8Array){
-    return new Uint8Array(await crypto.subtle.digest(type, data));
+export async function cryptoHash(bit:256|384|512, data:Uint8Array){
+    return new Uint8Array(await crypto.subtle.digest(`SHA-${bit}`, data));
 }
 
 /**
