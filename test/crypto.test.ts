@@ -67,10 +67,9 @@ Deno.test({
     name: "Crypto: Sign and Verify",
     async fn(){
         const key = await cryptoGenerateKey(false);
-
         const signature = await cryptoSign(key.privateKey, sample);
-        const verify = await cryptoVerify(signature, key.publicKey, sample);
+        const result = await cryptoVerify(key.publicKey, signature, sample);
 
-        assertEquals(verify, true);
+        assertEquals(result, true);
     }
 });

@@ -10,8 +10,6 @@ export type FileInit = [string, Uint8Array];
 
 /**
 * Encode data into a byte array in "minipack" format.
-* @param files array of pair of name and byte array.
-* @return byte array in "minipack" format.
 * @see https://deno.land/x/simple_utility
 */
 export async function minipackEncode(files:FileInit[]){
@@ -41,8 +39,6 @@ export async function minipackEncode(files:FileInit[]){
 
 /**
 * Decode byte array in "minipack" format.
-* @param archive byte array in "minipack" format.
-* @return array of pair of name and byte array.
 * @see https://deno.land/x/simple_utility
 */
 export async function minipackDecode(archive:Uint8Array){

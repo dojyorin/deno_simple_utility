@@ -30,10 +30,6 @@ export interface FetchResponseType{
 
 /**
 * Extended fetch function that can directly specify the response type.
-* @param path Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
-* @param type The type you want to receive in the response.
-* @param option `window` is removed from `RequestInit` and `query` is added to write the query string.
-* @return response from the server specified by `type`.
 */
 export async function fetchExtend<T extends keyof FetchResponseType>(path:string, type:T, option?:FetchInit){
     const {origin, pathname} = /^http(s|):\/\//i.test(path) ? new URL(path) : new URL(path, location.href);
