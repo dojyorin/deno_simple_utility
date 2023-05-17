@@ -35,7 +35,7 @@ Deno.test({
 Deno.test({
     name: "Crypto: Hash",
     async fn(){
-        const hash = await cryptoHash(true, sample);
+        const hash = await cryptoHash("SHA-512", sample);
 
         assertEquals(hash, hashResult);
     }
