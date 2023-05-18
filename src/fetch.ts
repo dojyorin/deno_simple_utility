@@ -31,7 +31,9 @@ export interface FetchResponseType{
 /**
 * Extended fetch function that can specify response type directly.
 * @example
+* ```ts
 * const response = await fetchExtend("./asset", "byte");
+* ```
 */
 export async function fetchExtend<T extends keyof FetchResponseType>(path:string, type:T, option?:FetchInit){
     const {origin, pathname} = /^http(s|):\/\//i.test(path) ? new URL(path) : new URL(path, location.href);

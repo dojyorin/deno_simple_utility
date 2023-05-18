@@ -2,8 +2,10 @@
 * Return UNIX time in seconds.
 * If no argument, will be calculate at current time.
 * @example
+* ```ts
 * const time = unixtimeEncode();
 * const date = unixtimeDecode(time);
+* ```
 */
 export function unixtimeEncode(date?:Date){
     return Math.floor((date ?? new Date()).getTime() / 1000);
@@ -13,8 +15,10 @@ export function unixtimeEncode(date?:Date){
 * Returns `Date` from UNIX time.
 * Note that in seconds, not milliseconds.
 * @example
+* ```ts
 * const time = unixtimeEncode();
 * const date = unixtimeDecode(time);
+* ```
 */
 export function unixtimeDecode(time:number){
     return new Date(time * 1000);
@@ -23,7 +27,9 @@ export function unixtimeDecode(time:number){
 /**
 * Convert from formatted datetime string such as ISO8601 to UNIX time in seconds.
 * @example
+* ```ts
 * const time = unixtimeParse("2023-05-18T08:31:32.292Z");
+* ```
 */
 export function unixtimeParse(ds:string){
     const [y, mo, d, h, mi, s] = ds.split(/[/ :TZ_.-]/i).map(s => Number(s));
