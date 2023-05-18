@@ -3,22 +3,24 @@ async function streamConvert(data:Uint8Array, ts:TransformStream<Uint8Array, Uin
 }
 
 /**
-* Compress binary in "deflate" format (RFC1951).
-* It does not include header information like "gzip" (RFC1952) or "zlib" (RFC1950) as it does purely "compression only".
+* Compress binary with "deflate" format.
+* Does not contain header such as "gzip" (RFC1952) or "zlib" (RFC1950).
 * @example
-* const compressed = await deflateEncode(await Deno.readFile("./file"));
-* const decompressed = await deflateDecode(compressed);
+* const bin = await Deno.readFile("./file");
+* const converted = await deflateEncode(bin);
+* const restored = await deflateDecode(converted);
 */
 export async function deflateEncode(data:Uint8Array){
     return await streamConvert(data, new CompressionStream("deflate-raw"));
 }
 
 /**
-* Decompress "deflate" format (RFC1951) binary.
-* Binary containing header information like "gzip" (RFC1952) or "zlib" (RFC1950) cannot be decompressed.
+* Decompress "deflate" format binary.
+* Cannot decompress such as "gzip" (RFC1952) or "zlib" (RFC1950) that contain header.
 * @example
-* const compressed = await deflateEncode(await Deno.readFile("./file"));
-* const decompressed = await deflateDecode(compressed);
+* const bin = await Deno.readFile("./file");
+* const converted = await deflateEncode(bin);
+* const restored = await deflateDecode(converted);
 */
 export async function deflateDecode(data:Uint8Array){
     return await streamConvert(data, new DecompressionStream("deflate-raw"));

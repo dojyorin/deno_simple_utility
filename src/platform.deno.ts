@@ -1,5 +1,5 @@
 /**
-* Running on Windows.
+* Are you running on Windows?
 * @example
 * const runOnWin = isWin();
 */

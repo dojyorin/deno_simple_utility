@@ -1,5 +1,5 @@
 import {assertEquals, dirname, fromFileUrl} from "../deps.test.ts";
-import {unixSlash, windowsSlash, tmpPath, dataPath, homePath, mainPath} from "../src/path.deno.ts";
+import {slashUnix, slashWin, tmpPath, dataPath, homePath, mainPath} from "../src/path.deno.ts";
 
 Deno.test({
     name: "Path: Separator",
@@ -7,8 +7,8 @@ Deno.test({
         const sampleUnix = "C:/Windows/System32/cmd.exe";
         const sampleWindows = "C:\\Windows\\System32\\cmd.exe";
 
-        assertEquals(unixSlash(sampleWindows), sampleUnix);
-        assertEquals(windowsSlash(sampleUnix), sampleWindows);
+        assertEquals(slashUnix(sampleWindows), sampleUnix);
+        assertEquals(slashWin(sampleUnix), sampleWindows);
     }
 });
 
@@ -18,8 +18,8 @@ Deno.test({
     async fn(){
         assertEquals(tmpPath(), "C:/Windows/Temp");
         assertEquals(dataPath(), "C:/ProgramData");
-        assertEquals(homePath(), unixSlash(Deno.env.toObject().USERPROFILE));
-        assertEquals(mainPath(), unixSlash(fromFileUrl(dirname(Deno.mainModule))));
+        assertEquals(homePath(), slashUnix(Deno.env.toObject().USERPROFILE));
+        assertEquals(mainPath(), slashUnix(fromFileUrl(dirname(Deno.mainModule))));
     }
 });
 

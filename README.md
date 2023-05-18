@@ -1,11 +1,11 @@
-# **Simple Utility for Deno**
+# **Deno Simple Utility**
 ![actions:test](https://github.com/dojyorin/deno_simple_utility/actions/workflows/test.yaml/badge.svg)
 ![actions:release](https://github.com/dojyorin/deno_simple_utility/actions/workflows/release.yaml/badge.svg)
 
 Useful snippet collection.
 
 # Details
-It's basically thin wrapper around Deno's functions to improve usability, but some features are original to this module.
+It's basically thin wrapper around Deno functions to improve usability, but some features are original to this module.
 This section describes the original features of this module.
 
 ## Minipack

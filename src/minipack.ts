@@ -4,19 +4,20 @@ const sizeName = 1;
 const sizeBody = 4;
 
 /**
-* The file name and byte array pairs that make up the basic file.
+* Simple filename/binary pair that make up file.
 */
 export type FileInit = [string, Uint8Array];
 
 /**
-* Encode files in "minipack" format.
-* @see https://deno.land/x/simple_utility
+* Concatenate files with "minipack" format.
+* @see https://deno.land/x/simple_utility#minipack
 * @example
-* const minipack = minipackEncode([
-*     ["file1.txt", await Deno.readFile("./file1")],
-*     ["file2.txt", await Deno.readFile("./file2")]
-* ]);
-* const files = minipackDecode(minipack);
+* const files = [
+*     ["file1", await Deno.readFile("./file1")],
+*     ["file2", await Deno.readFile("./file2")]
+* ];
+* const converted = minipackEncode(files);
+* const restored = minipackDecode(converted);
 */
 export function minipackEncode(files:FileInit[]){
     const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
@@ -45,7 +46,14 @@ export function minipackEncode(files:FileInit[]){
 
 /**
 * Decode byte array in "minipack" format.
-* @see https://deno.land/x/simple_utility
+* @see https://deno.land/x/simple_utility#minipack
+* @example
+* const files = [
+*     ["file1", await Deno.readFile("./file1")],
+*     ["file2", await Deno.readFile("./file2")]
+* ];
+* const converted = minipackEncode(files);
+* const restored = minipackDecode(converted);
 */
 export function minipackDecode(archive:Uint8Array){
     const files:FileInit[] = [];

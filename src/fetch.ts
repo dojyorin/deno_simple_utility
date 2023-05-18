@@ -6,14 +6,14 @@ import {type JsonStruct} from "./core.d.ts";
 export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
 
 /**
-* `RequestInit` and `query` property for query string.
+* `RequestInit` with added `query` property that can specify query-string.
 */
 export interface FetchInit extends Omit<RequestInit, "window">{
     query?: QueryInit;
 }
 
 /**
-* Map of fetch response type and string specifying them.
+* Map of fetch response type and string specify them.
 */
 export interface FetchResponseType{
     "text": string;
@@ -29,7 +29,7 @@ export interface FetchResponseType{
 }
 
 /**
-* Extended fetch function that can directly specify the response type.
+* Extended fetch function that can specify response type directly.
 * @example
 * const response = await fetchExtend("./asset", "byte");
 */
