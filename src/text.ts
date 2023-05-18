@@ -7,7 +7,7 @@
 * const restored = utfDecode(converted);
 * ```
 */
-export function utfEncode(data:string){
+export function utfEncode(data:string):Uint8Array{
     return new TextEncoder().encode(data);
 }
 
@@ -20,7 +20,7 @@ export function utfEncode(data:string){
 * const restored = utfDecode(converted);
 * ```
 */
-export function utfDecode(data:Uint8Array){
+export function utfDecode(data:Uint8Array):string{
     return new TextDecoder().decode(data);
 }
 
@@ -33,7 +33,7 @@ export function utfDecode(data:Uint8Array){
 * const restored = hexDecode(converted);
 * ```
 */
-export function hexEncode(data:Uint8Array){
+export function hexEncode(data:Uint8Array):string{
     return [...data].map(n => n.toString(16).toUpperCase().padStart(2, "0")).join("");
 }
 
@@ -46,7 +46,7 @@ export function hexEncode(data:Uint8Array){
 * const restored = hexDecode(converted);
 * ```
 */
-export function hexDecode(data:string){
+export function hexDecode(data:string):Uint8Array{
     return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(s => parseInt(s, 16)) ?? []);
 }
 
@@ -58,7 +58,7 @@ export function hexDecode(data:string){
 * const formated = trimExtend(text);
 * ```
 */
-export function trimExtend(data:string){
+export function trimExtend(data:string):string{
     return data.trim().replace(/\r/g, "").replace(/\t/g, " ").replace(/ +/g, " ").replace(/ +$/mg, "");
 }
 
@@ -71,6 +71,6 @@ export function trimExtend(data:string){
 * const characters = accurateSegment(text);
 * ```
 */
-export function accurateSegment(data:string){
+export function accurateSegment(data:string):string[]{
     return [...new Intl.Segmenter().segment(data)].map(({segment}) => segment);
 }

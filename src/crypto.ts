@@ -50,7 +50,7 @@ async function deriveSecretKey({publicKey, privateKey}:PortableCryptoKeyPair){
 * const uuid = cryptoUuid();
 * ```
 */
-export function cryptoUuid(){
+export function cryptoUuid():string{
     return crypto.randomUUID();
 }
 
@@ -61,7 +61,7 @@ export function cryptoUuid(){
 * const random = cryptoRandom(16);
 * ```
 */
-export function cryptoRandom(n:number){
+export function cryptoRandom(n:number):Uint8Array{
     return crypto.getRandomValues(new Uint8Array(n));
 }
 
@@ -73,7 +73,7 @@ export function cryptoRandom(n:number){
 * const hash = await cryptoHash(256, bin);
 * ```
 */
-export async function cryptoHash(bit:256|384|512, data:Uint8Array){
+export async function cryptoHash(bit:256|384|512, data:Uint8Array):Promise<Uint8Array>{
     return new Uint8Array(await crypto.subtle.digest(`SHA-${bit}`, data));
 }
 
@@ -115,7 +115,7 @@ export async function cryptoGenerateKey(isECDH:boolean):Promise<PortableCryptoKe
 * }, converted);
 * ```
 */
-export async function cryptoEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array){
+export async function cryptoEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
     const gcm = aesGcmConfig(cryptoRandom(sizeIv));
     const output = new Uint8Array((gcm.tagLength ?? 0 / 8) + gcm.iv.byteLength + data.byteLength);
     output.set(<Uint8Array>gcm.iv, 0);
@@ -143,7 +143,7 @@ export async function cryptoEncrypt({publicKey, privateKey}:PortableCryptoKeyPai
 * }, converted);
 * ```
 */
-export async function cryptoDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array){
+export async function cryptoDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
     const gcm = aesGcmConfig(data.subarray(0, sizeIv));
 
     return new Uint8Array(await crypto.subtle.decrypt(gcm, await deriveSecretKey({publicKey, privateKey}), data.subarray(gcm.iv.byteLength)));
@@ -159,7 +159,7 @@ export async function cryptoDecrypt({publicKey, privateKey}:PortableCryptoKeyPai
 * const verified = await cryptoVerify(key.publicKey, signature, bin);
 * ```
 */
-export async function cryptoSign(privateKey:PortableCryptoKey, data:Uint8Array){
+export async function cryptoSign(privateKey:PortableCryptoKey, data:Uint8Array):Promise<Uint8Array>{
     return new Uint8Array(await crypto.subtle.sign(dsaHash, await crypto.subtle.importKey("pkcs8", privateKey, dsaKey, false, ["sign"]), data));
 }
 
@@ -173,6 +173,6 @@ export async function cryptoSign(privateKey:PortableCryptoKey, data:Uint8Array){
 * const verified = await cryptoVerify(key.publicKey, signature, bin);
 * ```
 */
-export async function cryptoVerify(publicKey:PortableCryptoKey, signature:Uint8Array, data:Uint8Array){
+export async function cryptoVerify(publicKey:PortableCryptoKey, signature:Uint8Array, data:Uint8Array):Promise<boolean>{
     return await crypto.subtle.verify(dsaHash, await crypto.subtle.importKey("spki", publicKey, dsaKey, false, ["verify"]), signature, data);
 }

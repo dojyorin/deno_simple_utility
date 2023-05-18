@@ -9,7 +9,7 @@ import {isWin} from "./platform.deno.ts";
 * const path = slashUnix("C:\\file");
 * ```
 */
-export function slashUnix(path:string){
+export function slashUnix(path:string):string{
     return path.replaceAll("\\", "/");
 }
 
@@ -21,7 +21,7 @@ export function slashUnix(path:string){
 * const path = slashWin("C:/file");
 * ```
 */
-export function slashWin(path:string){
+export function slashWin(path:string):string{
     return path.replaceAll("/", "\\");
 }
 
@@ -33,7 +33,7 @@ export function slashWin(path:string){
 * const path = tmpPath();
 * ```
 */
-export function tmpPath(){
+export function tmpPath():string{
     return isWin() ? "C:/Windows/Temp" : "/tmp";
 }
 
@@ -45,7 +45,7 @@ export function tmpPath(){
 * const path = dataPath();
 * ```
 */
-export function dataPath(){
+export function dataPath():string{
     return isWin() ? "C:/ProgramData" : "/var";
 }
 
@@ -57,7 +57,7 @@ export function dataPath(){
 * const path = homePath();
 * ```
 */
-export function homePath(){
+export function homePath():string{
     const {HOME, USERPROFILE} = Deno.env.toObject();
 
     return isWin() ? slashUnix(USERPROFILE) : HOME;
@@ -70,7 +70,7 @@ export function homePath(){
 * const path = mainPath();
 * ```
 */
-export function mainPath(){
+export function mainPath():string{
     const path = fromFileUrl(dirname(Deno.mainModule));
 
     return isWin() ? slashUnix(path) : path;

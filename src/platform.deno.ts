@@ -5,6 +5,6 @@
 * const runOnWin = isWin();
 * ```
 */
-export function isWin(){
+export function isWin():boolean{
     return Deno.build.os === "windows";
 }

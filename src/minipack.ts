@@ -21,7 +21,7 @@ export type FileInit = [string, Uint8Array];
 * const restored = minipackDecode(converted);
 * ```
 */
-export function minipackEncode(files:FileInit[]){
+export function minipackEncode(files:FileInit[]):Uint8Array{
     const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
 
     let i = 0;
@@ -59,7 +59,7 @@ export function minipackEncode(files:FileInit[]){
 * const restored = minipackDecode(converted);
 * ```
 */
-export function minipackDecode(archive:Uint8Array){
+export function minipackDecode(archive:Uint8Array):FileInit[]{
     const files:FileInit[] = [];
 
     for(let i = 0; i < archive.byteLength; false){

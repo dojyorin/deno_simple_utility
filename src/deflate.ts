@@ -12,7 +12,7 @@ async function streamConvert(data:Uint8Array, ts:TransformStream<Uint8Array, Uin
 * const restored = await deflateDecode(converted);
 * ```
 */
-export async function deflateEncode(data:Uint8Array){
+export async function deflateEncode(data:Uint8Array):Promise<Uint8Array>{
     return await streamConvert(data, new CompressionStream("deflate-raw"));
 }
 
@@ -26,6 +26,6 @@ export async function deflateEncode(data:Uint8Array){
 * const restored = await deflateDecode(converted);
 * ```
 */
-export async function deflateDecode(data:Uint8Array){
+export async function deflateDecode(data:Uint8Array):Promise<Uint8Array>{
     return await streamConvert(data, new DecompressionStream("deflate-raw"));
 }
