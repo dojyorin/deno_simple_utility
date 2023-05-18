@@ -15,7 +15,7 @@ export interface FetchInit extends Omit<RequestInit, "window">{
 /**
 * Map of fetch response type and string specify them.
 */
-export interface FetchResponseType{
+export interface ResponseType{
     "text": string;
     "json": JsonStruct;
     "form": FormData;
@@ -35,7 +35,7 @@ export interface FetchResponseType{
 * const response = await fetchExtend("./asset", "byte");
 * ```
 */
-export async function fetchExtend<T extends keyof FetchResponseType>(path:string, type:T, option?:FetchInit){
+export async function fetchExtend<T extends keyof ResponseType>(path:string, type:T, option?:FetchInit):Promise<ResponseType[T]>{
     const {origin, pathname} = /^http(s|):\/\//i.test(path) ? new URL(path) : new URL(path, location.href);
     const query = new URLSearchParams(option?.query).toString();
 
@@ -56,16 +56,16 @@ export async function fetchExtend<T extends keyof FetchResponseType>(path:string
     });
 
     switch(type){
-        case "text": return <FetchResponseType[T]>await response.text();
-        case "json": return <FetchResponseType[T]>await response.json();
-        case "form": return <FetchResponseType[T]>await response.formData();
-        case "byte": return <FetchResponseType[T]>new Uint8Array(await response.arrayBuffer());
-        case "buffer": return <FetchResponseType[T]>await response.arrayBuffer();
-        case "blob": return <FetchResponseType[T]>await response.blob();
-        case "ok": return <FetchResponseType[T]>response.ok;
-        case "code": return <FetchResponseType[T]>response.status;
-        case "header": return <FetchResponseType[T]>response.headers;
-        case "response": return <FetchResponseType[T]>response;
+        case "text": return <ResponseType[T]>await response.text();
+        case "json": return <ResponseType[T]>await response.json();
+        case "form": return <ResponseType[T]>await response.formData();
+        case "byte": return <ResponseType[T]>new Uint8Array(await response.arrayBuffer());
+        case "buffer": return <ResponseType[T]>await response.arrayBuffer();
+        case "blob": return <ResponseType[T]>await response.blob();
+        case "ok": return <ResponseType[T]>response.ok;
+        case "code": return <ResponseType[T]>response.status;
+        case "header": return <ResponseType[T]>response.headers;
+        case "response": return <ResponseType[T]>response;
         default: throw new Error();
     }
 }

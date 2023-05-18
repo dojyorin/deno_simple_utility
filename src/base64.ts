@@ -7,7 +7,7 @@
 * const restored = base64Decode(converted);
 * ```
 */
-export function base64Encode(data:Uint8Array){
+export function base64Encode(data:Uint8Array):string{
     return btoa([...data].map(n => String.fromCharCode(n)).join(""));
 }
 
@@ -20,6 +20,6 @@ export function base64Encode(data:Uint8Array){
 * const restored = base64Decode(converted);
 * ```
 */
-export function base64Decode(data:string){
+export function base64Decode(data:string):Uint8Array{
     return new Uint8Array([...atob(data)].map(s => s.charCodeAt(0)));
 }

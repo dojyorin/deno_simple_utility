@@ -5,7 +5,7 @@
 * const success = executeCommand(["echo", "foobar"]);
 * ```
 */
-export async function runCommand(...commands:string[]){
+export async function runCommand(...commands:string[]):Promise<boolean>{
     const {success} = await new Deno.Command(commands.shift() ?? "", {
         args: commands,
         stdin: "null",
