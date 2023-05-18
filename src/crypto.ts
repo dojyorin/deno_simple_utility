@@ -46,7 +46,9 @@ async function deriveSecretKey({publicKey, privateKey}:PortableCryptoKeyPair){
 /**
 * Generate UUIDv4 string.
 * @example
+* ```ts
 * const uuid = cryptoUuid();
+* ```
 */
 export function cryptoUuid(){
     return crypto.randomUUID();
@@ -55,7 +57,9 @@ export function cryptoUuid(){
 /**
 * Generate random binary with any number of bytes.
 * @example
+* ```ts
 * const random = cryptoRandom(16);
+* ```
 */
 export function cryptoRandom(n:number){
     return crypto.getRandomValues(new Uint8Array(n));
@@ -64,8 +68,10 @@ export function cryptoRandom(n:number){
 /**
 * Derive SHA2 hash value from binary.
 * @example
+* ```ts
 * const bin = await Deno.readFile("./file");
 * const hash = await cryptoHash(256, bin);
+* ```
 */
 export async function cryptoHash(bit:256|384|512, data:Uint8Array){
     return new Uint8Array(await crypto.subtle.digest(`SHA-${bit}`, data));
@@ -76,8 +82,10 @@ export async function cryptoHash(bit:256|384|512, data:Uint8Array){
 * You can generate keys for ECDH or ECDSA.
 * Algorithm use is "NIST P-512".
 * @example
+* ```ts
 * const keyForECDH = await cryptoGenerateKey(true);
 * const keyForECDSA = await cryptoGenerateKey(false);
+* ```
 */
 export async function cryptoGenerateKey(isECDH:boolean):Promise<PortableCryptoKeyPair>{
     const {publicKey, privateKey} = await crypto.subtle.generateKey(isECDH ? dhKey : dsaKey, true, isECDH ? ["deriveKey", "deriveBits"] : ["sign", "verify"]);
@@ -93,6 +101,7 @@ export async function cryptoGenerateKey(isECDH:boolean):Promise<PortableCryptoKe
 * Algorithm use is "AES-GCM" with 256 bits key, 128 bits tag and 96 bits IV.
 * IV is prepended to cipher.
 * @example
+* ```ts
 * const bin = await Deno.readFile("./file");
 * const key1 = await cryptoGenerateKey(true);
 * const key2 = await cryptoGenerateKey(true);
@@ -104,6 +113,7 @@ export async function cryptoGenerateKey(isECDH:boolean):Promise<PortableCryptoKe
 *     publicKey: key2.publicKey,
 *     privateKey: key1.privateKey
 * }, converted);
+* ```
 */
 export async function cryptoEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array){
     const gcm = aesGcmConfig(cryptoRandom(sizeIv));
@@ -119,6 +129,7 @@ export async function cryptoEncrypt({publicKey, privateKey}:PortableCryptoKeyPai
 * Algorithm use is "AES-GCM" with 256 bits key, 128 bits tag and 96 bits IV.
 * IV is read from head of cipher.
 * @example
+* ```ts
 * const bin = await Deno.readFile("./file");
 * const key1 = await cryptoGenerateKey(true);
 * const key2 = await cryptoGenerateKey(true);
@@ -130,6 +141,7 @@ export async function cryptoEncrypt({publicKey, privateKey}:PortableCryptoKeyPai
 *     publicKey: key2.publicKey,
 *     privateKey: key1.privateKey
 * }, converted);
+* ```
 */
 export async function cryptoDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array){
     const gcm = aesGcmConfig(data.subarray(0, sizeIv));
@@ -140,10 +152,12 @@ export async function cryptoDecrypt({publicKey, privateKey}:PortableCryptoKeyPai
 /**
 * Create signature using private-key.
 * @example
+* ```ts
 * const bin = await Deno.readFile("./file");
 * const key = await cryptoGenerateKey(false);
 * const signature = await cryptoSign(key.privateKey, bin);
 * const verified = await cryptoVerify(key.publicKey, signature, bin);
+* ```
 */
 export async function cryptoSign(privateKey:PortableCryptoKey, data:Uint8Array){
     return new Uint8Array(await crypto.subtle.sign(dsaHash, await crypto.subtle.importKey("pkcs8", privateKey, dsaKey, false, ["sign"]), data));
@@ -152,10 +166,12 @@ export async function cryptoSign(privateKey:PortableCryptoKey, data:Uint8Array){
 /**
 * Verify signature using public-key.
 * @example
+* ```ts
 * const bin = await Deno.readFile("./file");
 * const key = await cryptoGenerateKey(false);
 * const signature = await cryptoSign(key.privateKey, bin);
 * const verified = await cryptoVerify(key.publicKey, signature, bin);
+* ```
 */
 export async function cryptoVerify(publicKey:PortableCryptoKey, signature:Uint8Array, data:Uint8Array){
     return await crypto.subtle.verify(dsaHash, await crypto.subtle.importKey("spki", publicKey, dsaKey, false, ["verify"]), signature, data);

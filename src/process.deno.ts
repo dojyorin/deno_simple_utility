@@ -1,7 +1,9 @@
 /**
 * Run command as subprocess.
 * @example
+* ```ts
 * const success = executeCommand(["echo", "foobar"]);
+* ```
 */
 export async function runCommand(...commands:string[]){
     const {success} = await new Deno.Command(commands.shift() ?? "", {
