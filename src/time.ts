@@ -1,28 +1,32 @@
 /**
-* Since the unixtime that can be handled by the `Date` is in milliseconds, this method output downscaled to 1/1000.
-* @param date date object for any datetime, if blank output the current datetime.
-* @return unixtime in seconds.
+* Return UNIX time in seconds.
+* If no argument, will be calculate at current time.
+* @example
+* const time = unixtimeEncode();
+* const date = unixtimeDecode(time);
 */
 export function unixtimeEncode(date?:Date){
     return Math.floor((date ?? new Date()).getTime() / 1000);
 }
 
 /**
-* Since the unixtime that can be handled by the `Date` is in milliseconds, the argument of this method is internally multiplied by x1000.
-* @param time unixtime in seconds.
-* @return date object specified by `time`.
+* Returns `Date` from UNIX time.
+* Note that in seconds, not milliseconds.
+* @example
+* const time = unixtimeEncode();
+* const date = unixtimeDecode(time);
 */
 export function unixtimeDecode(time:number){
     return new Date(time * 1000);
 }
 
 /**
-* Convert formatted datetime string such as ISO8601 to unixtime.
-* @param dt formatted datetime string.
-* @return unixtime in seconds.
+* Convert from formatted datetime string such as ISO8601 to UNIX time in seconds.
+* @example
+* const time = unixtimeParse("2023-05-18T08:31:32.292Z");
 */
-export function unixtimeParse(dt:string){
-    const [y, mo, d, h, mi, s] = dt.split(/[/ :TZ_.-]/i).map(s => Number(s));
+export function unixtimeParse(ds:string){
+    const [y, mo, d, h, mi, s] = ds.split(/[/ :TZ_.-]/i).map(s => Number(s));
 
     return unixtimeEncode(new Date(y, (mo ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0));
 }

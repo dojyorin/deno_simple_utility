@@ -1,52 +1,63 @@
 /**
-* Convert from unicode string to UTF-8 byte array.
-* @param data unicode string.
-* @return byte array in UTF-8 format.
+* Convert from string to UTF-8 binary.
+* @example
+* const text = "HelloWorld!";
+* const converted = utfEncode(text);
+* const restored = utfDecode(converted);
 */
 export function utfEncode(data:string){
     return new TextEncoder().encode(data);
 }
 
 /**
-* Convert from UTF-8 byte array to unicode string.
-* @param data byte array in UTF-8 format.
-* @return unicode string.
+* Convert from UTF-8 binary to string.
+* @example
+* const text = "HelloWorld!";
+* const converted = utfEncode(text);
+* const restored = utfDecode(converted);
 */
 export function utfDecode(data:Uint8Array){
     return new TextDecoder().decode(data);
 }
 
 /**
-* Convert from byte array to HEX string.
-* @param data byte array.
-* @return HEX string.
+* Convert from binary to hex string.
+* @example
+* const bin = await Deno.readFile("./file");
+* const converted = hexEncode(bin);
+* const restored = hexDecode(converted);
 */
 export function hexEncode(data:Uint8Array){
     return [...data].map(n => n.toString(16).toUpperCase().padStart(2, "0")).join("");
 }
 
 /**
-* Convert from HEX string to byte array.
-* @param data HEX string.
-* @return byte array.
+* Convert from hex string to binary.
+* @example
+* const bin = await Deno.readFile("./file");
+* const converted = hexEncode(bin);
+* const restored = hexDecode(converted);
 */
 export function hexDecode(data:string){
     return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(s => parseInt(s, 16)) ?? []);
 }
 
 /**
-* In addition to leading and trailing spaces, tabs, carriage returns, and two or more consecutive spaces are converted to a single space.
-* @param data messy string.
-* @return formatted string.
+* Does `String.prototype.trim()`, convert from `\t`, `\r`, and two or more consecutive spaces to single space.
+* @example
+* const text = "  Lorem ipsum\r dolor   sit \t  amet. ";
+* const formated = trimExtend(text);
 */
 export function trimExtend(data:string){
     return data.trim().replace(/\r/g, "").replace(/\t/g, " ").replace(/ +/g, " ").replace(/ +$/mg, "");
 }
 
 /**
-* Accurately count Unicode above `0x010000` and array them character by character.
-* @param data any string.
-* @return Array of one character.
+* Accurately recognize string that contain character above `0x010000` and array them one  by character.
+* Useful for calculate number of characters with string contains emoji.
+* @example
+* const text = "😀😃😄😁😆😅😂🤣";
+* const characters = accurateSegment(text);
 */
 export function accurateSegment(data:string){
     return [...new Intl.Segmenter().segment(data)].map(({segment}) => segment);

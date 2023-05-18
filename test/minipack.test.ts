@@ -12,8 +12,8 @@ const encodeResult = new Uint8Array([
 
 Deno.test({
     name: "Minipack: Encode",
-    async fn(){
-        const result = await minipackEncode([
+    fn(){
+        const result = minipackEncode([
             [fileName, sample]
         ]);
 
@@ -23,8 +23,8 @@ Deno.test({
 
 Deno.test({
     name: "Minipack: Decode",
-    async fn(){
-        const [[name, body]] = await minipackDecode(encodeResult);
+    fn(){
+        const [[name, body]] = minipackDecode(encodeResult);
 
         assertEquals(name, fileName);
         assertEquals(body, sample);

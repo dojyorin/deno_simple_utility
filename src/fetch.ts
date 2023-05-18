@@ -1,19 +1,19 @@
 import {type JsonStruct} from "./core.d.ts";
 
 /**
-* Possible input types for `URLSearchParams`.
+* Possible input for `URLSearchParams`.
 */
 export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
 
 /**
-* Option to remove `window` from `RequestInit` and add `query` for query string.
+* `RequestInit` with added `query` property that can specify query-string.
 */
 export interface FetchInit extends Omit<RequestInit, "window">{
     query?: QueryInit;
 }
 
 /**
-* A map of fetch response types and strings specifying them.
+* Map of fetch response type and string specify them.
 */
 export interface FetchResponseType{
     "text": string;
@@ -29,11 +29,9 @@ export interface FetchResponseType{
 }
 
 /**
-* Extended fetch function that can directly specify the response type.
-* @param path Since the query string is ignored, please specify it in the `option.query` property instead of writing it directly in the URL.
-* @param type The type you want to receive in the response.
-* @param option `window` is removed from `RequestInit` and `query` is added to write the query string.
-* @return response from the server specified by `type`.
+* Extended fetch function that can specify response type directly.
+* @example
+* const response = await fetchExtend("./asset", "byte");
 */
 export async function fetchExtend<T extends keyof FetchResponseType>(path:string, type:T, option?:FetchInit){
     const {origin, pathname} = /^http(s|):\/\//i.test(path) ? new URL(path) : new URL(path, location.href);

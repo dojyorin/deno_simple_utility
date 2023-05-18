@@ -1,7 +1,8 @@
 /**
-* Check if it's running on Windows.
-* @return `true` if running on Windows.
+* Are you running on Windows?
+* @example
+* const runOnWin = isWin();
 */
-export function isWindows(){
+export function isWin(){
     return Deno.build.os === "windows";
 }
