@@ -9,5 +9,3 @@ export * from "./src/time.ts";
 export * from "./src/path.deno.ts";
 export * from "./src/platform.deno.ts";
 export * from "./src/process.deno.ts";
-
-export type * from "./src/core.d.ts";
