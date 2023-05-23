@@ -95,7 +95,7 @@ export async function pubkeyGen(usage:"ECDH" | "ECDSA"):Promise<PortableCryptoKe
 * ```
 */
 export async function pubkeyEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
-    const iv = cryptoRandom(12);
+    const iv = randomBin(12);
     const enc = await crypto.subtle.encrypt({
         name: "AES-GCM",
         tagLength: 128,
