@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {cryptoUuid, cryptoRandom, cryptoHash, cryptoGenerateKey, cryptoEncrypt, cryptoDecrypt, cryptoSign, cryptoVerify} from "../src/crypto.ts";
+import {randomUuid, randomBin, hashValue, pubkeyGen, pubkeyEncrypt, pubkeyDecrypt, pubkeySign, pubkeyVerify} from "../src/crypto.ts";
 
 const sample = new Uint8Array([0x02, 0xF2, 0x5D, 0x1F, 0x1C, 0x34, 0xB9, 0x2F]);
 
@@ -17,7 +17,7 @@ const hashResult = new Uint8Array([
 Deno.test({
     name: "Crypto: UUID",
     fn(){
-        const uuid = cryptoUuid();
+        const uuid = randomUuid();
 
         assertEquals(uuid.length, 36);
     }
@@ -26,7 +26,7 @@ Deno.test({
 Deno.test({
     name: "Crypto: Random",
     fn(){
-        const random = cryptoRandom(16);
+        const random = randomBin(16);
 
         assertEquals(random.byteLength, 16);
     }
@@ -35,7 +35,7 @@ Deno.test({
 Deno.test({
     name: "Crypto: Hash",
     async fn(){
-        const hash = await cryptoHash(512, sample);
+        const hash = await hashValue(512, sample);
 
         assertEquals(hash, hashResult);
     }
@@ -45,15 +45,15 @@ Deno.test({
     ignore: true,
     name: "Crypto: Encrypt and Decrypt",
     async fn(){
-        const key1 = await cryptoGenerateKey(true);
-        const key2 = await cryptoGenerateKey(true);
+        const key1 = await pubkeyGen("ECDH");
+        const key2 = await pubkeyGen("ECDH");
 
-        const encrypt = await cryptoEncrypt({
+        const encrypt = await pubkeyEncrypt({
             publicKey: key1.publicKey,
             privateKey: key2.privateKey
         }, sample);
 
-        const decrypt = await cryptoDecrypt({
+        const decrypt = await pubkeyDecrypt({
             publicKey: key2.publicKey,
             privateKey: key1.privateKey
         }, encrypt);
@@ -66,9 +66,9 @@ Deno.test({
     ignore: true,
     name: "Crypto: Sign and Verify",
     async fn(){
-        const key = await cryptoGenerateKey(false);
-        const signature = await cryptoSign(key.privateKey, sample);
-        const result = await cryptoVerify(key.publicKey, signature, sample);
+        const key = await pubkeyGen("ECDSA");
+        const signature = await pubkeySign(key.privateKey, sample);
+        const result = await pubkeyVerify(key.publicKey, signature, sample);
 
         assertEquals(result, true);
     }
