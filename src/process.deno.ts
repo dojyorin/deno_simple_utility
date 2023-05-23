@@ -2,7 +2,7 @@
 * Run command as subprocess.
 * @example
 * ```ts
-* const success = executeCommand(["echo", "foobar"]);
+* const success = await runCommand(["echo", "foobar"]);
 * ```
 */
 export async function runCommand(...commands:string[]):Promise<boolean>{
