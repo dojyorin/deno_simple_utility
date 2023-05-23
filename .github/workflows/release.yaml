@@ -1,5 +1,5 @@
-name: Release
-"on":
+name: release
+on:
     push:
         tags: v[0-9]+.[0-9]+.[0-9]+
 jobs:
@@ -14,7 +14,7 @@ jobs:
               with:
                 deno-version: v1.x
             - name: install esbuild
-              run: curl -L $(curl -L https://esbuild.github.io/getting-started | grep -o -E 'https:[^"]+linux-x64[^"]+\.tgz' | uniq) | tar x -z --strip-components 2
+              run: curl -L $(curl -L https://esbuild.github.io/getting-started | grep -oE -e 'https:[^"]+linux-x64[^"]+\.tgz' | uniq) | tar x -z --strip-components 2
             - name: bundle universal module
               run: deno bundle ./mod.universal.ts | ./esbuild --minify | head -c -1 > ./mod.universal.min.js
             - name: dispatch release

@@ -1,5 +1,3 @@
-import {type JsonStruct} from "./core.d.ts";
-
 /**
 * Possible input for `URLSearchParams`.
 */
@@ -17,7 +15,7 @@ export interface FetchInit extends Omit<RequestInit, "window">{
 */
 export interface ResponseType{
     "text": string;
-    "json": JsonStruct;
+    "json": unknown;
     "form": FormData;
     "byte": Uint8Array;
     "buffer": ArrayBuffer;
