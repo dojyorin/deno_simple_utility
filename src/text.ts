@@ -51,7 +51,7 @@ export function hexDecode(data:string):Uint8Array{
 }
 
 /**
-* Does `String.prototype.trim()`, convert from `\t`, `\r`, and two or more consecutive spaces to single space.
+* Trim head and tail blank, remove CR and consecutive space or tab to single space.
 * @example
 * ```ts
 * const text = "  Lorem ipsum\r dolor   sit \t  amet. ";
@@ -63,7 +63,7 @@ export function trimExtend(data:string):string{
 }
 
 /**
-* Accurately recognize string that contain character above `0x010000` and array them one  by character.
+* Accurately recognize string that contain character above `0x010000` and array them one by character.
 * Useful for calculate number of characters with string contains emoji.
 * @example
 * ```ts
