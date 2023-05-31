@@ -4,7 +4,7 @@ const sizeName = 1;
 const sizeBody = 4;
 
 /**
-* Simple filename/binary pair that make up file.
+* Simple filename and binary pair that make up file.
 */
 export type FileInit = [string, Uint8Array];
 

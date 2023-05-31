@@ -1,6 +1,6 @@
 /**
 * Return UNIX time in seconds.
-* If no argument, will be calculate at current time.
+* If no argument will be calculate at current time.
 * @example
 * ```ts
 * const time = unixtimeEncode();
@@ -13,7 +13,7 @@ export function unixtimeEncode(date?:Date):number{
 
 /**
 * Returns `Date` from UNIX time.
-* Note that in seconds, not milliseconds.
+* Note that in seconds not milliseconds.
 * @example
 * ```ts
 * const time = unixtimeEncode();
