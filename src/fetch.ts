@@ -4,7 +4,7 @@
 export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
 
 /**
-* `RequestInit` with added `query` property that can specify query-string.
+* `RequestInit` with added `query` property that can specify query string.
 */
 export interface FetchInit extends Omit<RequestInit, "window">{
     query?: QueryInit;
