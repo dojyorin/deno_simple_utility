@@ -17,18 +17,18 @@ const hashResult = new Uint8Array([
 Deno.test({
     name: "Crypto: UUID",
     fn(){
-        const uuid = randomUuid();
+        const {length} = randomUuid();
 
-        assertEquals(uuid.length, 36);
+        assertEquals(length, 36);
     }
 });
 
 Deno.test({
     name: "Crypto: Random",
     fn(){
-        const random = randomBin(16);
+        const {byteLength} = randomBin(16);
 
-        assertEquals(random.byteLength, 16);
+        assertEquals(byteLength, 16);
     }
 });
 
@@ -68,8 +68,8 @@ Deno.test({
     async fn(){
         const key = await pubkeyGen("ECDSA");
         const signature = await pubkeySign(key.privateKey, sample);
-        const result = await pubkeyVerify(key.publicKey, signature, sample);
+        const verify = await pubkeyVerify(key.publicKey, signature, sample);
 
-        assertEquals(result, true);
+        assertEquals(verify, true);
     }
 });

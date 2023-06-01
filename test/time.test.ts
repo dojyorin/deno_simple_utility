@@ -3,23 +3,13 @@ import {unixtimeEncode, unixtimeDecode, unixtimeParse} from "../src/time.ts";
 
 const sample = new Date(2000, 0, 1, 0, 0, 0, 0);
 
-const encodeResult = 946684800;
-
 Deno.test({
-    name: "Date: Encode",
+    name: "Date: Encode and Decode",
     async fn(){
-        const result = unixtimeEncode(sample);
+        const encode = unixtimeEncode(sample);
+        const decode = unixtimeDecode(encode);
 
-        assertEquals(result, encodeResult);
-    }
-});
-
-Deno.test({
-    name: "Date: Decode",
-    async fn(){
-        const result = unixtimeDecode(encodeResult);
-
-        assertEquals(result.toISOString(), sample.toISOString());
+        assertEquals(decode, sample);
     }
 });
 
@@ -28,6 +18,6 @@ Deno.test({
     async fn(){
         const result = unixtimeParse(sample.toISOString());
 
-        assertEquals(result, encodeResult);
+        assertEquals(result, 946684800);
     }
 });
