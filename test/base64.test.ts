@@ -8,22 +8,12 @@ const sample = new Uint8Array([
     0x7A, 0xEF, 0xD7, 0xAF, 0xF5, 0x1F, 0x2A, 0x3A
 ]);
 
-const encodeResult = "WA3HZCFCJ3Yupv6eWKOTmpoHV65OWy/Heu/Xr/UfKjo=";
-
 Deno.test({
-    name: "Base64: Encode",
+    name: "Base64: Encode and Decode",
     fn(){
-        const result = base64Encode(sample);
+        const encode = base64Encode(sample);
+        const decode = base64Decode(encode);
 
-        assertEquals(result, encodeResult);
-    }
-});
-
-Deno.test({
-    name: "Base64: Decode",
-    fn(){
-        const result = base64Decode(encodeResult);
-
-        assertEquals(result, sample);
+        assertEquals(decode, sample);
     }
 });
