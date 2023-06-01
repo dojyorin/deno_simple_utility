@@ -33,7 +33,7 @@ Deno.test({
 Deno.test({
     name: "Text: Trim",
     async fn(){
-        const result = trimExtend(sample);
+        const result = trimExtend(sampleText);
 
         assertEquals(result, "Lorem ipsum dolor sit amet.");
     }
