@@ -51,15 +51,15 @@ export function hexDecode(data:string):Uint8Array{
 }
 
 /**
-* Trim head and tail blank, remove CR and consecutive space or tab to single space.
+* Trim head and tail blank, remove CR and consecutive space (tab, LF) to single space (tab, LF).
 * @example
 * ```ts
-* const text = "  Lorem ipsum\r dolor   sit \t  amet. ";
+* const text = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
 * const formated = trimExtend(text);
 * ```
 */
 export function trimExtend(data:string):string{
-    return data.trim().replace(/\r/g, "").replace(/\t/g, " ").replace(/ +/g, " ").replace(/ +$/mg, "");
+    return data.trim().replace(/\r/g, "").replace(/ +/g, " ").replace(/\t+/g, "\t").replace(/\n+/g, "\n").replace(/^ /mg, "").replace(/ $/mg, "");
 }
 
 /**
