@@ -52,7 +52,7 @@ export async function jsonLoad<T extends unknown>(path:string, defaultv:T):Promi
 
 /**
 * Wrapper function of `jsonLoad()`.
-* Path is fixed `${Deno.mainModule}/config.json`.
+* Config file path is fixed `${Deno.mainModule}/config.json`.
 * @example
 * ```ts
 * import dconfig from "./config.json" assert {type: "json"};

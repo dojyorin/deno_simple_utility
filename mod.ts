@@ -7,6 +7,7 @@ export * from "./src/text.ts";
 export * from "./src/time.ts";
 
 export * from "./src/json.deno.ts";
+export * from "./src/log.deno.ts";
 export * from "./src/path.deno.ts";
 export * from "./src/platform.deno.ts";
 export * from "./src/process.deno.ts";
