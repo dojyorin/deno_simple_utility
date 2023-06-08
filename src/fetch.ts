@@ -34,7 +34,7 @@ export interface ResponseType{
 * ```
 */
 export async function fetchExtend<T extends keyof ResponseType>(path:string, type:T, option?:FetchInit):Promise<ResponseType[T]>{
-    const {origin, pathname} = new URL(path, location.href);
+    const {origin, pathname} = new URL(path, location?.href);
     const query = new URLSearchParams(option?.query).toString();
 
     const response = await fetch(`${origin}${pathname}${query && "?"}${query}`, {
