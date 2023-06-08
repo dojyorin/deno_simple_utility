@@ -1,10 +1,10 @@
 import {assertEquals, exists} from "../deps.test.ts";
-import {setupLog} from "../src/log.deno.ts";
+import {logSet} from "../src/log.deno.ts";
 
 Deno.test({
     name: "Log: Setup",
     async fn(){
-        const log = setupLog();
+        const log = logSet();
         log.info("Lorem ipsum dolor sit amet.");
 
         const result = await exists("./execution.log", {
