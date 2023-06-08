@@ -10,7 +10,7 @@ import {isWin} from "./platform.deno.ts";
 * ```
 */
 export function slashUnix(path:string):string{
-    return path.replaceAll("\\", "/");
+    return path.replace(/\\/g, "/");
 }
 
 /**
@@ -22,7 +22,7 @@ export function slashUnix(path:string):string{
 * ```
 */
 export function slashWin(path:string):string{
-    return path.replaceAll("/", "\\");
+    return path.replace(/\//g, "\\");
 }
 
 /**

@@ -11,10 +11,10 @@ function logRecord(date:Date, level:string, message:string){
 * Log file default save path is `${Deno.mainModule}/execution.log`.
 * @example
 * ```ts
-* const log = setupLog();
+* const log = logSet();
 * ```
 */
-export function setupLog(name?:string):Logger{
+export function logSet(name?:string):Logger{
     const logName = name ?? "execution";
     const level = "INFO";
 
