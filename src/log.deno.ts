@@ -8,14 +8,14 @@ function logRecord(date:Date, level:string, message:string){
 /**
 * Instantiate logger with general configuration.
 * Output to console and file.
-* Log file default save path is `${Deno.mainModule}/execution.log`.
+* Log file default save path is `${Deno.mainModule}/operation.log`.
 * @example
 * ```ts
-* const log = logSet();
+* const log = logEntry();
 * ```
 */
-export function logSet(name?:string):Logger{
-    const logName = name ?? "execution";
+export function logEntry(name?:string):Logger{
+    const logName = name ?? "operation";
     const level = "INFO";
 
     const log = new Logger(logName, level, {

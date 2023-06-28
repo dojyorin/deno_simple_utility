@@ -6,7 +6,7 @@ export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
 /**
 * `RequestInit` with added `query` property that can specify query string.
 */
-export interface FetchInit extends Omit<RequestInit, "window">{
+export interface FetchInit extends Omit<RequestInit, "integrity" | "window">{
     query?: QueryInit;
 }
 
@@ -34,7 +34,7 @@ export interface ResponseType{
 * ```
 */
 export async function fetchExtend<T extends keyof ResponseType>(path:string, type:T, option?:FetchInit):Promise<ResponseType[T]>{
-    const {origin, pathname} = new URL(path, location?.href);
+    const {origin, pathname} = new URL(path, globalThis?.location?.href);
     const query = new URLSearchParams(option?.query).toString();
 
     const response = await fetch(`${origin}${pathname}${query && "?"}${query}`, {
@@ -45,12 +45,10 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
         redirect: option?.redirect ?? "follow",
         keepalive: option?.keepalive ?? false,
         referrerPolicy: option?.referrerPolicy ?? "no-referrer",
-        referrer: option?.referrer ?? "",
-        integrity: option?.integrity ?? "",
-        signal: option?.signal ?? null,
-        headers: option?.headers ?? {},
-        body: option?.body ?? null,
-        window: null
+        referrer: option?.referrer,
+        signal: option?.signal,
+        headers: option?.headers,
+        body: option?.body
     });
 
     switch(type){
