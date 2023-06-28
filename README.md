@@ -25,9 +25,14 @@ The actual binary structure looks like this:
 
 This structure is repeats for the number of files.
 
-# Compatible
+# Browser
 Collected only parts of this module that not use the `Deno` namespace and prepared as browser-compatible code to [`mod.universal.ts`](./mod.universal.ts).
-You can get bundled script in [releases](https://github.com/dojyorin/deno_simple_utility/releases).
+
+You can use script from [esm.sh](https://esm.sh).
+
+```ts
+import {fetchExtend} from "https://esm.sh/gh/dojyorin/deno_simple_utility@version/mod.universal.ts?bundle&target=esnext";
+```
 
 # API
 See [Deno Document](https://deno.land/x/simple_utility/mod.ts) for details.
