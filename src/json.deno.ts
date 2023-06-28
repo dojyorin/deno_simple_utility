@@ -34,20 +34,20 @@ export async function jsonWrite<T extends unknown>(path:string, data:T):Promise<
 * const resource = await jsonLoad("./resource.json", dresource);
 * ```
 */
-export async function jsonLoad<T extends unknown>(path:string, defaultv:T):Promise<T>{
+export async function jsonLoad<T extends unknown>(path:string, def:T):Promise<T>{
     try{
         return await jsonRead<T>(path);
     }
     catch(e){
         if(e instanceof Deno.errors.NotFound){
-            await jsonWrite(path, defaultv);
+            await jsonWrite(path, def);
         }
         else{
             throw e;
         }
     }
 
-    return defaultv;
+    return def;
 }
 
 /**
@@ -59,6 +59,6 @@ export async function jsonLoad<T extends unknown>(path:string, defaultv:T):Promi
 * const config = await configLoad(dconfig);
 * ```
 */
-export async function configLoad<T extends unknown>(defaultv:T):Promise<T>{
-    return await jsonLoad(`${mainPath()}/config.json`, defaultv);
+export async function configLoad<T extends unknown>(def:T):Promise<T>{
+    return await jsonLoad(`${mainPath()}/config.json`, def);
 }
