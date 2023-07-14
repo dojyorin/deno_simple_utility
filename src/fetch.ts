@@ -1,3 +1,5 @@
+import {base64Encode} from "./base64.ts";
+
 /**
 * Possible input for `URLSearchParams`.
 */
@@ -15,6 +17,7 @@ export interface FetchInit extends Omit<RequestInit, "integrity" | "window">{
 */
 export interface ResponseType{
     "text": string;
+    "base64": string;
     "json": unknown;
     "form": FormData;
     "byte": Uint8Array;
@@ -53,6 +56,7 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
 
     switch(type){
         case "text": return <ResponseType[T]>await response.text();
+        case "base64": return <ResponseType[T]>base64Encode(new Uint8Array(await response.arrayBuffer()));
         case "json": return <ResponseType[T]>await response.json();
         case "form": return <ResponseType[T]>await response.formData();
         case "byte": return <ResponseType[T]>new Uint8Array(await response.arrayBuffer());
