@@ -20,17 +20,6 @@ async function deriveSecretKey({publicKey, privateKey}:PortableCryptoKeyPair){
 }
 
 /**
-* Generate UUIDv4 string.
-* @example
-* ```ts
-* const uuid = randomUuid();
-* ```
-*/
-export function randomUuid():string{
-    return crypto.randomUUID();
-}
-
-/**
 * Generate random binary with any number of bytes.
 * @example
 * ```ts

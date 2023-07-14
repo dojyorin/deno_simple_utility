@@ -47,7 +47,7 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
         referrerPolicy: option?.referrerPolicy ?? "no-referrer",
         referrer: option?.referrer,
         signal: option?.signal,
-        headers: option?.headers,
+        headers: option?.headers && new Headers(option.headers),
         body: option?.body
     });
 

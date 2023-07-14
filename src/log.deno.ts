@@ -15,10 +15,10 @@ function logRecord(date:Date, level:string, message:string){
 * ```
 */
 export function logEntry(name?:string):Logger{
-    const logName = name ?? "operation";
+    const title = name ?? "operation";
     const level = "INFO";
 
-    const log = new Logger(logName, level, {
+    const log = new Logger(title, level, {
         handlers: [
             new ConsoleHandler(level, {
                 formatter({datetime, levelName, msg}){
@@ -26,7 +26,7 @@ export function logEntry(name?:string):Logger{
                 }
             }),
             new FileHandler(level, {
-                filename: `${mainPath()}/${logName}.log`,
+                filename: `${mainPath()}/${title}.log`,
                 formatter({datetime, levelName, msg}){
                     return logRecord(datetime, levelName, msg);
                 }
