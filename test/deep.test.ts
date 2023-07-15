@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {deepClone, deepFreeze, deepSeal} from "../src/object.ts";
+import {deepClone, deepFreeze, deepSeal} from "../src/deep.ts";
 
 const sample = {
     aaa: {
