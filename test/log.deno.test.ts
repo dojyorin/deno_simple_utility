@@ -1,13 +1,15 @@
 import {assertEquals, exists} from "../deps.test.ts";
 import {logEntry} from "../src/log.deno.ts";
 
+const name = "operation";
+
 Deno.test({
     name: "Log: Entry",
     async fn(){
-        const log = logEntry();
+        const log = logEntry(name);
         log.info("Lorem ipsum dolor sit amet.");
 
-        const result = await exists("./operation.log", {
+        const result = await exists(`./${name}.log`, {
             isFile: true
         });
 

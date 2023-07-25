@@ -1,3 +1,4 @@
+import {type Opt} from "./deep.ts";
 import {mainPath} from "./path.deno.ts";
 
 /**
@@ -7,7 +8,7 @@ import {mainPath} from "./path.deno.ts";
 * const object = await jsonRead("./resource.json");
 * ```
 */
-export async function jsonRead<T extends unknown>(path:string):Promise<T>{
+export async function jsonRead<T extends Opt<T>>(path:string):Promise<T>{
     return JSON.parse(await Deno.readTextFile(path));
 }
 
@@ -20,7 +21,7 @@ export async function jsonRead<T extends unknown>(path:string):Promise<T>{
 * });
 * ```
 */
-export async function jsonWrite<T extends unknown>(path:string, data:T):Promise<void>{
+export async function jsonWrite<T extends Opt<T>>(path:string, data:T):Promise<void>{
     await Deno.writeTextFile(path, JSON.stringify(data, undefined, 4));
 }
 
@@ -34,7 +35,7 @@ export async function jsonWrite<T extends unknown>(path:string, data:T):Promise<
 * const resource = await jsonLoad("./resource.json", dresource);
 * ```
 */
-export async function jsonLoad<T extends unknown>(path:string, def:T):Promise<T>{
+export async function jsonLoad<T extends Opt<T>>(path:string, def:T):Promise<T>{
     try{
         return await jsonRead<T>(path);
     }
@@ -59,6 +60,6 @@ export async function jsonLoad<T extends unknown>(path:string, def:T):Promise<T>
 * const config = await configLoad(dconfig);
 * ```
 */
-export async function configLoad<T extends unknown>(def:T):Promise<T>{
+export async function configLoad<T extends Opt<T>>(def:T):Promise<T>{
     return await jsonLoad(`${mainPath()}/config.json`, def);
 }
