@@ -2,6 +2,7 @@ import "./test/base64.test.ts";
 import "./test/crypto.test.ts";
 import "./test/deep.test.ts";
 import "./test/deflate.test.ts";
+import "./test/evaluate.test.ts";
 import "./test/fetch.test.ts";
 import "./test/import.test.ts";
 import "./test/json.deno.test.ts";
