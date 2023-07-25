@@ -6,10 +6,10 @@ import {isWin} from "./platform.deno.ts";
 * Useful for converting from Windows path to UNIX path.
 * @example
 * ```ts
-* const path = slashUnix("C:\\file");
+* const path = slashU("C:\\file");
 * ```
 */
-export function slashUnix(path:string):string{
+export function slashU(path:string):string{
     return path.replace(/\\/g, "/");
 }
 
@@ -18,10 +18,10 @@ export function slashUnix(path:string):string{
 * Useful for converting from UNIX path to Windows path.
 * @example
 * ```ts
-* const path = slashWin("C:/file");
+* const path = slashW("C:/file");
 * ```
 */
-export function slashWin(path:string):string{
+export function slashW(path:string):string{
     return path.replace(/\//g, "\\");
 }
 
@@ -60,7 +60,7 @@ export function dataPath():string{
 export function homePath():string{
     const {HOME, USERPROFILE} = Deno.env.toObject();
 
-    return isWin() ? slashUnix(USERPROFILE) : HOME;
+    return isWin() ? slashU(USERPROFILE) : HOME;
 }
 
 /**
@@ -73,5 +73,5 @@ export function homePath():string{
 export function mainPath():string{
     const path = fromFileUrl(dirname(Deno.mainModule));
 
-    return isWin() ? slashUnix(path) : path;
+    return isWin() ? slashU(path) : path;
 }
