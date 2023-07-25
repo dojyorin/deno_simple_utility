@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {utfEncode, utfDecode, hexEncode, hexDecode, trimExtend, accurateSegment} from "../src/text.ts";
+import {utfEncode, utfDecode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment} from "../src/text.ts";
 
 const sampleText = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
 const sampleBin = new Uint8Array([
@@ -12,7 +12,7 @@ const sampleBin = new Uint8Array([
 
 Deno.test({
     name: "Text: UTF8 Encode and Decode",
-    async fn(){
+    fn(){
         const encode = utfEncode(sampleText);
         const decode = utfDecode(encode);
 
@@ -22,7 +22,7 @@ Deno.test({
 
 Deno.test({
     name: "Text: HEX Encode and Decode",
-    async fn(){
+    fn(){
         const encode = hexEncode(sampleBin);
         const decode = hexDecode(encode);
 
@@ -32,7 +32,7 @@ Deno.test({
 
 Deno.test({
     name: "Text: Trim",
-    async fn(){
+    fn(){
         const result = trimExtend(sampleText);
 
         assertEquals(result, "Lorem ipsum dolor sit amet.");
@@ -40,8 +40,26 @@ Deno.test({
 });
 
 Deno.test({
+    name: "Text: Fix Width",
+    fn(){
+        const result = fixWidth("１＋１＝２");
+
+        assertEquals(result, "1+1=2");
+    }
+});
+
+Deno.test({
+    name: "Text: Clean Up",
+    fn(){
+        const result = cleanText("１  ＋  １  ＝  ２  ");
+
+        assertEquals(result, "1 + 1 = 2");
+    }
+});
+
+Deno.test({
     name: "Text: Segment",
-    async fn(){
+    fn(){
         const {length} = accurateSegment("😄😁😆😅😂");
 
         assertEquals(length, 5);

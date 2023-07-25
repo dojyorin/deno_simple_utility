@@ -4,7 +4,7 @@ import {isWin} from "../src/platform.deno.ts";
 Deno.test({
     ignore: Deno.build.os !== "windows",
     name: "Platform: Windows",
-    async fn(){
+    fn(){
         assertEquals(isWin(), true);
     }
 });
@@ -12,7 +12,7 @@ Deno.test({
 Deno.test({
     ignore: Deno.build.os === "windows",
     name: "Platform: Posix",
-    async fn(){
+    fn(){
         assertEquals(isWin(), false);
     }
 });
