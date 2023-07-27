@@ -1,4 +1,5 @@
 export * from "./src/base64.ts";
+export * from "./src/blob.ts";
 export * from "./src/crypto.ts";
 export * from "./src/deep.ts";
 export * from "./src/deflate.ts";

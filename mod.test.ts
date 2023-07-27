@@ -1,4 +1,5 @@
 import "./test/base64.test.ts";
+import "./test/blob.test.ts";
 import "./test/crypto.test.ts";
 import "./test/deep.test.ts";
 import "./test/deflate.test.ts";
