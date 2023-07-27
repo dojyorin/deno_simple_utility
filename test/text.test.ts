@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {utfEncode, utfDecode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment} from "../src/text.ts";
+import {utfEncode, utfDecode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment, pad0} from "../src/text.ts";
 
 const sampleText = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
 const sampleBin = new Uint8Array([
@@ -63,5 +63,14 @@ Deno.test({
         const {length} = accurateSegment("😄😁😆😅😂");
 
         assertEquals(length, 5);
+    }
+});
+
+Deno.test({
+    name: "Text: Pad 0",
+    fn(){
+        const pad = pad0(8);
+
+        assertEquals(pad, "08");
     }
 });

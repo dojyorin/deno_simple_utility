@@ -34,7 +34,7 @@ export function utfDecode(data:Uint8Array):string{
 * ```
 */
 export function hexEncode(data:Uint8Array):string{
-    return [...data].map(n => n.toString(16).toUpperCase().padStart(2, "0")).join("");
+    return [...data].map(n => pad0(n, 2, 16)).join("");
 }
 
 /**
@@ -47,7 +47,7 @@ export function hexEncode(data:Uint8Array):string{
 * ```
 */
 export function hexDecode(data:string):Uint8Array{
-    return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(s => parseInt(s, 16)) ?? []);
+    return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(s => Number(`0x${s}`)) ?? []);
 }
 
 /**
@@ -125,4 +125,17 @@ export function cleanText(data:string){
 */
 export function accurateSegment(data:string):string[]{
     return [...new Intl.Segmenter().segment(data)].map(({segment}) => segment);
+}
+
+/**
+* Create string with zero padding at beginning of number.
+* Output is 2 digits by default.
+* @example
+* ```ts
+* const num = 8;
+* const padding = pad0(num);
+* ```
+*/
+export function pad0(data:number, digit?:number, radix?:number){
+    return data.toString(radix).toUpperCase().padStart(digit ?? 2, "0");
 }
