@@ -1,5 +1,5 @@
-import {assertEquals, serve} from "../deps.test.ts";
-import {fetchExtend} from "../src/fetch.ts";
+import {assertEquals} from "../deps.test.ts";
+import {fetchExtend, httpAuth, httpContent} from "../src/fetch.ts";
 
 const sample = new Uint8Array([
     0x71, 0xD6, 0xFB, 0x3D, 0xF9, 0xD9, 0x41, 0x07,
@@ -13,16 +13,34 @@ Deno.test({
     async fn(){
         const ac = new AbortController();
 
-        serve(() => new Response(sample), {
+        Deno.serve({
             hostname: "127.0.0.1",
             port: 62000,
             signal: ac.signal
-        });
+        }, () => new Response(sample));
 
         const result = await fetchExtend("http://127.0.0.1:62000", "byte");
 
         assertEquals(result, sample);
 
         ac.abort();
+    }
+});
+
+Deno.test({
+    name: "Fetch: HTTP Authorization",
+    fn(){
+        const result = httpAuth("Basic", btoa("root:root"));
+
+        assertEquals(result["Authorization"], "Basic cm9vdDpyb290");
+    }
+});
+
+Deno.test({
+    name: "Fetch: HTTP ContentType",
+    fn(){
+        const result = httpContent(new URLSearchParams());
+
+        assertEquals(result["Content-Type"], "application/x-www-form-urlencoded");
     }
 });
