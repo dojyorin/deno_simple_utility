@@ -34,7 +34,7 @@ export function utfDecode(data:Uint8Array):string{
 * ```
 */
 export function hexEncode(data:Uint8Array):string{
-    return [...data].map(n => pad0(n, 2, 16)).join("");
+    return [...data].map(v => pad0(v, 2, 16)).join("");
 }
 
 /**
@@ -47,7 +47,7 @@ export function hexEncode(data:Uint8Array):string{
 * ```
 */
 export function hexDecode(data:string):Uint8Array{
-    return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(s => Number(`0x${s}`)) ?? []);
+    return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(v => Number(`0x${v}`)) ?? []);
 }
 
 /**
@@ -70,7 +70,7 @@ export function trimExtend(data:string):string{
 * const formated = fixWidth(text);
 * ```
 */
-export function fixWidth(data:string){
+export function fixWidth(data:string):string{
     return Object.entries({
         "ｳﾞ": "ヴ",
         "ｶﾞ": "ガ", "ｷﾞ": "ギ", "ｸﾞ": "グ", "ｹﾞ": "ゲ", "ｺﾞ": "ゴ",
@@ -110,7 +110,7 @@ export function fixWidth(data:string){
 * const formated = cleanText(text);
 * ```
 */
-export function cleanText(data:string){
+export function cleanText(data:string):string{
     return trimExtend(fixWidth(data));
 }
 
@@ -136,6 +136,6 @@ export function accurateSegment(data:string):string[]{
 * const padding = pad0(num);
 * ```
 */
-export function pad0(data:number, digit?:number, radix?:number){
+export function pad0(data:number, digit?:number, radix?:number):string{
     return data.toString(radix).toUpperCase().padStart(digit ?? 2, "0");
 }
