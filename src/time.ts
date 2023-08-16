@@ -32,7 +32,7 @@ export function unixtimeDecode(time:number):Date{
 * ```
 */
 export function unixtimeParse(ds:string):number{
-    const [y, mo, d, h, mi, s] = ds.split(/[/ :TZ_.-]/i).map(s => Number(s));
+    const [y, m, d, h, mi, s] = ds.split(/[/ :TZ_.-]/i).map(v => Number(v));
 
-    return unixtimeEncode(new Date(y, (mo ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0));
+    return unixtimeEncode(new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0));
 }

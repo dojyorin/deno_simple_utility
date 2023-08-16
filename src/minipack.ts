@@ -22,7 +22,7 @@ export type FileInit = [string, Uint8Array];
 * ```
 */
 export function minipackEncode(files:FileInit[]):Uint8Array{
-    const archive = new Uint8Array(files.reduce((a, [k, v]) => a + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
+    const archive = new Uint8Array(files.reduce((size, [k, v]) => size + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
 
     let i = 0;
 
