@@ -3,19 +3,27 @@
 */
 export type PortableCryptoKeyPair = Record<keyof CryptoKeyPair, Uint8Array>;
 
+async function importSignKey(key:Uint8Array, pub:boolean){
+    return await crypto.subtle.importKey(pub ? "spki" : "pkcs8", key, {
+        name: "ECDSA",
+        namedCurve: "P-384"
+    }, false, [pub ? "verify" : "sign"]);
+}
+
+async function importDeriveKey(key:Uint8Array, pub:boolean){
+    return await crypto.subtle.importKey(pub ? "spki" : "pkcs8", key, {
+        name: "ECDH",
+        namedCurve: "P-384"
+    }, false, pub ? [] : ["deriveKey", "deriveBits"]);
+}
+
 async function deriveSecretKey({publicKey, privateKey}:PortableCryptoKeyPair){
     return await crypto.subtle.deriveKey({
         name: "ECDH",
-        public: await crypto.subtle.importKey("spki", publicKey, {
-            name: "ECDH",
-            namedCurve: "P-521"
-        }, false, [])
-    }, await crypto.subtle.importKey("pkcs8", privateKey, {
-        name: "ECDH",
-        namedCurve: "P-521"
-    }, false, ["deriveKey", "deriveBits"]), {
+        public: await importDeriveKey(publicKey, true)
+    }, await importDeriveKey(privateKey, false), {
         name: "AES-GCM",
-        length: 256
+        length: 192
     }, false, ["encrypt", "decrypt"]);
 }
 
@@ -45,7 +53,7 @@ export async function hashValue(bit:256 | 384 | 512, data:Uint8Array):Promise<Ui
 /**
 * Generate exportable public-key pair.
 * You can generate keys for ECDH or ECDSA.
-* Algorithm use is "NIST P-512".
+* Algorithm use is "NIST P-384".
 * @example
 * ```ts
 * const key1 = await pubkeyGen("ECDH");
@@ -55,7 +63,7 @@ export async function hashValue(bit:256 | 384 | 512, data:Uint8Array):Promise<Ui
 export async function pubkeyGen(usage:"ECDH" | "ECDSA"):Promise<PortableCryptoKeyPair>{
     const {publicKey, privateKey} = await crypto.subtle.generateKey({
         name: usage,
-        namedCurve: "P-521"
+        namedCurve: "P-384"
     }, true, usage === "ECDH" ? ["deriveKey", "deriveBits"] : ["sign", "verify"]);
 
     return {
@@ -92,7 +100,7 @@ export async function pubkeyEncrypt({publicKey, privateKey}:PortableCryptoKeyPai
     }, await deriveSecretKey({publicKey, privateKey}), data);
 
     const output = new Uint8Array(iv.byteLength + enc.byteLength);
-    output.set(<Uint8Array>iv, 0);
+    output.set(iv, 0);
     output.set(new Uint8Array(enc), iv.byteLength);
 
     return output;
@@ -141,11 +149,8 @@ export async function pubkeyDecrypt({publicKey, privateKey}:PortableCryptoKeyPai
 export async function pubkeySign(privateKey:Uint8Array, data:Uint8Array):Promise<Uint8Array>{
     const sign = await crypto.subtle.sign({
         name: "ECDSA",
-        hash: "SHA-512"
-    }, await crypto.subtle.importKey("pkcs8", privateKey, {
-        name: "ECDSA",
-        namedCurve: "P-521"
-    }, false, ["sign"]), data);
+        hash: "SHA-384"
+    }, await importSignKey(privateKey, false), data);
 
     return new Uint8Array(sign);
 }
@@ -163,9 +168,6 @@ export async function pubkeySign(privateKey:Uint8Array, data:Uint8Array):Promise
 export async function pubkeyVerify(publicKey:Uint8Array, signature:Uint8Array, data:Uint8Array):Promise<boolean>{
     return await crypto.subtle.verify({
         name: "ECDSA",
-        hash: "SHA-512"
-    }, await crypto.subtle.importKey("spki", publicKey, {
-        name: "ECDSA",
-        namedCurve: "P-521"
-    }, false, ["verify"]), signature, data);
+        hash: "SHA-384"
+    }, await importSignKey(publicKey, true), signature, data);
 }
