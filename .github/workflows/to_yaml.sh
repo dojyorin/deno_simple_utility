@@ -1,6 +1,10 @@
 #!/bin/sh
 set -eu
 
-cd ${0%/*}
+while [[ ${#} -ge 1 ]]; do
+    if [[ -f ./${1}.json ]]; then
+        yq -I 4 -o y ./${1}.json | head -c -1 > ./${1}.yaml
+    fi
 
-yq -o y -I 4 ./${1}.json | head -c -1 > ./${1}.yaml
+    shift
+done

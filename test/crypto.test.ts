@@ -33,7 +33,6 @@ Deno.test({
 });
 
 Deno.test({
-    ignore: true,
     name: "Crypto: Encrypt and Decrypt",
     async fn(){
         const key1 = await pubkeyGen("ECDH");
@@ -54,7 +53,6 @@ Deno.test({
 });
 
 Deno.test({
-    ignore: true,
     name: "Crypto: Sign and Verify",
     async fn(){
         const key = await pubkeyGen("ECDSA");
