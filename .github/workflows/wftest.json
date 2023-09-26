@@ -1,5 +1,5 @@
 {
-    "name": "test",
+    "name": "wftest",
     "on": {
         "push": {
             "branches": [
@@ -38,15 +38,6 @@
             "steps": [{
                 "name": "clone repository",
                 "uses": "actions/checkout@v3"
-            }, {
-                "name": "install deno",
-                "uses": "denoland/setup-deno@v1",
-                "with": {
-                    "deno-version": "v1.x"
-                }
-            }, {
-                "name": "run test",
-                "run": "deno test -A ./mod.test.ts"
             }]
         }
     }
