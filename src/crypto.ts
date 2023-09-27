@@ -3,45 +3,65 @@
 */
 export type PortableCryptoKeyPair = Record<keyof CryptoKeyPair, Uint8Array>;
 
-const ecdh = {
-    name: "ECDH",
-    namedCurve: "P-384"
-};
-
-const ecdsa = {
-    name: "ECDSA",
-    namedCurve: "P-384"
-};
-
-const aesenctype = {
-    name: "AES-GCM",
-    length: 192
-};
-
 const ecdsa2 = {
-    name: ecdsa.name,
+    name: "ECDSA",
     hash: "SHA-384"
 };
-
-const deriveusage:KeyUsage[] = ["deriveKey", "deriveBits"];
-const aesusage:KeyUsage[] = ["encrypt", "decrypt"];
 
 const pubkeytype = "spki";
 const privatekeytype = "pkcs8";
 
-function deriveinit(key:CryptoKey){
+async function generateKey(exc:boolean){
+    const {publicKey, privateKey} = await crypto.subtle.generateKey({
+        name: exc ? "ECDH" : "ECDSA",
+        namedCurve: "P-256"
+    }, true, exc ? ["deriveKey", "deriveBits"] : ["sign", "verify"]);
+
     return {
-        name: ecdh.name,
-        public: key
+        publicKey: new Uint8Array(await crypto.subtle.exportKey(pubkeytype, publicKey)),
+        privateKey: new Uint8Array(await crypto.subtle.exportKey(privatekeytype, privateKey))
     };
 }
 
-function aesinit(iv:Uint8Array){
-    return {
-        name: aesenctype.name,
-        iv: iv
-    };
+async function importKey(key:Uint8Array, exc:boolean, pub:boolean){
+    return await crypto.subtle.importKey(pub ? pubkeytype : privatekeytype, key, {
+        name: exc ? "ECDH" : "ECDSA",
+        namedCurve: "P-256"
+    }, false, exc ? pub ? [] : ["encrypt", "decrypt"] : pub ? ["verify"] : ["sign"])
 }
+
+async function deriveKey({publicKey, privateKey}:PortableCryptoKeyPair){
+    return await crypto.subtle.deriveKey({
+        name: "ECDH",
+        public: await importKey(publicKey, true, true)
+    }, await importKey(privateKey, true, false), {
+        name: "AES-GCM",
+        length: 128
+    }, false, ["encrypt", "decrypt"]);
+}
+
+async function encrypt(key:CryptoKey, data:Uint8Array){
+    const aes = {
+        name: "AES-GCM",
+        iv: randomBin(12)
+    };
+
+    const output = new Uint8Array(aes.iv.byteLength + data.byteLength);
+    output.set(aes.iv, 0);
+    output.set(new Uint8Array(await crypto.subtle.encrypt(aes, key, data)), aes.iv.byteLength);
+
+    return output;
+}
+
+async function decrypt(key:CryptoKey, data:Uint8Array):Promise<Uint8Array>{
+    const aes = {
+        name: "AES-GCM",
+        iv: data.subarray(0, 12)
+    };
+
+    return new Uint8Array(await crypto.subtle.decrypt(aes, key, data.subarray(aes.iv.byteLength)));
+}
+
 
 /**
 * Generate random binary with any number of bytes.
@@ -77,12 +97,7 @@ export async function hashValue(bit:256 | 384 | 512, data:Uint8Array):Promise<Ui
 * ```
 */
 export async function pubkeyGenECDH():Promise<PortableCryptoKeyPair>{
-    const {publicKey, privateKey} = await crypto.subtle.generateKey(ecdh, true, deriveusage);
-
-    return {
-        publicKey: new Uint8Array(await crypto.subtle.exportKey(pubkeytype, publicKey)),
-        privateKey: new Uint8Array(await crypto.subtle.exportKey(privatekeytype, privateKey))
-    };
+    return await generateKey(true);
 }
 
 /**
@@ -95,12 +110,7 @@ export async function pubkeyGenECDH():Promise<PortableCryptoKeyPair>{
 * ```
 */
 export async function pubkeyGenECDSA():Promise<PortableCryptoKeyPair>{
-    const {publicKey, privateKey} = await crypto.subtle.generateKey(ecdsa, true, ["sign", "verify"]);
-
-    return {
-        publicKey: new Uint8Array(await crypto.subtle.exportKey(pubkeytype, publicKey)),
-        privateKey: new Uint8Array(await crypto.subtle.exportKey(privatekeytype, privateKey))
-    };
+    return await generateKey(false);
 }
 
 /**
@@ -122,16 +132,8 @@ export async function pubkeyGenECDSA():Promise<PortableCryptoKeyPair>{
 * }, converted);
 * ```
 */
-export async function pubkeyEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
-    const iv = randomBin(12);
-    const key = await crypto.subtle.deriveKey(deriveinit(await crypto.subtle.importKey(pubkeytype, publicKey, ecdh, false, [])), await crypto.subtle.importKey(privatekeytype, privateKey, ecdh, false, deriveusage), aesenctype, false, aesusage);
-    const enc = await crypto.subtle.encrypt(aesinit(iv), key, data);
-
-    const output = new Uint8Array(iv.byteLength + enc.byteLength);
-    output.set(iv, 0);
-    output.set(new Uint8Array(enc), iv.byteLength);
-
-    return output;
+export async function pubkeyEncrypt(key:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
+    return await encrypt(await deriveKey(key), data);
 }
 
 /**
@@ -153,12 +155,8 @@ export async function pubkeyEncrypt({publicKey, privateKey}:PortableCryptoKeyPai
 * }, converted);
 * ```
 */
-export async function pubkeyDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
-    const iv = data.subarray(0, 12);
-    const key = await crypto.subtle.deriveKey(deriveinit(await crypto.subtle.importKey(pubkeytype, publicKey, ecdh, false, [])), await crypto.subtle.importKey(privatekeytype, privateKey, ecdh, false, deriveusage), aesenctype, false, aesusage);
-    const dec = await crypto.subtle.decrypt(aesinit(iv), key, data.subarray(iv.byteLength));
-
-    return new Uint8Array(dec);
+export async function pubkeyDecrypt(key:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
+    return await decrypt(await deriveKey(key), data);
 }
 
 /**
@@ -172,7 +170,7 @@ export async function pubkeyDecrypt({publicKey, privateKey}:PortableCryptoKeyPai
 * ```
 */
 export async function pubkeySign(privateKey:Uint8Array, data:Uint8Array):Promise<Uint8Array>{
-    return new Uint8Array(await crypto.subtle.sign(ecdsa2, await crypto.subtle.importKey(privatekeytype, privateKey, ecdsa, false, ["sign"]), data));
+    return new Uint8Array(await crypto.subtle.sign(ecdsa2, await importKey(privateKey, false, false), data));
 }
 
 /**
@@ -186,5 +184,5 @@ export async function pubkeySign(privateKey:Uint8Array, data:Uint8Array):Promise
 * ```
 */
 export async function pubkeyVerify(publicKey:Uint8Array, signature:Uint8Array, data:Uint8Array):Promise<boolean>{
-    return await crypto.subtle.verify(ecdsa2, await crypto.subtle.importKey(pubkeytype, publicKey, ecdsa, false, ["verify"]), signature, data);
+    return await crypto.subtle.verify(ecdsa2, await importKey(publicKey, false, true), signature, data);
 }
