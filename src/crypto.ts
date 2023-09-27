@@ -3,28 +3,44 @@
 */
 export type PortableCryptoKeyPair = Record<keyof CryptoKeyPair, Uint8Array>;
 
-async function importSignKey(key:Uint8Array, pub:boolean){
-    return await crypto.subtle.importKey(pub ? "spki" : "pkcs8", key, {
-        name: "ECDSA",
-        namedCurve: "P-384"
-    }, false, [pub ? "verify" : "sign"]);
+const ecdh = {
+    name: "ECDH",
+    namedCurve: "P-384"
+};
+
+const ecdsa = {
+    name: "ECDSA",
+    namedCurve: "P-384"
+};
+
+const aesenctype = {
+    name: "AES-GCM",
+    length: 192
+};
+
+const ecdsa2 = {
+    name: ecdsa.name,
+    hash: "SHA-384"
+};
+
+const deriveusage:KeyUsage[] = ["deriveKey", "deriveBits"];
+const aesusage:KeyUsage[] = ["encrypt", "decrypt"];
+
+const pubkeytype = "spki";
+const privatekeytype = "pkcs8";
+
+function deriveinit(key:CryptoKey){
+    return {
+        name: ecdh.name,
+        public: key
+    };
 }
 
-async function importDeriveKey(key:Uint8Array, pub:boolean){
-    return await crypto.subtle.importKey(pub ? "spki" : "pkcs8", key, {
-        name: "ECDH",
-        namedCurve: "P-384"
-    }, false, pub ? [] : ["deriveKey", "deriveBits"]);
-}
-
-async function deriveSecretKey({publicKey, privateKey}:PortableCryptoKeyPair){
-    return await crypto.subtle.deriveKey({
-        name: "ECDH",
-        public: await importDeriveKey(publicKey, true)
-    }, await importDeriveKey(privateKey, false), {
-        name: "AES-GCM",
-        length: 192
-    }, false, ["encrypt", "decrypt"]);
+function aesinit(iv:Uint8Array){
+    return {
+        name: aesenctype.name,
+        iv: iv
+    };
 }
 
 /**
@@ -52,23 +68,38 @@ export async function hashValue(bit:256 | 384 | 512, data:Uint8Array):Promise<Ui
 
 /**
 * Generate exportable public-key pair.
-* You can generate keys for ECDH or ECDSA.
+* You can generate keys for ECDH.
 * Algorithm use is "NIST P-384".
 * @example
 * ```ts
-* const key1 = await pubkeyGen("ECDH");
-* const key2 = await pubkeyGen("ECDSA");
+* const key1 = await pubkeyGenECDH();
+* const key2 = await pubkeyGenECDH();
 * ```
 */
-export async function pubkeyGen(usage:"ECDH" | "ECDSA"):Promise<PortableCryptoKeyPair>{
-    const {publicKey, privateKey} = await crypto.subtle.generateKey({
-        name: usage,
-        namedCurve: "P-384"
-    }, true, usage === "ECDH" ? ["deriveKey", "deriveBits"] : ["sign", "verify"]);
+export async function pubkeyGenECDH():Promise<PortableCryptoKeyPair>{
+    const {publicKey, privateKey} = await crypto.subtle.generateKey(ecdh, true, deriveusage);
 
     return {
-        publicKey: new Uint8Array(await crypto.subtle.exportKey("spki", publicKey)),
-        privateKey: new Uint8Array(await crypto.subtle.exportKey("pkcs8", privateKey))
+        publicKey: new Uint8Array(await crypto.subtle.exportKey(pubkeytype, publicKey)),
+        privateKey: new Uint8Array(await crypto.subtle.exportKey(privatekeytype, privateKey))
+    };
+}
+
+/**
+* Generate exportable public-key pair.
+* You can generate keys for ECDSA.
+* Algorithm use is "NIST P-384".
+* @example
+* ```ts
+* const key = await pubkeyGenECDSA();
+* ```
+*/
+export async function pubkeyGenECDSA():Promise<PortableCryptoKeyPair>{
+    const {publicKey, privateKey} = await crypto.subtle.generateKey(ecdsa, true, ["sign", "verify"]);
+
+    return {
+        publicKey: new Uint8Array(await crypto.subtle.exportKey(pubkeytype, publicKey)),
+        privateKey: new Uint8Array(await crypto.subtle.exportKey(privatekeytype, privateKey))
     };
 }
 
@@ -93,11 +124,8 @@ export async function pubkeyGen(usage:"ECDH" | "ECDSA"):Promise<PortableCryptoKe
 */
 export async function pubkeyEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
     const iv = randomBin(12);
-    const enc = await crypto.subtle.encrypt({
-        name: "AES-GCM",
-        tagLength: 128,
-        iv: iv
-    }, await deriveSecretKey({publicKey, privateKey}), data);
+    const key = await crypto.subtle.deriveKey(deriveinit(await crypto.subtle.importKey(pubkeytype, publicKey, ecdh, false, [])), await crypto.subtle.importKey(privatekeytype, privateKey, ecdh, false, deriveusage), aesenctype, false, aesusage);
+    const enc = await crypto.subtle.encrypt(aesinit(iv), key, data);
 
     const output = new Uint8Array(iv.byteLength + enc.byteLength);
     output.set(iv, 0);
@@ -127,11 +155,8 @@ export async function pubkeyEncrypt({publicKey, privateKey}:PortableCryptoKeyPai
 */
 export async function pubkeyDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
     const iv = data.subarray(0, 12);
-    const dec = await crypto.subtle.decrypt({
-        name: "AES-GCM",
-        tagLength: 128,
-        iv: iv
-    }, await deriveSecretKey({publicKey, privateKey}), data.subarray(iv.byteLength));
+    const key = await crypto.subtle.deriveKey(deriveinit(await crypto.subtle.importKey(pubkeytype, publicKey, ecdh, false, [])), await crypto.subtle.importKey(privatekeytype, privateKey, ecdh, false, deriveusage), aesenctype, false, aesusage);
+    const dec = await crypto.subtle.decrypt(aesinit(iv), key, data.subarray(iv.byteLength));
 
     return new Uint8Array(dec);
 }
@@ -147,12 +172,7 @@ export async function pubkeyDecrypt({publicKey, privateKey}:PortableCryptoKeyPai
 * ```
 */
 export async function pubkeySign(privateKey:Uint8Array, data:Uint8Array):Promise<Uint8Array>{
-    const sign = await crypto.subtle.sign({
-        name: "ECDSA",
-        hash: "SHA-384"
-    }, await importSignKey(privateKey, false), data);
-
-    return new Uint8Array(sign);
+    return new Uint8Array(await crypto.subtle.sign(ecdsa2, await crypto.subtle.importKey(privatekeytype, privateKey, ecdsa, false, ["sign"]), data));
 }
 
 /**
@@ -166,8 +186,5 @@ export async function pubkeySign(privateKey:Uint8Array, data:Uint8Array):Promise
 * ```
 */
 export async function pubkeyVerify(publicKey:Uint8Array, signature:Uint8Array, data:Uint8Array):Promise<boolean>{
-    return await crypto.subtle.verify({
-        name: "ECDSA",
-        hash: "SHA-384"
-    }, await importSignKey(publicKey, true), signature, data);
+    return await crypto.subtle.verify(ecdsa2, await crypto.subtle.importKey(pubkeytype, publicKey, ecdsa, false, ["verify"]), signature, data);
 }
