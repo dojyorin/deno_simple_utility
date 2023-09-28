@@ -46,10 +46,10 @@ async function deriveKey({publicKey, privateKey}:PortableCryptoKeyPair){
 * Generate random binary with any number of bytes.
 * @example
 * ```ts
-* const random = randomBin(16);
+* const random = generateRandom(16);
 * ```
 */
-export function randomBin(n:number):Uint8Array{
+export function generateRandom(n:number):Uint8Array{
     return crypto.getRandomValues(new Uint8Array(n));
 }
 
@@ -61,7 +61,7 @@ export function randomBin(n:number):Uint8Array{
 * const hash = await hashValue(256, bin);
 * ```
 */
-export async function hashValue(bit:256 | 384 | 512, data:Uint8Array):Promise<Uint8Array>{
+export async function deriveHash(bit:256 | 384 | 512, data:Uint8Array):Promise<Uint8Array>{
     return new Uint8Array(await crypto.subtle.digest(`SHA-${bit}`, data));
 }
 
@@ -75,7 +75,7 @@ export async function hashValue(bit:256 | 384 | 512, data:Uint8Array):Promise<Ui
 * const key2 = await pubkeyGen("ECDSA");
 * ```
 */
-export async function generateKeyECDH():Promise<PortableCryptoKeyPair>{
+export async function pkGenerateECDH():Promise<PortableCryptoKeyPair>{
     return await generateKey(CURVE_ECDH, ["deriveKey"]);
 }
 
@@ -89,7 +89,7 @@ export async function generateKeyECDH():Promise<PortableCryptoKeyPair>{
 * const key2 = await pubkeyGen("ECDSA");
 * ```
 */
-export async function generateKeyECDSA():Promise<PortableCryptoKeyPair>{
+export async function pkGenerateECDSA():Promise<PortableCryptoKeyPair>{
     return await generateKey(CURVE_ECDSA, ["sign", "verify"]);
 }
 
@@ -112,10 +112,10 @@ export async function generateKeyECDSA():Promise<PortableCryptoKeyPair>{
 * }, converted);
 * ```
 */
-export async function pubkeyEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
+export async function pkEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
     const aes = {
         name: AES_MODE,
-        iv: randomBin(12)
+        iv: generateRandom(12)
     };
 
     const output = new Uint8Array(aes.iv.byteLength + data.byteLength + 16);
@@ -144,7 +144,7 @@ export async function pubkeyEncrypt({publicKey, privateKey}:PortableCryptoKeyPai
 * }, converted);
 * ```
 */
-export async function pubkeyDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
+export async function pkDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
     const aes = {
         name: AES_MODE,
         iv: data.subarray(0, 12)
@@ -163,7 +163,7 @@ export async function pubkeyDecrypt({publicKey, privateKey}:PortableCryptoKeyPai
 * const verified = await pubkeyVerify(key.publicKey, signature, bin);
 * ```
 */
-export async function pubkeySign(key:Uint8Array, data:Uint8Array):Promise<Uint8Array>{
+export async function pkSign(key:Uint8Array, data:Uint8Array):Promise<Uint8Array>{
     return new Uint8Array(await crypto.subtle.sign(MAC_ECDSA, await crypto.subtle.importKey(FORMAT_PRI, key, CURVE_ECDSA, false, ["sign"]), data));
 }
 
@@ -177,6 +177,6 @@ export async function pubkeySign(key:Uint8Array, data:Uint8Array):Promise<Uint8A
 * const verified = await pubkeyVerify(key.publicKey, signature, bin);
 * ```
 */
-export async function pubkeyVerify(key:Uint8Array, sign:Uint8Array, data:Uint8Array):Promise<boolean>{
+export async function pkVerify(key:Uint8Array, sign:Uint8Array, data:Uint8Array):Promise<boolean>{
     return await crypto.subtle.verify(MAC_ECDSA, await crypto.subtle.importKey(FORMAT_PUB, key, CURVE_ECDSA, false, ["verify"]), sign, data);
 }

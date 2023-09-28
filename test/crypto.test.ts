@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {randomBin, hashValue, generateKeyECDH, generateKeyECDSA, pubkeyEncrypt, pubkeyDecrypt, pubkeySign, pubkeyVerify} from "../src/crypto.ts";
+import {generateRandom, deriveHash, pkGenerateECDH, pkGenerateECDSA, pkEncrypt, pkDecrypt, pkSign, pkVerify} from "../src/crypto.ts";
 
 const sample = new Uint8Array([0x02, 0xF2, 0x5D, 0x1F, 0x1C, 0x34, 0xB9, 0x2F]);
 
@@ -17,7 +17,7 @@ const hashResult = new Uint8Array([
 Deno.test({
     name: "Crypto: Random",
     fn(){
-        const {byteLength} = randomBin(16);
+        const {byteLength} = generateRandom(16);
 
         assertEquals(byteLength, 16);
     }
@@ -26,7 +26,7 @@ Deno.test({
 Deno.test({
     name: "Crypto: Hash",
     async fn(){
-        const hash = await hashValue(512, sample);
+        const hash = await deriveHash(512, sample);
 
         assertEquals(hash, hashResult);
     }
@@ -35,15 +35,15 @@ Deno.test({
 Deno.test({
     name: "Crypto: Encrypt and Decrypt",
     async fn(){
-        const key1 = await generateKeyECDH();
-        const key2 = await generateKeyECDH();
+        const key1 = await pkGenerateECDH();
+        const key2 = await pkGenerateECDH();
 
-        const encrypt = await pubkeyEncrypt({
+        const encrypt = await pkEncrypt({
             publicKey: key1.publicKey,
             privateKey: key2.privateKey
         }, sample);
 
-        const decrypt = await pubkeyDecrypt({
+        const decrypt = await pkDecrypt({
             publicKey: key2.publicKey,
             privateKey: key1.privateKey
         }, encrypt);
@@ -55,9 +55,9 @@ Deno.test({
 Deno.test({
     name: "Crypto: Sign and Verify",
     async fn(){
-        const key = await generateKeyECDSA();
-        const signature = await pubkeySign(key.privateKey, sample);
-        const verify = await pubkeyVerify(key.publicKey, signature, sample);
+        const key = await pkGenerateECDSA();
+        const signature = await pkSign(key.privateKey, sample);
+        const verify = await pkVerify(key.publicKey, signature, sample);
 
         assertEquals(verify, true);
     }
