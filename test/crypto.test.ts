@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {randomBin, hashValue, pubkeyGenECDH, pubkeyGenECDSA, pubkeyEncrypt, pubkeyDecrypt, pubkeySign, pubkeyVerify} from "../src/crypto.ts";
+import {randomBin, hashValue, generateKeyECDH, generateKeyECDSA, pubkeyEncrypt, pubkeyDecrypt, pubkeySign, pubkeyVerify} from "../src/crypto.ts";
 
 const sample = new Uint8Array([0x02, 0xF2, 0x5D, 0x1F, 0x1C, 0x34, 0xB9, 0x2F]);
 
@@ -35,8 +35,8 @@ Deno.test({
 Deno.test({
     name: "Crypto: Encrypt and Decrypt",
     async fn(){
-        const key1 = await pubkeyGenECDH();
-        const key2 = await pubkeyGenECDH();
+        const key1 = await generateKeyECDH();
+        const key2 = await generateKeyECDH();
 
         const encrypt = await pubkeyEncrypt({
             publicKey: key1.publicKey,
@@ -55,7 +55,7 @@ Deno.test({
 Deno.test({
     name: "Crypto: Sign and Verify",
     async fn(){
-        const key = await pubkeyGenECDSA();
+        const key = await generateKeyECDSA();
         const signature = await pubkeySign(key.privateKey, sample);
         const verify = await pubkeyVerify(key.publicKey, signature, sample);
 
