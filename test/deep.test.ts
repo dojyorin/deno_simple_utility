@@ -10,7 +10,7 @@ const sample = {
 };
 
 Deno.test({
-    name: "Freeze: DeepFreeze",
+    name: "Deep: Freeze",
     fn(){
         const freeze = deepFreeze(deepClone(sample));
 
@@ -21,7 +21,7 @@ Deno.test({
 });
 
 Deno.test({
-    name: "Freeze: DeepSeal",
+    name: "Deep: Seal",
     fn(){
         const seal = deepSeal(deepClone(sample));
 

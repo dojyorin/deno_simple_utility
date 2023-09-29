@@ -3,11 +3,11 @@
 * If no argument will be calculate at current time.
 * @example
 * ```ts
-* const time = unixtimeEncode();
-* const date = unixtimeDecode(time);
+* const time = utEncode();
+* const date = utDecode(time);
 * ```
 */
-export function unixtimeEncode(date?:Date):number{
+export function utEncode(date?:Date):number{
     return Math.floor((date ?? new Date()).getTime() / 1000);
 }
 
@@ -16,11 +16,11 @@ export function unixtimeEncode(date?:Date):number{
 * Note that in seconds not milliseconds.
 * @example
 * ```ts
-* const time = unixtimeEncode();
-* const date = unixtimeDecode(time);
+* const time = utEncode();
+* const date = utDecode(time);
 * ```
 */
-export function unixtimeDecode(time:number):Date{
+export function utDecode(time:number):Date{
     return new Date(time * 1000);
 }
 
@@ -28,11 +28,11 @@ export function unixtimeDecode(time:number):Date{
 * Convert from formatted datetime string such as ISO8601 to UNIX time in seconds.
 * @example
 * ```ts
-* const time = unixtimeParse("2023-05-18T08:31:32.292Z");
+* const time = utParse("2023-05-18T08:31:32.292Z");
 * ```
 */
-export function unixtimeParse(ds:string):number{
+export function utParse(ds:string):number{
     const [y, m, d, h, mi, s] = ds.split(/[/ :TZ_.-]/i).map(v => Number(v));
 
-    return unixtimeEncode(new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0));
+    return utEncode(new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0));
 }
