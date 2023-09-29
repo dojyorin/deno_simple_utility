@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {utfEncode, utfDecode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment, pad0} from "../src/text.ts";
+import {u8Encode, u8Decode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment, pad0} from "../src/text.ts";
 
 const sampleText = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
 const sampleBin = new Uint8Array([
@@ -13,8 +13,8 @@ const sampleBin = new Uint8Array([
 Deno.test({
     name: "Text: UTF8 Encode and Decode",
     fn(){
-        const encode = utfEncode(sampleText);
-        const decode = utfDecode(encode);
+        const encode = u8Encode(sampleText);
+        const decode = u8Decode(encode);
 
         assertEquals(decode, sampleText);
     }

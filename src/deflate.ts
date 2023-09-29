@@ -8,8 +8,8 @@ async function streamConvert(data:Uint8Array, ts:TransformStream<Uint8Array, Uin
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const converted = await deflateEncode(bin);
-* const restored = await deflateDecode(converted);
+* const encode = await deflateEncode(bin);
+* const decode = await deflateDecode(encode);
 * ```
 */
 export async function deflateEncode(data:Uint8Array):Promise<Uint8Array>{
@@ -22,8 +22,8 @@ export async function deflateEncode(data:Uint8Array):Promise<Uint8Array>{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const converted = await deflateEncode(bin);
-* const restored = await deflateDecode(converted);
+* const encode = await deflateEncode(bin);
+* const decode = await deflateDecode(encode);
 * ```
 */
 export async function deflateDecode(data:Uint8Array):Promise<Uint8Array>{
