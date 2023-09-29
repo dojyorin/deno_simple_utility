@@ -58,7 +58,7 @@ export function generateRandom(n:number):Uint8Array{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const hash = await hashValue(256, bin);
+* const hash = await deriveHash(256, bin);
 * ```
 */
 export async function deriveHash(bit:256 | 384 | 512, data:Uint8Array):Promise<Uint8Array>{
@@ -66,13 +66,12 @@ export async function deriveHash(bit:256 | 384 | 512, data:Uint8Array):Promise<U
 }
 
 /**
-* Generate exportable public-key pair.
-* You can generate keys for ECDH.
-* Algorithm use is "NIST P-256".
+* Generate exportable public-key pair for ECDH.
+* Curve algorithm is "NIST P-256".
 * @example
 * ```ts
-* const key1 = await pubkeyGen("ECDH");
-* const key2 = await pubkeyGen("ECDSA");
+* const k1 = await pkGenerateECDH();
+* const k2 = await pkGenerateECDH();
 * ```
 */
 export async function pkGenerateECDH():Promise<PortableCryptoKeyPair>{
@@ -80,13 +79,11 @@ export async function pkGenerateECDH():Promise<PortableCryptoKeyPair>{
 }
 
 /**
-* Generate exportable public-key pair.
-* You can generate keys for ECDSA.
-* Algorithm use is "NIST P-256".
+* Generate exportable public-key pair for ECDSA.
+* Curve algorithm is "NIST P-256".
 * @example
 * ```ts
-* const key1 = await pubkeyGen("ECDH");
-* const key2 = await pubkeyGen("ECDSA");
+* const {publicKey, privateKey} = await pkGenerateECDSA();
 * ```
 */
 export async function pkGenerateECDSA():Promise<PortableCryptoKeyPair>{
@@ -95,21 +92,21 @@ export async function pkGenerateECDSA():Promise<PortableCryptoKeyPair>{
 
 /**
 * Encrypt binary.
-* Algorithm use is AES_MODE with 256 bits key, 128 bits tag and 96 bits IV.
+* Algorithm is AES-GCM with 128 bits key, 128 bits tag and 96 bits IV.
 * IV is prepended to cipher.
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const key1 = await pubkeyGen("ECDH");
-* const key2 = await pubkeyGen("ECDH");
-* const converted = await pubkeyEncrypt({
-*     publicKey: key1.publicKey,
-*     privateKey: key2.privateKey
+* const k1 = await pkGenerateECDH();
+* const k2 = await pkGenerateECDH();
+* const cipher = await pkEncrypt({
+*     publicKey: k1.publicKey,
+*     privateKey: k2.privateKey
 * }, bin);
-* const restored = await pubkeyDecrypt({
-*     publicKey: key2.publicKey,
-*     privateKey: key1.privateKey
-* }, converted);
+* const decrypt = await pkDecrypt({
+*     publicKey: k2.publicKey,
+*     privateKey: k1.privateKey
+* }, cipher);
 * ```
 */
 export async function pkEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
@@ -127,21 +124,21 @@ export async function pkEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, d
 
 /**
 * Decrypt binary.
-* Algorithm use is AES_MODE with 256 bits key, 128 bits tag and 96 bits IV.
+* Algorithm is AES-GCM with 128 bits key, 128 bits tag and 96 bits IV.
 * IV is read from head of cipher.
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const key1 = await pubkeyGen("ECDH");
-* const key2 = await pubkeyGen("ECDH");
-* const converted = await pubkeyEncrypt({
-*     publicKey: key1.publicKey,
-*     privateKey: key2.privateKey
+* const k1 = await pkGenerateECDH();
+* const k2 = await pkGenerateECDH();
+* const cipher = await pkEncrypt({
+*     publicKey: k1.publicKey,
+*     privateKey: k2.privateKey
 * }, bin);
-* const restored = await pubkeyDecrypt({
-*     publicKey: key2.publicKey,
-*     privateKey: key1.privateKey
-* }, converted);
+* const decrypt = await pkDecrypt({
+*     publicKey: k2.publicKey,
+*     privateKey: k1.privateKey
+* }, cipher);
 * ```
 */
 export async function pkDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
@@ -158,9 +155,9 @@ export async function pkDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, d
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const key = await pubkeyGen("ECDSA");
-* const signature = await pubkeySign(key.privateKey, bin);
-* const verified = await pubkeyVerify(key.publicKey, signature, bin);
+* const {publicKey, privateKey} = await pkGenerateECDSA();
+* const sign = await pkSign(privateKey, bin);
+* const verified = await pkVerify(publicKey, sign, bin);
 * ```
 */
 export async function pkSign(key:Uint8Array, data:Uint8Array):Promise<Uint8Array>{
@@ -172,9 +169,9 @@ export async function pkSign(key:Uint8Array, data:Uint8Array):Promise<Uint8Array
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const key = await pubkeyGen("ECDSA");
-* const signature = await pubkeySign(key.privateKey, bin);
-* const verified = await pubkeyVerify(key.publicKey, signature, bin);
+* const {publicKey, privateKey} = await pkGenerateECDSA();
+* const sign = await pkSign(privateKey, bin);
+* const verified = await pkVerify(publicKey, sign, bin);
 * ```
 */
 export async function pkVerify(key:Uint8Array, sign:Uint8Array, data:Uint8Array):Promise<boolean>{

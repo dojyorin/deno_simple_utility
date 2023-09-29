@@ -3,8 +3,8 @@
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const converted = base64Encode(bin);
-* const restored = base64Decode(converted);
+* const encode = base64Encode(bin);
+* const decode = base64Decode(encode);
 * ```
 */
 export function base64Encode(data:Uint8Array):string{
@@ -16,8 +16,8 @@ export function base64Encode(data:Uint8Array):string{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const converted = base64Encode(bin);
-* const restored = base64Decode(converted);
+* const encode = base64Encode(bin);
+* const decode = base64Decode(encode);
 * ```
 */
 export function base64Decode(data:string):Uint8Array{
@@ -30,7 +30,7 @@ export function base64Decode(data:string):Uint8Array{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const url = base64DataURL(bin);
+* const data = base64DataURL(bin);
 * ```
 */
 export function base64DataURL(data:Uint8Array, mime?:string):string{
