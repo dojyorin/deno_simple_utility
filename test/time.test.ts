@@ -4,7 +4,7 @@ import {utEncode, utDecode, utParse} from "../src/time.ts";
 const sample = new Date(2000, 0, 1, 0, 0, 0, 0);
 
 Deno.test({
-    name: "Date: Encode and Decode",
+    name: "Time: Encode and Decode",
     fn(){
         const encode = utEncode(sample);
         const decode = utDecode(encode);
@@ -14,7 +14,7 @@ Deno.test({
 });
 
 Deno.test({
-    name: "Date: Parse",
+    name: "Time: Parse",
     fn(){
         const result = utParse(sample.toISOString());
 
