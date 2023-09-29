@@ -1,10 +1,8 @@
 #!/bin/sh
 set -eu
 
-while [[ ${#} -ge 1 ]]; do
-    if [[ -f ./${1}.json ]]; then
-        yq -I 4 -o y ./${1}.json | head -c -1 > ./${1}.yaml
-    fi
+cd ${0%/*}
 
-    shift
-done
+for _v in $(find ./ -maxdepth 1 -type f -name '*.json'); do
+    yq -I 4 -o y ${_v} | head -c -1 > ${_v%.*}.yaml
+done; unset _v
