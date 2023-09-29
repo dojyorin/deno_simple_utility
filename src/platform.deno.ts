@@ -2,7 +2,7 @@
 * Are you running on Windows?
 * @example
 * ```ts
-* const runOnWin = isWin();
+* const win = isWin();
 * ```
 */
 export function isWin():boolean{

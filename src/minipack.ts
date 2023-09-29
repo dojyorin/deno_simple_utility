@@ -23,7 +23,6 @@ export type FileInit = [string, Uint8Array];
 */
 export function minipackEncode(files:FileInit[]):Uint8Array{
     const archive = new Uint8Array(files.reduce((size, [k, v]) => size + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
-
     let i = 0;
 
     for(const [k, v] of files){
@@ -55,14 +54,14 @@ export function minipackEncode(files:FileInit[]):Uint8Array{
 *     ["file1", await Deno.readFile("./file1")],
 *     ["file2", await Deno.readFile("./file2")]
 * ];
-* const converted = minipackEncode(files);
-* const restored = minipackDecode(converted);
+* const encode = minipackEncode(files);
+* const decode = minipackDecode(encode);
 * ```
 */
 export function minipackDecode(archive:Uint8Array):FileInit[]{
     const files:FileInit[] = [];
 
-    for(let i = 0; i < archive.byteLength; false){
+    for(let i = 0; i < archive.byteLength;){
         const ns = new DataView(archive.buffer, i).getUint8(0);
         i += sizeName;
 

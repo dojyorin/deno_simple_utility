@@ -3,8 +3,8 @@
 * @example
 * ```ts
 * const text = "HelloWorld!";
-* const converted = utfEncode(text);
-* const restored = utfDecode(converted);
+* const encode = utfEncode(text);
+* const decode = utfDecode(encode);
 * ```
 */
 export function utfEncode(data:string):Uint8Array{
@@ -16,8 +16,8 @@ export function utfEncode(data:string):Uint8Array{
 * @example
 * ```ts
 * const text = "HelloWorld!";
-* const converted = utfEncode(text);
-* const restored = utfDecode(converted);
+* const encode = utfEncode(text);
+* const decode = utfDecode(encode);
 * ```
 */
 export function utfDecode(data:Uint8Array):string{
@@ -29,8 +29,8 @@ export function utfDecode(data:Uint8Array):string{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const converted = hexEncode(bin);
-* const restored = hexDecode(converted);
+* const encode = hexEncode(bin);
+* const decode = hexDecode(encode);
 * ```
 */
 export function hexEncode(data:Uint8Array):string{
@@ -42,8 +42,8 @@ export function hexEncode(data:Uint8Array):string{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const converted = hexEncode(bin);
-* const restored = hexDecode(converted);
+* const encode = hexEncode(bin);
+* const decode = hexDecode(encode);
 * ```
 */
 export function hexDecode(data:string):Uint8Array{
@@ -55,7 +55,7 @@ export function hexDecode(data:string):Uint8Array{
 * @example
 * ```ts
 * const text = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
-* const formated = trimExtend(text);
+* const format = trimExtend(text);
 * ```
 */
 export function trimExtend(data:string):string{
@@ -67,7 +67,7 @@ export function trimExtend(data:string):string{
 * @example
 * ```ts
 * const text = "１＋１＝２";
-* const formated = fixWidth(text);
+* const format = fixWidth(text);
 * ```
 */
 export function fixWidth(data:string):string{
@@ -107,7 +107,7 @@ export function fixWidth(data:string):string{
 * @example
 * ```ts
 * const text = "１  ＋  １  ＝  ２  ";
-* const formated = cleanText(text);
+* const format = cleanText(text);
 * ```
 */
 export function cleanText(data:string):string{
@@ -133,7 +133,7 @@ export function accurateSegment(data:string):string[]{
 * @example
 * ```ts
 * const num = 8;
-* const padding = pad0(num);
+* const pad = pad0(num);
 * ```
 */
 export function pad0(data:number, digit?:number, radix?:number):string{

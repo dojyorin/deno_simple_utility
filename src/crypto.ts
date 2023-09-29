@@ -157,7 +157,7 @@ export async function pkDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, d
 * const bin = await Deno.readFile("./file");
 * const {publicKey, privateKey} = await pkGenerateECDSA();
 * const sign = await pkSign(privateKey, bin);
-* const verified = await pkVerify(publicKey, sign, bin);
+* const verify = await pkVerify(publicKey, sign, bin);
 * ```
 */
 export async function pkSign(key:Uint8Array, data:Uint8Array):Promise<Uint8Array>{
@@ -171,7 +171,7 @@ export async function pkSign(key:Uint8Array, data:Uint8Array):Promise<Uint8Array
 * const bin = await Deno.readFile("./file");
 * const {publicKey, privateKey} = await pkGenerateECDSA();
 * const sign = await pkSign(privateKey, bin);
-* const verified = await pkVerify(publicKey, sign, bin);
+* const verify = await pkVerify(publicKey, sign, bin);
 * ```
 */
 export async function pkVerify(key:Uint8Array, sign:Uint8Array, data:Uint8Array):Promise<boolean>{

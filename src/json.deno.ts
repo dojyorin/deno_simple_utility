@@ -5,7 +5,7 @@ import {mainPath} from "./path.deno.ts";
 * Read JSON file and convert to object.
 * @example
 * ```ts
-* const object = await jsonRead("./resource.json");
+* const json = await jsonRead("./resource.json");
 * ```
 */
 export async function jsonRead<T extends Opt<T>>(path:string):Promise<T>{
