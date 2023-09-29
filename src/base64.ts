@@ -3,11 +3,11 @@
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const encode = base64Encode(bin);
-* const decode = base64Decode(encode);
+* const encode = b64Encode(bin);
+* const decode = b64Decode(encode);
 * ```
 */
-export function base64Encode(data:Uint8Array):string{
+export function b64Encode(data:Uint8Array):string{
     return btoa([...data].map(v => String.fromCharCode(v)).join(""));
 }
 
@@ -16,11 +16,11 @@ export function base64Encode(data:Uint8Array):string{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const encode = base64Encode(bin);
-* const decode = base64Decode(encode);
+* const encode = b64Encode(bin);
+* const decode = b64Decode(encode);
 * ```
 */
-export function base64Decode(data:string):Uint8Array{
+export function b64Decode(data:string):Uint8Array{
     return new Uint8Array([...atob(data)].map(v => v.charCodeAt(0)));
 }
 
@@ -30,9 +30,9 @@ export function base64Decode(data:string):Uint8Array{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const data = base64DataURL(bin);
+* const data = b64DataURL(bin);
 * ```
 */
-export function base64DataURL(data:Uint8Array, mime?:string):string{
-    return `data:${mime ?? "application/octet-stream"};base64,${base64Encode(data)}`;
+export function b64DataURL(data:Uint8Array, mime?:string):string{
+    return `data:${mime ?? "application/octet-stream"};base64,${b64Encode(data)}`;
 }

@@ -1,4 +1,4 @@
-import {base64Encode} from "./base64.ts";
+import {b64Encode} from "./base64.ts";
 
 /**
 * Assignment of types convertible from blob.
@@ -21,7 +21,7 @@ export interface BlobType{
 export async function blobConvert<T extends keyof BlobType>(blob:Blob, type:T):Promise<BlobType[T]>{
     switch(type){
         case "text": return <BlobType[T]>await blob.text();
-        case "base64": return <BlobType[T]>base64Encode(new Uint8Array(await blob.arrayBuffer()));
+        case "base64": return <BlobType[T]>b64Encode(new Uint8Array(await blob.arrayBuffer()));
         case "byte": return <BlobType[T]>new Uint8Array(await blob.arrayBuffer());
         case "buffer": return <BlobType[T]>await blob.arrayBuffer();
         default: throw new Error();

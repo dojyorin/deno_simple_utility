@@ -1,4 +1,4 @@
-import {utfEncode, utfDecode} from "./text.ts";
+import {u8Encode, u8Decode} from "./text.ts";
 
 const sizeName = 1;
 const sizeBody = 4;
@@ -17,16 +17,16 @@ export type FileInit = [string, Uint8Array];
 *     ["file1", await Deno.readFile("./file1")],
 *     ["file2", await Deno.readFile("./file2")]
 * ];
-* const converted = minipackEncode(files);
-* const restored = minipackDecode(converted);
+* const encode = mpEncode(files);
+* const decode = mpDecode(encode);
 * ```
 */
-export function minipackEncode(files:FileInit[]):Uint8Array{
-    const archive = new Uint8Array(files.reduce((size, [k, v]) => size + sizeName + sizeBody + utfEncode(k).byteLength + v.byteLength, 0));
+export function mpEncode(files:FileInit[]):Uint8Array{
+    const archive = new Uint8Array(files.reduce((size, [k, v]) => size + sizeName + sizeBody + u8Encode(k).byteLength + v.byteLength, 0));
     let i = 0;
 
     for(const [k, v] of files){
-        const name = utfEncode(k);
+        const name = u8Encode(k);
         const body = v;
 
         new DataView(archive.buffer, i).setUint8(0, name.byteLength);
@@ -54,11 +54,11 @@ export function minipackEncode(files:FileInit[]):Uint8Array{
 *     ["file1", await Deno.readFile("./file1")],
 *     ["file2", await Deno.readFile("./file2")]
 * ];
-* const encode = minipackEncode(files);
-* const decode = minipackDecode(encode);
+* const encode = mpEncode(files);
+* const decode = mpDecode(encode);
 * ```
 */
-export function minipackDecode(archive:Uint8Array):FileInit[]{
+export function mpDecode(archive:Uint8Array):FileInit[]{
     const files:FileInit[] = [];
 
     for(let i = 0; i < archive.byteLength;){
@@ -68,7 +68,7 @@ export function minipackDecode(archive:Uint8Array):FileInit[]{
         const bs = new DataView(archive.buffer, i).getUint32(0);
         i += sizeBody;
 
-        const name = utfDecode(archive.subarray(i, i += ns));
+        const name = u8Decode(archive.subarray(i, i += ns));
         const body = archive.subarray(i, i += bs);
 
         files.push([name, body]);

@@ -3,11 +3,11 @@
 * @example
 * ```ts
 * const text = "HelloWorld!";
-* const encode = utfEncode(text);
-* const decode = utfDecode(encode);
+* const encode = u8Encode(text);
+* const decode = u8Decode(encode);
 * ```
 */
-export function utfEncode(data:string):Uint8Array{
+export function u8Encode(data:string):Uint8Array{
     return new TextEncoder().encode(data);
 }
 
@@ -16,11 +16,11 @@ export function utfEncode(data:string):Uint8Array{
 * @example
 * ```ts
 * const text = "HelloWorld!";
-* const encode = utfEncode(text);
-* const decode = utfDecode(encode);
+* const encode = u8Encode(text);
+* const decode = u8Decode(encode);
 * ```
 */
-export function utfDecode(data:Uint8Array):string{
+export function u8Decode(data:Uint8Array):string{
     return new TextDecoder().decode(data);
 }
 
