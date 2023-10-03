@@ -1,15 +1,13 @@
 import {b64Encode} from "./base64.ts";
 
 /**
-* Possible input for `URLSearchParams`.
-*/
-export type QueryInit = Exclude<HeadersInit, Headers> | URLSearchParams;
-
-/**
 * `RequestInit` with added `query` property that can specify query string.
 */
 export interface FetchInit extends Omit<RequestInit, "integrity" | "window">{
-    query?: QueryInit;
+    signal?: AbortSignal;
+    headers?: Headers;
+    body?: BodyInit;
+    query?: URLSearchParams;
 }
 
 /**
@@ -38,7 +36,7 @@ export interface ResponseType{
 */
 export async function fetchExtend<T extends keyof ResponseType>(path:string, type:T, option?:FetchInit):Promise<ResponseType[T]>{
     const {origin, pathname} = new URL(path, globalThis?.location?.href);
-    const query = new URLSearchParams(option?.query).toString();
+    const query = option?.query?.toString();
 
     const response = await fetch(`${origin}${pathname}${query && "?"}${query}`, {
         method: option?.method ?? "GET",
@@ -50,7 +48,7 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
         referrerPolicy: option?.referrerPolicy ?? "no-referrer",
         referrer: option?.referrer,
         signal: option?.signal,
-        headers: option?.headers && new Headers(option.headers),
+        headers: option?.headers,
         body: option?.body
     });
 
