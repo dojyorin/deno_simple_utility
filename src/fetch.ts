@@ -8,6 +8,10 @@ export interface FetchInit extends Omit<RequestInit, "integrity" | "window">{
     headers?: Headers;
     body?: BodyInit;
     query?: URLSearchParams;
+    secret?: {
+        token: string;
+        basic?: true;
+    };
 }
 
 /**
@@ -35,10 +39,27 @@ export interface ResponseType{
 * ```
 */
 export async function fetchExtend<T extends keyof ResponseType>(path:string, type:T, option?:FetchInit):Promise<ResponseType[T]>{
-    const {origin, pathname} = new URL(path, globalThis?.location?.href);
-    const query = option?.query?.toString();
+    const u = new URL(path, globalThis?.location?.href);
+    const h = new Headers(option?.headers);
 
-    const response = await fetch(`${origin}${pathname}${query && "?"}${query}`, {
+    u.hash = "";
+
+    for(const [k, v] of option?.query ?? []){
+        u.searchParams.set(k, v);
+    }
+
+    if(option?.secret){
+        if(option.secret.basic){
+            const [id, pw] = option.secret.token.split(/:/);
+            u.username = id ?? "";
+            u.password = pw ?? "";
+        }
+        else{
+            h.set("Authorization", `Bearer ${option.secret.token}`);
+        }
+    }
+
+    const response = await fetch(u.href, {
         method: option?.method ?? "GET",
         credentials: option?.credentials ?? "omit",
         mode: option?.mode ?? "cors",
@@ -48,7 +69,7 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
         referrerPolicy: option?.referrerPolicy ?? "no-referrer",
         referrer: option?.referrer,
         signal: option?.signal,
-        headers: option?.headers,
+        headers: [...h.keys()].length ? h : undefined,
         body: option?.body
     });
 
