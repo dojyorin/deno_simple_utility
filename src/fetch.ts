@@ -9,8 +9,10 @@ export interface FetchInit extends Omit<RequestInit, "integrity" | "window">{
     body?: BodyInit;
     query?: URLSearchParams;
     secret?: {
-        token: string;
-        basic?: true;
+        key: string;
+    } | {
+        id: string;
+        pw: string;
     };
 }
 
@@ -49,13 +51,12 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
     }
 
     if(option?.secret){
-        if(option.secret.basic){
-            const [id, pw] = option.secret.token.split(/:/);
-            u.username = id ?? "";
-            u.password = pw ?? "";
+        if("key" in option.secret){
+            h.set("Authorization", `Bearer ${option.secret.key}`);
         }
         else{
-            h.set("Authorization", `Bearer ${option.secret.token}`);
+            u.username = option.secret.id;
+            u.password = option.secret.pw;
         }
     }
 

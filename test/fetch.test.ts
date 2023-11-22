@@ -13,7 +13,7 @@ Deno.test({
     async fn(){
         const ac = new AbortController();
 
-        Deno.serve({
+        const server = Deno.serve({
             hostname: "127.0.0.1",
             port: 62000,
             signal: ac.signal
@@ -24,5 +24,6 @@ Deno.test({
         assertEquals(result, sample);
 
         ac.abort();
+        await server.finished;
     }
 });
