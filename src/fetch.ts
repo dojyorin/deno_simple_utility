@@ -10,7 +10,10 @@ export interface FetchInit extends Omit<RequestInit, "integrity" | "window">{
     query?: URLSearchParams;
     secret?: {
         key: string;
+        id?: undefined;
+        pw?: undefined;
     } | {
+        key?: undefined;
         id: string;
         pw: string;
     };
@@ -50,14 +53,12 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
         u.searchParams.set(k, v);
     }
 
-    if(option?.secret){
-        if("key" in option.secret){
-            h.set("Authorization", `Bearer ${option.secret.key}`);
-        }
-        else{
-            u.username = option.secret.id;
-            u.password = option.secret.pw;
-        }
+    if(option?.secret?.key){
+        h.set("Authorization", `Bearer ${option.secret.key}`);
+    }
+    else if(option?.secret?.id){
+        u.username = option.secret.id;
+        u.password = option.secret.pw;
     }
 
     const response = await fetch(u.href, {
