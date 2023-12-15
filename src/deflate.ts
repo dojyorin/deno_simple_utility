@@ -1,6 +1,4 @@
-async function streamConvert(data:Uint8Array, ts:TransformStream<Uint8Array, Uint8Array>){
-    return new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(ts)).arrayBuffer());
-}
+import {streamEncode, streamDecode} from "./stream.ts";
 
 /**
 * Compress binary with "deflate" format.
@@ -13,7 +11,7 @@ async function streamConvert(data:Uint8Array, ts:TransformStream<Uint8Array, Uin
 * ```
 */
 export async function deflateEncode(data:Uint8Array):Promise<Uint8Array>{
-    return await streamConvert(data, new CompressionStream("deflate-raw"));
+    return await streamDecode(streamEncode(data).pipeThrough(new CompressionStream("deflate-raw")));
 }
 
 /**
@@ -27,5 +25,5 @@ export async function deflateEncode(data:Uint8Array):Promise<Uint8Array>{
 * ```
 */
 export async function deflateDecode(data:Uint8Array):Promise<Uint8Array>{
-    return await streamConvert(data, new DecompressionStream("deflate-raw"));
+    return await streamDecode(streamEncode(data).pipeThrough(new DecompressionStream("deflate-raw")));
 }

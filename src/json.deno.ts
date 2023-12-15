@@ -1,5 +1,4 @@
 import {type Opt} from "./deep.ts";
-import {mainPath} from "./path.deno.ts";
 
 /**
 * Read JSON file and convert to object.
@@ -49,17 +48,4 @@ export async function jsonLoad<T extends Opt<T>>(path:string, def:T):Promise<T>{
     }
 
     return def;
-}
-
-/**
-* Wrapper function of `jsonLoad()`.
-* Config file path is fixed `${Deno.mainModule}/config.json`.
-* @example
-* ```ts
-* import dconfig from "./config.json" assert {type: "json"};
-* const config = await configLoad(dconfig);
-* ```
-*/
-export async function configLoad<T extends Opt<T>>(def:T):Promise<T>{
-    return await jsonLoad(`${mainPath()}/config.json`, def);
 }

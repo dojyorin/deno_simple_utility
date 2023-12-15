@@ -11,7 +11,7 @@ Deno.test({
 
 Deno.test({
     ignore: Deno.build.os === "windows",
-    name: "Platform: Posix",
+    name: "Platform: Unix",
     fn(){
         assertEquals(isWin(), false);
     }

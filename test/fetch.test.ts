@@ -11,19 +11,14 @@ const sample = new Uint8Array([
 Deno.test({
     name: "Fetch: Get",
     async fn(){
-        const ac = new AbortController();
-
         const server = Deno.serve({
             hostname: "127.0.0.1",
             port: 62000,
-            signal: ac.signal
         }, () => new Response(sample));
 
         const result = await fetchExtend("http://127.0.0.1:62000", "byte");
+        await server.shutdown();
 
         assertEquals(result, sample);
-
-        ac.abort();
-        await server.finished;
     }
 });
