@@ -12,5 +12,6 @@ import "./test/minipack.test.ts";
 import "./test/path.deno.test.ts";
 import "./test/platform.deno.test.ts";
 import "./test/process.deno.test.ts";
+import "./test/stream.test.ts";
 import "./test/text.test.ts";
 import "./test/time.test.ts";
