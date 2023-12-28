@@ -8,6 +8,7 @@ export interface BlobType{
     "base64": string;
     "byte": Uint8Array;
     "buffer": ArrayBuffer;
+    "stream": ReadableStream<Uint8Array>;
 }
 
 /**
@@ -24,6 +25,7 @@ export async function blobConvert<T extends keyof BlobType>(blob:Blob, type:T):P
         case "base64": return <BlobType[T]>b64Encode(new Uint8Array(await blob.arrayBuffer()));
         case "byte": return <BlobType[T]>new Uint8Array(await blob.arrayBuffer());
         case "buffer": return <BlobType[T]>await blob.arrayBuffer();
+        case "stream": return <BlobType[T]>blob.stream();
         default: throw new Error();
     }
 }
