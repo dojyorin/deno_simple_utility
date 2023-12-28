@@ -57,8 +57,7 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
         h.set("Authorization", `Bearer ${option.secret.key}`);
     }
     else if(option?.secret?.id){
-        u.username = option.secret.id;
-        u.password = option.secret.pw;
+        h.set("Authorization", `Basic ${btoa(`${option.secret.id}:${option.secret.pw}`)}`);
     }
 
     const response = await fetch(u.href, {
