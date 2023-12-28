@@ -19,7 +19,7 @@ export function envGet<T extends keyof EnvType, U extends boolean>(key:string, t
 
     if(env === undefined){
         if(required){
-            throw new Error(key);
+            throw new Error();
         }
         else{
             return <U extends true ? EnvType[T] : EnvType[T] | undefined>env;
