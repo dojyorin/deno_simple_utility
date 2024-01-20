@@ -1,7 +1,7 @@
 /**
 * WIP.
 */
-export interface WorkerMessage<T>{
+export interface WorkerMessage<T extends unknown>{
     message: T;
     transfer?: Transferable[];
 }
@@ -9,16 +9,29 @@ export interface WorkerMessage<T>{
 /**
 * WIP.
 */
-export type WorkerTask<T, K> = (message:T) => WorkerMessage<K> | Promise<WorkerMessage<K>>;
+export type WorkerTask<T extends unknown, K extends unknown> = (message:T) => WorkerMessage<K> | Promise<WorkerMessage<K>>;
+
+/**
+* WIP.
+*/
+export type WorkerContext<T extends unknown, K extends unknown> = (message:T, transfer?:Transferable[]) => Promise<K>;
 
 /**
 * WIP.
 * @example
 * ```ts
-* const task = createTask(()=>{});
+* const task = createTask<number, number>(async(data)=>{
+*     const {delay} = await import("https://deno.land/std/async/mod.ts");
+*     await delay(1000);
+*     return {
+*         message: data * 2
+*     };
+* });
+* const result1 = await task(1);
+* const result2 = await task(2);
 * ```
 */
-export function createTask<T, K>(task:WorkerTask<T, K>){
+export function createTask<T extends unknown, K extends unknown>(task:WorkerTask<T, K>):WorkerContext<T, K>{
     const script = task.toString();
     const regist = /*js*/`
         globalThis.onmessage = async({data})=>{
@@ -33,7 +46,10 @@ export function createTask<T, K>(task:WorkerTask<T, K>){
     return (message:T, transfer?:Transferable[])=>{
         return new Promise<K>((res, rej)=>{
             const worker = new Worker(url, {
-                type: "module"
+                type: "module",
+                deno: {
+                    permissions: "inherit"
+                }
             });
 
             worker.onmessage = ({data})=>{
