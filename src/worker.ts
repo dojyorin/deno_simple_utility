@@ -56,22 +56,24 @@ export function createTask<T extends unknown, K extends unknown>(task:TaskAction
                 type: "module"
             });
 
-            worker.onmessage = ({data})=>{
-                res(data);
+            function dispose(){
                 worker.terminate();
                 URL.revokeObjectURL(url);
+            }
+
+            worker.onmessage = ({data})=>{
+                res(data);
+                dispose();
             };
 
             worker.onerror = (e)=>{
                 rej(e);
-                worker.terminate();
-                URL.revokeObjectURL(url);
+                dispose();
             };
 
             worker.onmessageerror = (e)=>{
                 rej(e);
-                worker.terminate();
-                URL.revokeObjectURL(url);
+                dispose();
             };
 
             worker.postMessage(message, {
