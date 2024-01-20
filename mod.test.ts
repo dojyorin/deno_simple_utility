@@ -15,3 +15,4 @@ import "./test/process.deno.test.ts";
 import "./test/stream.test.ts";
 import "./test/text.test.ts";
 import "./test/time.test.ts";
+import "./test/worker.test.ts";

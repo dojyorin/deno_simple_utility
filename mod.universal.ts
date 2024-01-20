@@ -9,3 +9,4 @@ export * from "./src/minipack.ts";
 export * from "./src/stream.ts";
 export * from "./src/text.ts";
 export * from "./src/time.ts";
+export * from "./src/worker.ts";
