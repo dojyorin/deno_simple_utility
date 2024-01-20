@@ -46,10 +46,7 @@ export function createTask<T extends unknown, K extends unknown>(task:WorkerTask
     return (message:T, transfer?:Transferable[])=>{
         return new Promise<K>((res, rej)=>{
             const worker = new Worker(url, {
-                type: "module",
-                deno: {
-                    permissions: "inherit"
-                }
+                type: "module"
             });
 
             worker.onmessage = ({data})=>{
