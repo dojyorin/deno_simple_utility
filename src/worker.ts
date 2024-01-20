@@ -48,10 +48,10 @@ export function createTask<T extends unknown, K extends unknown>(task:TaskAction
             });
         };
     `;
-    const url = URL.createObjectURL(new Blob([regist]));
 
     return (message, transfers)=>{
         return new Promise<K>((res, rej)=>{
+            const url = URL.createObjectURL(new Blob([regist]));
             const worker = new Worker(url, {
                 type: "module"
             });
@@ -59,16 +59,19 @@ export function createTask<T extends unknown, K extends unknown>(task:TaskAction
             worker.onmessage = ({data})=>{
                 res(data);
                 worker.terminate();
+                URL.revokeObjectURL(url);
             };
 
             worker.onerror = (e)=>{
                 rej(e);
                 worker.terminate();
+                URL.revokeObjectURL(url);
             };
 
             worker.onmessageerror = (e)=>{
                 rej(e);
                 worker.terminate();
+                URL.revokeObjectURL(url);
             };
 
             worker.postMessage(message, {
