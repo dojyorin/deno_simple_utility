@@ -12,11 +12,11 @@ Deno.test({
 
             return {
                 message: result,
-                transfer: [result]
+                transfer: [result.buffer]
             };
         });
 
-        const result = await task(sample1, [sample1]);
+        const result = await task(sample1, [sample1.buffer]);
 
         assertEquals(result, sample2);
     }
