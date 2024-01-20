@@ -1,20 +1,25 @@
 /**
-* Communication content between main thread and worker thread.
+* TypedArray also automatically unwrap to `ArrayBuffer`.
 */
-export interface WorkerMessage<T extends unknown>{
-    message: T;
-    transfer?: Transferable[];
-}
+export type TaskTransfer = Transferable | ArrayBufferView;
 
 /**
 * Content of processing run by worker thread.
 */
-export type TaskAction<T extends unknown, K extends unknown> = (message:T) => WorkerMessage<K> | Promise<WorkerMessage<K>>;
+export type TaskAction<T extends unknown, K extends unknown> = (message:T) => TaskMessage<K> | Promise<TaskMessage<K>>;
 
 /**
 * Run registered `TaskAction` in worker thread.
 */
-export type TaskContext<T extends unknown, K extends unknown> = (message:T, transfer?:Transferable[]) => Promise<K>;
+export type TaskContext<T extends unknown, K extends unknown> = (message:T, transfers?:TaskTransfer[]) => Promise<K>;
+
+/**
+* Communication content between main thread and worker thread.
+*/
+export interface TaskMessage<T extends unknown>{
+    message: T;
+    transfers?: TaskTransfer[];
+}
 
 /**
 * Register `TaskAction` and return reusable task execution context.
@@ -37,15 +42,15 @@ export function createTask<T extends unknown, K extends unknown>(task:TaskAction
     const script = task.toString();
     const regist = /*js*/`
         globalThis.onmessage = async({data})=>{
-            const {message, transfer} = await(${script})(data);
+            const {message, transfers} = await(${script})(data);
             globalThis.postMessage(message, {
-                transfer: transfer
+                transfer: transfers?.map(v => "buffer" in v ? v.buffer : v)
             });
         };
     `;
     const url = URL.createObjectURL(new Blob([regist]));
 
-    return (message:T, transfer?:Transferable[])=>{
+    return (message, transfers)=>{
         return new Promise<K>((res, rej)=>{
             const worker = new Worker(url, {
                 type: "module"
@@ -67,7 +72,7 @@ export function createTask<T extends unknown, K extends unknown>(task:TaskAction
             };
 
             worker.postMessage(message, {
-                transfer: transfer
+                transfer: transfers?.map(v => "buffer" in v ? v.buffer : v)
             });
         });
     };
