@@ -1,5 +1,5 @@
 /**
-* WIP.
+* Communication content between main thread and worker thread.
 */
 export interface WorkerMessage<T extends unknown>{
     message: T;
@@ -7,17 +7,19 @@ export interface WorkerMessage<T extends unknown>{
 }
 
 /**
-* WIP.
+* Content of processing run by worker thread.
 */
-export type WorkerTask<T extends unknown, K extends unknown> = (message:T) => WorkerMessage<K> | Promise<WorkerMessage<K>>;
+export type TaskAction<T extends unknown, K extends unknown> = (message:T) => WorkerMessage<K> | Promise<WorkerMessage<K>>;
 
 /**
-* WIP.
+* Run registered `TaskAction` in worker thread.
 */
-export type WorkerContext<T extends unknown, K extends unknown> = (message:T, transfer?:Transferable[]) => Promise<K>;
+export type TaskContext<T extends unknown, K extends unknown> = (message:T, transfer?:Transferable[]) => Promise<K>;
 
 /**
-* WIP.
+* Register `TaskAction` and return reusable task execution context.
+* `Worker` instance is created and destroyed each time they run `TaskContext`.
+* `import` can only use "syntax", not "declaration".
 * @example
 * ```ts
 * const task = createTask<number, number>(async(data)=>{
@@ -31,7 +33,7 @@ export type WorkerContext<T extends unknown, K extends unknown> = (message:T, tr
 * const result2 = await task(2);
 * ```
 */
-export function createTask<T extends unknown, K extends unknown>(task:WorkerTask<T, K>):WorkerContext<T, K>{
+export function createTask<T extends unknown, K extends unknown>(task:TaskAction<T, K>):TaskContext<T, K>{
     const script = task.toString();
     const regist = /*js*/`
         globalThis.onmessage = async({data})=>{
