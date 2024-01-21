@@ -1,15 +1,15 @@
 /**
-* WIP.
+* Something that might be string.
 */
 export type MaybeString = string | null | undefined;
 
 /**
-* WIP.
+* Whether to allow `undefined`.
 */
 export type TypeStrict<T extends unknown, U extends boolean> = U extends true ? T : T | undefined;
 
 /**
-* WIP.
+* Map of primitive types and string that specify them.
 */
 export interface PrimitiveMap{
     "s": string;
@@ -18,7 +18,8 @@ export interface PrimitiveMap{
 }
 
 /**
-* WIP.
+* Convert from dirty text to specified type.
+* Enabling `strict` flag will throw exception if parsing is not possible.
 * @example
 * ```ts
 * const value = typeDecode("123", "n", true);
@@ -34,7 +35,8 @@ export function typeDecode<T extends keyof PrimitiveMap, U extends boolean>(text
 }
 
 /**
-* WIP.
+* Convert from dirty text to string.
+* Enabling `strict` flag will throw exception if parsing is not possible.
 * @example
 * ```ts
 * const value = typeS("foo", true);
@@ -53,7 +55,8 @@ export function typeS<T extends boolean>(text:MaybeString, strict?:T):TypeStrict
 }
 
 /**
-* WIP.
+* Convert from dirty text to number.
+* Enabling `strict` flag will throw exception if parsing is not possible.
 * @example
 * ```ts
 * const value = typeN("123", true);
@@ -74,7 +77,8 @@ export function typeN<T extends boolean>(text:MaybeString, strict?:T):TypeStrict
 }
 
 /**
-* WIP.
+* Convert from dirty text to boolean.
+* Enabling `strict` flag will throw exception if parsing is not possible.
 * @example
 * ```ts
 * const value = typeB("true", true);
