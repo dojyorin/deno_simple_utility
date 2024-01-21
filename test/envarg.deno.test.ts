@@ -1,5 +1,5 @@
 import {assertEquals} from "../deps.test.ts";
-import {envGet} from "../src/env.deno.ts";
+import {envGet} from "../src/envarg.deno.ts";
 
 Deno.env.set("TEST_ENV_1", "abc");
 Deno.env.set("TEST_ENV_2", "123");
