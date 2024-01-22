@@ -12,7 +12,6 @@ export * from "./src/text.ts";
 export * from "./src/time.ts";
 export * from "./src/worker.ts";
 
-export * from "./src/envarg.deno.ts";
 export * from "./src/json.deno.ts";
 export * from "./src/log.deno.ts";
 export * from "./src/path.deno.ts";

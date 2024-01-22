@@ -1,15 +1,15 @@
 import {assertEquals} from "../deps.test.ts";
-import {typeDecode} from "../src/primitive.ts";
+import {primitiveParse, primitiveParseX} from "../src/primitive.ts";
 
 Deno.test({
-    name: "Type: Decode",
+    name: "Primitive: Parse",
     fn(){
-        const result1 = typeDecode("foo", "string", true);
-        const result2 = typeDecode(null, "string");
-        const result3 = typeDecode("12345", "number", true);
-        const result4 = typeDecode("foo", "number");
-        const result5 = typeDecode("true", "boolean", true);
-        const result6 = typeDecode("foo", "boolean");
+        const result1 = primitiveParse("foo", "string", true);
+        const result2 = primitiveParse(null, "string");
+        const result3 = primitiveParse("12345", "number", true);
+        const result4 = primitiveParse("foo", "number");
+        const result5 = primitiveParse("true", "boolean", true);
+        const result6 = primitiveParse("foo", "boolean");
 
         assertEquals(result1, "foo");
         assertEquals(result2, undefined);
@@ -17,5 +17,18 @@ Deno.test({
         assertEquals(result4, undefined);
         assertEquals(result5, true);
         assertEquals(result6, undefined);
+    }
+});
+
+Deno.test({
+    name: "Primitive: ParseX",
+    fn(){
+        const result1 = primitiveParseX("foo", "");
+        const result2 = primitiveParseX("123", 0);
+        const result3 = primitiveParseX("true", false);
+
+        assertEquals(result1, "foo");
+        assertEquals(result2, 123);
+        assertEquals(result3, true);
     }
 });
