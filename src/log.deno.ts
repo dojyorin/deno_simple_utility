@@ -1,4 +1,4 @@
-import {Logger, handlers, format} from "../deps.ts";
+import {Logger, ConsoleHandler, FileHandler, format} from "../deps.ts";
 import {mainPath} from "./path.deno.ts";
 
 function logRecord(date:Date, level:string, message:string){
@@ -19,7 +19,7 @@ export function logEntry(name?:string):Logger{
 
     const log = new Logger("operation", level, {
         handlers: [
-            new handlers.ConsoleHandler(level, {
+            new ConsoleHandler(level, {
                 formatter({datetime, levelName, msg}){
                     return logRecord(datetime, levelName, msg);
                 }
@@ -29,7 +29,7 @@ export function logEntry(name?:string):Logger{
 
     if(name){
         log.handlers.push(...[
-            new handlers.FileHandler(level, {
+            new FileHandler(level, {
                 filename: `${mainPath()}/${name}.log`,
                 formatter({datetime, levelName, msg}){
                     return logRecord(datetime, levelName, msg);
