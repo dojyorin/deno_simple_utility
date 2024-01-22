@@ -36,3 +36,14 @@ export function utParse(ds:string):number{
 
     return utEncode(new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0));
 }
+
+/**
+* Wait for specified time.
+* @example
+* ```ts
+* await delay(1000);
+* ```
+*/
+export async function delay(ms:number):Promise<void>{
+    await new Promise<void>(done => setTimeout(done, ms));
+}

@@ -11,7 +11,7 @@ const sampleBin = new Uint8Array([
 ]);
 
 Deno.test({
-    name: "Text: UTF8 Encode and Decode",
+    name: "Text: UTF-8 Encode and Decode",
     fn(){
         const encode = u8Encode(sampleText);
         const decode = u8Decode(encode);

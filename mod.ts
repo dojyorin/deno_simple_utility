@@ -6,11 +6,12 @@ export * from "./src/deflate.ts";
 export * from "./src/fetch.ts";
 export * from "./src/import.ts";
 export * from "./src/minipack.ts";
+export * from "./src/primitive.ts";
 export * from "./src/stream.ts";
 export * from "./src/text.ts";
 export * from "./src/time.ts";
+export * from "./src/worker.ts";
 
-export * from "./src/env.deno.ts";
 export * from "./src/json.deno.ts";
 export * from "./src/log.deno.ts";
 export * from "./src/path.deno.ts";
