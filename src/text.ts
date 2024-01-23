@@ -25,6 +25,18 @@ export function u8Decode(data:Uint8Array):string{
 }
 
 /**
+* Convert from SHIFT-JIS binary to hex string.
+* @example
+* ```ts
+* const bin = await Deno.readFile("./file");
+* const decode = sjisDecode(bin);
+* ```
+*/
+export function sjisDecode(data:Uint8Array):string{
+    return new TextDecoder("shift-jis").decode(data);
+}
+
+/**
 * Convert from binary to hex string.
 * @example
 * ```ts

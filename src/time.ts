@@ -1,3 +1,5 @@
+import {pad0} from "./text.ts";
+
 /**
 * Return UNIX time in seconds.
 * If no argument will be calculate at current time.
@@ -12,7 +14,7 @@ export function utEncode(date?:Date):number{
 }
 
 /**
-* Returns `Date` from UNIX time.
+* Return `Date` from UNIX time.
 * Note that in seconds not milliseconds.
 * @example
 * ```ts
@@ -46,4 +48,17 @@ export function utParse(ds:string):number{
 */
 export async function delay(ms:number):Promise<void>{
     await new Promise<void>(done => setTimeout(done, ms));
+}
+
+/**
+* Generate serialized string from current or any `Date` to "yyyyMMddhhmmss".
+* @example
+* ```ts
+* const format = dtSerial();
+* ```
+*/
+export function dtSerial(date?:Date):string{
+    const d = date ?? new Date();
+
+    return `${d.getFullYear()}${pad0(d.getMonth() + 1)}${pad0(d.getDate())}${pad0(d.getHours())}${pad0(d.getMinutes())}${pad0(d.getSeconds())}`;
 }
