@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {u8Encode, u8Decode, sjisDecode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment, pad0} from "../src/text.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {u8Encode, u8Decode, sjisDecode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment, pad0} from "../../src/pure/text.ts";
 
 const sampleText = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
 const sampleBin = new Uint8Array([

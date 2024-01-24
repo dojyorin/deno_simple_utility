@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {createTask} from "../src/worker.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {createTask} from "../../src/pure/worker.ts";
 
 const sample1 = new Uint8Array([1, 2, 3, 4]);
 const sample2 = new Uint8Array([2, 4, 6, 8]);

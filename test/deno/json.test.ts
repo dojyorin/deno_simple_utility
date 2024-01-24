@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {jsonRead, jsonWrite, jsonLoad} from "../src/json.deno.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {jsonRead, jsonWrite, jsonLoad} from "../../src/deno/json.ts";
 
 const object = <const>{
     id: "22d8b040-8a63-46a0-8df6-0f508a778689",

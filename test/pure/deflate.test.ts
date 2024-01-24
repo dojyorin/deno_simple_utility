@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {streamEncode, streamDecode} from "../src/stream.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {deflateEncode, deflateDecode} from "../../src/pure/deflate.ts";
 
 const sample = new Uint8Array([
     0x71, 0xD6, 0xFB, 0x3D, 0xF9, 0xD9, 0x41, 0x07,
@@ -9,10 +9,10 @@ const sample = new Uint8Array([
 ]);
 
 Deno.test({
-    name: "Stream: Encode and Decode",
+    name: "Deflate: Encode and Decode",
     async fn(){
-        const encode = streamEncode(sample);
-        const decode = await streamDecode(encode);
+        const encode = await deflateEncode(sample);
+        const decode = await deflateDecode(encode);
 
         assertEquals(decode, sample);
     }

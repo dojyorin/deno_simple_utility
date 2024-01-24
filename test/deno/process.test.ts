@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {runCommand} from "../src/process.deno.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {runCommand} from "../../src/deno/process.ts";
 
 Deno.test({
     name: "Process: Run (no args)",

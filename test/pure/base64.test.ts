@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {b64Encode, b64Decode, b64DataURL} from "../src/base64.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {b64Encode, b64Decode, b64DataURL} from "../../src/pure/base64.ts";
 
 const sample1 = new Uint8Array([
     0x58, 0x0D, 0xC7, 0x64, 0x21, 0x42, 0x27, 0x76,

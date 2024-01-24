@@ -1,5 +1,5 @@
-import {assertEquals, dirname, fromFileUrl} from "../deps.test.ts";
-import {slashU, slashW, tmpPath, dataPath, homePath, mainPath} from "../src/path.deno.ts";
+import {assertEquals, dirname, fromFileUrl} from "../../deps.test.ts";
+import {slashU, slashW, tmpPath, dataPath, homePath, mainPath} from "../../src/deno/path.ts";
 
 Deno.test({
     name: "Path: Separator",

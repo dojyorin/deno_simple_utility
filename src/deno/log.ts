@@ -1,5 +1,5 @@
-import {Logger, ConsoleHandler, FileHandler, format} from "../deps.ts";
-import {mainPath} from "./path.deno.ts";
+import {Logger, ConsoleHandler, FileHandler, format} from "../../deps.ts";
+import {mainPath} from "./path.ts";
 
 function logRecord(date:Date, level:string, message:string){
     return `${format(date, "yyyy-MM-ddTHH:mm:ss")} [${level}] ${message}`;

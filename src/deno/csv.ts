@@ -1,6 +1,6 @@
-import {parse, stringify} from "../deps.ts";
-import {deepClone} from "./deep.ts";
-import {primitiveParseX} from "./primitive.ts";
+import {parse, stringify} from "../../deps.ts";
+import {deepClone} from "../pure/deep.ts";
+import {primitiveParseX} from "../pure/primitive.ts";
 
 /**
 * Object containing string, number, or boolean.

@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {utEncode, utDecode, utParse, delay, dtSerial} from "../src/time.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {utEncode, utDecode, utParse, delay, dtSerial} from "../../src/pure/time.ts";
 
 const sample = new Date(2000, 0, 1, 0, 0, 0, 0);
 

@@ -28,12 +28,12 @@ The actual binary structure looks like this:
 This structure is repeats for the number of files.
 
 # Browser
-Collected only parts of this module that not use the `Deno` namespace and prepared as browser-compatible code to [`mod.universal.ts`](./mod.universal.ts).
+Collected only parts of this module that not use the `Deno` namespace and prepared as browser-compatible pure JavaScript to [`mod.pure.ts`](./mod.pure.ts).
 
 You can use script from [esm.sh](https://esm.sh).
 
 ```ts
-import {fetchExtend} from "https://esm.sh/gh/dojyorin/deno_simple_utility@version/mod.universal.ts?bundle&target=esnext";
+import {fetchExtend} from "https://esm.sh/gh/dojyorin/deno_simple_utility@version/mod.pure.ts?bundle&target=esnext";
 ```
 
 # API

@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {blobConvert, byteConcat} from "../src/byte.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {blobConvert, byteConcat} from "../../src/pure/byte.ts";
 
 const sample = "hello!";
 

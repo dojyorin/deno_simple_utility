@@ -1,5 +1,5 @@
-import {dirname, fromFileUrl} from "../deps.ts";
-import {isWin} from "./platform.deno.ts";
+import {dirname, fromFileUrl} from "../../deps.ts";
+import {isWin} from "./platform.ts";
 
 /**
 * Convert from backslash to slash.

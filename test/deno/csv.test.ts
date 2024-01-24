@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {csvEncode, csvDecode} from "../src/csv.deno.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {csvEncode, csvDecode} from "../../src/deno/csv.ts";
 
 const sample = [{
     foo: 123,

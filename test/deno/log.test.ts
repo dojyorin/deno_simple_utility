@@ -1,5 +1,5 @@
-import {assertEquals, exists} from "../deps.test.ts";
-import {logEntry} from "../src/log.deno.ts";
+import {assertEquals, exists} from "../../deps.test.ts";
+import {logEntry} from "../../src/deno/log.ts";
 
 const name = "operation";
 

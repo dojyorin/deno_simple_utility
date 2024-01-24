@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {primitiveParse, primitiveParseX} from "../src/primitive.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {primitiveParse, primitiveParseX} from "../../src/pure/primitive.ts";
 
 Deno.test({
     name: "Primitive: Parse",

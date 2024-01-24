@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {isWin} from "../src/platform.deno.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {isWin} from "../../src/deno/platform.ts";
 
 Deno.test({
     ignore: Deno.build.os !== "windows",

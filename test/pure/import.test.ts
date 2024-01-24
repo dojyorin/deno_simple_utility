@@ -1,5 +1,5 @@
-import {assertEquals} from "../deps.test.ts";
-import {importAssert} from "../src/import.ts";
+import {assertEquals} from "../../deps.test.ts";
+import {importAssert} from "../../src/pure/import.ts";
 
 const expect = <const>{
     assert: {

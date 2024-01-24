@@ -1,4 +1,4 @@
-import {type Opt} from "./deep.ts";
+import {type Opt} from "../pure/deep.ts";
 
 /**
 * Read JSON file and convert to object.
