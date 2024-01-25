@@ -1,11 +1,11 @@
 import {assertEquals} from "../../deps.test.ts";
-import {isWin} from "../../src/deno/platform.ts";
+import {osWin} from "../../src/deno/os.ts";
 
 Deno.test({
     ignore: Deno.build.os !== "windows",
     name: "Platform: Windows",
     fn(){
-        assertEquals(isWin(), true);
+        assertEquals(osWin, true);
     }
 });
 
@@ -13,6 +13,6 @@ Deno.test({
     ignore: Deno.build.os === "windows",
     name: "Platform: Unix",
     fn(){
-        assertEquals(isWin(), false);
+        assertEquals(osWin, false);
     }
 });

@@ -42,7 +42,7 @@ export function byteConcat(...parts:BufferSource[]):Uint8Array{
     let i = 0;
 
     for(const part of parts){
-        output.set(new Uint8Array(part instanceof ArrayBuffer ? part : part.buffer), i);
+        output.set(new Uint8Array("buffer" in part ? part.buffer : part), i);
         i += part.byteLength;
     }
 

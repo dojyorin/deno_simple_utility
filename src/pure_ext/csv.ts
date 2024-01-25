@@ -1,4 +1,4 @@
-import {parse, stringify} from "../../deps.ts";
+import {parse, stringify} from "../../deps.pure_ext.ts";
 import {deepClone} from "../pure/deep.ts";
 import {primitiveParseX} from "../pure/primitive.ts";
 

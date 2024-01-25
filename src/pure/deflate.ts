@@ -1,5 +1,7 @@
 import {streamEncode, streamDecode} from "./stream.ts";
 
+const DEFLATE_CODEC = "deflate-raw";
+
 /**
 * Compress binary with "deflate" format.
 * Does not contain header such as "gzip" (RFC1952) or "zlib" (RFC1950).
@@ -10,8 +12,8 @@ import {streamEncode, streamDecode} from "./stream.ts";
 * const decode = await deflateDecode(encode);
 * ```
 */
-export async function deflateEncode(data:Uint8Array):Promise<Uint8Array>{
-    return await streamDecode(streamEncode(data).pipeThrough(new CompressionStream("deflate-raw")));
+export async function deflateEncode(data:Uint8Array, codec?:string):Promise<Uint8Array>{
+    return await streamDecode(streamEncode(data).pipeThrough(new CompressionStream(codec ?? DEFLATE_CODEC)));
 }
 
 /**
@@ -24,6 +26,6 @@ export async function deflateEncode(data:Uint8Array):Promise<Uint8Array>{
 * const decode = await deflateDecode(encode);
 * ```
 */
-export async function deflateDecode(data:Uint8Array):Promise<Uint8Array>{
-    return await streamDecode(streamEncode(data).pipeThrough(new DecompressionStream("deflate-raw")));
+export async function deflateDecode(data:Uint8Array, codec?:string):Promise<Uint8Array>{
+    return await streamDecode(streamEncode(data).pipeThrough(new DecompressionStream(codec ?? DEFLATE_CODEC)));
 }

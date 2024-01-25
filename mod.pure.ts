@@ -4,7 +4,6 @@ export * from "./src/pure/crypto.ts";
 export * from "./src/pure/deep.ts";
 export * from "./src/pure/deflate.ts";
 export * from "./src/pure/fetch.ts";
-export * from "./src/pure/import.ts";
 export * from "./src/pure/minipack.ts";
 export * from "./src/pure/primitive.ts";
 export * from "./src/pure/stream.ts";

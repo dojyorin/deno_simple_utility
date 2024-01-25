@@ -33,6 +33,6 @@ export function b64Decode(data:string):Uint8Array{
 * const data = b64DataURL(bin);
 * ```
 */
-export function b64DataURL(data:Uint8Array, mime?:string):string{
-    return `data:${mime ?? "application/octet-stream"};base64,${b64Encode(data)}`;
+export function b64DataURL(data:Uint8Array, type?:string):string{
+    return `data:${type ?? "application/octet-stream"};base64,${b64Encode(data)}`;
 }

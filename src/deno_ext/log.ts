@@ -1,5 +1,4 @@
-import {Logger, ConsoleHandler, FileHandler, format} from "../../deps.ts";
-import {mainPath} from "./path.ts";
+import {Logger, ConsoleHandler, FileHandler, format} from "../../deps.deno_ext.ts";
 
 function logRecord(date:Date, level:string, message:string){
     return `${format(date, "yyyy-MM-ddTHH:mm:ss")} [${level}] ${message}`;
@@ -14,10 +13,10 @@ function logRecord(date:Date, level:string, message:string){
 * const log = logEntry();
 * ```
 */
-export function logEntry(name?:string):Logger{
+export function logEntry(name?:string, path?:string):Logger{
     const level = "INFO";
 
-    const log = new Logger("operation", level, {
+    const log = new Logger(name ?? "log", level, {
         handlers: [
             new ConsoleHandler(level, {
                 formatter({datetime, levelName, msg}){
@@ -27,15 +26,15 @@ export function logEntry(name?:string):Logger{
         ]
     });
 
-    if(name){
-        log.handlers.push(...[
+    if(path){
+        log.handlers.push(
             new FileHandler(level, {
-                filename: `${mainPath()}/${name}.log`,
+                filename: path,
                 formatter({datetime, levelName, msg}){
                     return logRecord(datetime, levelName, msg);
                 }
             })
-        ]);
+        );
     }
 
     for(const h of log.handlers){

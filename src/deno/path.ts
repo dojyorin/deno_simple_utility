@@ -1,5 +1,4 @@
-import {dirname, fromFileUrl} from "../../deps.ts";
-import {isWin} from "./platform.ts";
+import {osWin} from "./os.ts";
 
 /**
 * Convert from backslash to slash.
@@ -26,7 +25,7 @@ export function slashW(path:string):string{
 }
 
 /**
-* Return system-wide temporary directory path for each OS.
+* System-wide temporary directory path for each OS.
 * `/tmp` for UNIX and `C:/Windows/Temp` for Windows.
 * @example
 * ```ts
@@ -34,11 +33,11 @@ export function slashW(path:string):string{
 * ```
 */
 export function tmpPath():string{
-    return isWin() ? "C:/Windows/Temp" : "/tmp";
+    return osWin ? "C:/Windows/Temp" : "/tmp";
 }
 
 /**
-* Return system-wide application data directory path for each OS.
+* System-wide application data directory path for each OS.
 * `/var` for UNIX and `C:/ProgramData` for Windows.
 * @example
 * ```ts
@@ -46,11 +45,23 @@ export function tmpPath():string{
 * ```
 */
 export function dataPath():string{
-    return isWin() ? "C:/ProgramData" : "/var";
+    return osWin ? "C:/ProgramData" : "/var";
 }
 
 /**
-* Return system-wide home path for each OS.
+* System-wide user config directory path for each OS.
+* `~/.config` for UNIX and `~/AppData/Roaming` for Windows.
+* @example
+* ```ts
+* const path = configPath();
+* ```
+*/
+export function configPath():string{
+    return `${homePath()}/${osWin ? "AppData/Roaming" : ".config"}`;
+}
+
+/**
+* System-wide home path for each OS.
 * `${HOME}` for UNIX and `%USERPROFILE%` for Windows.
 * @example
 * ```ts
@@ -60,18 +71,19 @@ export function dataPath():string{
 export function homePath():string{
     const {HOME, USERPROFILE} = Deno.env.toObject();
 
-    return isWin() ? slashU(USERPROFILE) : HOME;
+    return osWin ? slashU(USERPROFILE) : HOME;
 }
 
 /**
-* Return directory of `Deno.mainModule`.
+* Directory of `Deno.mainModule`.
 * @example
 * ```ts
 * const path = mainPath();
 * ```
 */
 export function mainPath():string{
-    const path = fromFileUrl(dirname(Deno.mainModule));
+    const {hostname, pathname} = new URL(Deno.mainModule);
+    const path = pathname.replace(/\/[^/]*$/, "");
 
-    return isWin() ? slashU(path) : path;
+    return osWin && !hostname ? path.replace(/^\//, "") : path;
 }

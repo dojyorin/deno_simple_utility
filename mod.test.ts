@@ -1,20 +1,24 @@
-import "./test/pure/base64.test.ts";
-import "./test/pure/byte.test.ts";
-import "./test/pure/crypto.test.ts";
-import "./test/pure/deep.test.ts";
-import "./test/pure/deflate.test.ts";
-import "./test/pure/fetch.test.ts";
-import "./test/pure/import.test.ts";
-import "./test/pure/primitive.test.ts";
-import "./test/pure/minipack.test.ts";
-import "./test/pure/stream.test.ts";
-import "./test/pure/text.test.ts";
-import "./test/pure/time.test.ts";
-import "./test/pure/worker.test.ts";
+export * from "./test/pure/base64.test.ts";
+export * from "./test/pure/byte.test.ts";
+export * from "./test/pure/crypto.test.ts";
+export * from "./test/pure/deep.test.ts";
+export * from "./test/pure/deflate.test.ts";
+export * from "./test/pure/fetch.test.ts";
+export * from "./test/pure/minipack.test.ts";
+export * from "./test/pure/primitive.test.ts";
+export * from "./test/pure/stream.test.ts";
+export * from "./test/pure/text.test.ts";
+export * from "./test/pure/time.test.ts";
+export * from "./test/pure/worker.test.ts";
 
-import "./test/deno/csv.test.ts";
-import "./test/deno/json.test.ts";
-import "./test/deno/log.test.ts";
-import "./test/deno/path.test.ts";
-import "./test/deno/platform.test.ts";
-import "./test/deno/process.test.ts";
+export * from "./test/pure_ext/csv.test.ts";
+export * from "./test/pure_ext/excel.test.ts";
+
+export * from "./test/deno/json.test.ts";
+export * from "./test/deno/path.test.ts";
+export * from "./test/deno/os.test.ts";
+export * from "./test/deno/process.test.ts";
+
+export * from "./test/deno_ext/dom.test.ts";
+export * from "./test/deno_ext/log.test.ts";
+export * from "./test/deno_ext/smtp.test.ts";
