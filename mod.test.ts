@@ -13,10 +13,11 @@ export * from "./test/pure/worker.test.ts";
 
 export * from "./test/pure_ext/csv.test.ts";
 export * from "./test/pure_ext/excel.test.ts";
+export * from "./test/pure_ext/zip.test.ts";
 
 export * from "./test/deno/json.test.ts";
-export * from "./test/deno/path.test.ts";
 export * from "./test/deno/os.test.ts";
+export * from "./test/deno/path.test.ts";
 export * from "./test/deno/process.test.ts";
 
 export * from "./test/deno_ext/dom.test.ts";

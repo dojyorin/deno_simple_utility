@@ -13,6 +13,7 @@ export * from "./src/pure/worker.ts";
 
 export * from "./src/pure_ext/csv.ts";
 export * from "./src/pure_ext/excel.ts";
+export * from "./src/pure_ext/zip.ts";
 
 export * from "./src/deno/json.ts";
 export * from "./src/deno/os.ts";
