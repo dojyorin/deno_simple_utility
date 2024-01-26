@@ -1,6 +1,17 @@
 import {ZipReader, ZipWriter, Uint8ArrayReader, Uint8ArrayWriter} from "../../deps.pure_ext.ts";
 import {type DataMap} from "../pure/minipack.ts";
 
+/**
+* Convert from named binary to ZIP archive.
+* @example
+* ```ts
+* const files = [{
+*     name: "foo.txt",
+*     body: await Deno.readFile("./foo.txt")
+* }];
+* const zip = await zipEncode(files);
+* ```
+*/
 export async function zipEncode(files:DataMap[], pw?:string, weak?:boolean):Promise<Uint8Array>{
     const zip = new ZipWriter(new Uint8ArrayWriter(), {
         password: pw,
@@ -16,6 +27,14 @@ export async function zipEncode(files:DataMap[], pw?:string, weak?:boolean):Prom
     return await zip.close();
 }
 
+/**
+* Convert from ZIP archive to named binary.
+* @example
+* ```ts
+* const zip = await Deno.readFile("./foo.zip");
+* const files = await zipDecode(zip);
+* ```
+*/
 export async function zipDecode(archive:Uint8Array, pw?:string, encode?:string):Promise<DataMap[]>{
     const files:DataMap[] = [];
     const zip = new ZipReader(new Uint8ArrayReader(archive), {
