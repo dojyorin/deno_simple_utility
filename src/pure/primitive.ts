@@ -1,9 +1,4 @@
 /**
-* WIP.
-*/
-export type PrimitiveBase = string | number | boolean;
-
-/**
 * Infer data type from literal type.
 */
 export type WidenLiteral<T> = T extends string ? string : T extends number ? number : T extends boolean ? boolean : T;
@@ -86,7 +81,7 @@ export function primitiveParse<T extends keyof PrimitiveMap, U extends boolean>(
 * const value = primitiveParseX("123", 0);
 * ```
 */
-export function primitiveParseX<T extends PrimitiveBase>(text:MaybeString, def:T):WidenLiteral<T>{
+export function primitiveParseX<T extends string | number | boolean>(text:MaybeString, def:T):WidenLiteral<T>{
     switch(typeof def){
         case "string": {
             const v = String(text);
