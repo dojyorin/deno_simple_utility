@@ -5,4 +5,4 @@
 * const isWin = osWin;
 * ```
 */
-export const osWin = Deno.build.os === "windows";
+export const osWin:boolean = Deno.build.os === "windows";
