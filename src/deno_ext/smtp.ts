@@ -1,4 +1,5 @@
 import {createTransport} from "../../deps.deno_ext.ts";
+import {type DataMap} from "../pure/minipack.ts";
 
 /**
 * E-MAIL message.
@@ -10,6 +11,7 @@ export interface MailMessage{
     bcc?: string | string[];
     title: string;
     body: string;
+    files?: DataMap[];
 }
 
 /**
@@ -45,6 +47,7 @@ export async function smtpSend(path:string, message:MailMessage):Promise<void>{
         from: message.from,
         to: message.to,
         cc: message.cc,
+        attachments: message.files?.map(({name, body}) => ({filename: name, content: body})),
         bcc: message.bcc,
         subject: message.title,
         text: message.body
