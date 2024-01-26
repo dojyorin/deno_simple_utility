@@ -9,6 +9,7 @@ export type OptCSV<T> = Record<keyof T, string | number | boolean>;
 
 /**
 * Convert from object array to CSV string.
+* @see https://deno.land/std/csv
 * @example
 * ```ts
 * const csv = csvEncode([{
@@ -28,6 +29,7 @@ export function csvEncode<T extends OptCSV<T>>(data:T[], bom?:boolean):string{
 * Convert from CSV string to object array.
 * If cannot be parsed cell value, use default (`def`) value.
 * Convert to same type as default value.
+* @see https://deno.land/std/csv
 * @example
 * ```ts
 * const list = csvDecode("aaa,bbb\n123,true", {

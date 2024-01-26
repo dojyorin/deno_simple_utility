@@ -3,6 +3,7 @@ import {type DataMap} from "../pure/minipack.ts";
 
 /**
 * Convert from named binary to ZIP archive.
+* @see https://deno.land/x/zipjs
 * @example
 * ```ts
 * const files = [{
@@ -29,6 +30,7 @@ export async function zipEncode(files:DataMap[], pw?:string, weak?:boolean):Prom
 
 /**
 * Convert from ZIP archive to named binary.
+* @see https://deno.land/x/zipjs
 * @example
 * ```ts
 * const zip = await Deno.readFile("./foo.zip");

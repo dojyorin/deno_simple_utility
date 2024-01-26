@@ -16,6 +16,7 @@ export interface MailMessage{
 
 /**
 * Send E-MAIL using SMTP.
+* @see https://www.npmjs.com/package/nodemailer
 * @example
 * ```ts
 * const ok = await smtpSend("smtp://smtp.example.com:25", {

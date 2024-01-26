@@ -31,6 +31,7 @@ function extractValue(element?:Element){
 
 /**
 * Convert from HTML to DOM.
+* @see https://deno.land/x/deno_dom
 * @example
 * ```ts
 * const html = "<div>foo</div>";
