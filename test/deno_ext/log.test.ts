@@ -6,10 +6,12 @@ const name = "operation";
 Deno.test({
     name: "Log: Entry",
     async fn(){
-        const log = logEntry(name, name);
+        const path = `./${name}.log`;
+        const log = logEntry(name, path);
+
         log.info("Lorem ipsum dolor sit amet.");
 
-        const result = await exists(`./${name}.log`, {
+        const result = await exists(path, {
             isFile: true
         });
 
