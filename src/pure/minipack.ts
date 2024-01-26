@@ -23,8 +23,8 @@ export type FileInit = [string, Uint8Array];
 */
 export function mpEncode(files:FileInit[]):Uint8Array{
     const archive = new Uint8Array(files.reduce((size, [k, v]) => size + sizeName + sizeBody + u8Encode(k).byteLength + v.byteLength, 0));
-    let i = 0;
 
+    let i = 0;
     for(const [k, v] of files){
         const name = u8Encode(k);
         const body = v;

@@ -39,8 +39,8 @@ export async function blobConvert<T extends keyof BlobType>(blob:Blob, type:T):P
 */
 export function byteConcat(...parts:BufferSource[]):Uint8Array{
     const output = new Uint8Array(parts.reduce((n, {byteLength}) => n + byteLength , 0));
-    let i = 0;
 
+    let i = 0;
     for(const part of parts){
         output.set(new Uint8Array("buffer" in part ? part.buffer : part), i);
         i += part.byteLength;
