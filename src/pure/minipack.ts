@@ -4,9 +4,12 @@ const sizeName = 1;
 const sizeBody = 4;
 
 /**
-* Simple filename and binary pair that make up file.
+* Simple name and data pair.
 */
-export type FileInit = [string, Uint8Array];
+export interface DataMap{
+    name: string;
+    body: Uint8Array;
+}
 
 /**
 * Concatenate files with "minipack" format.
@@ -21,22 +24,21 @@ export type FileInit = [string, Uint8Array];
 * const decode = mpDecode(encode);
 * ```
 */
-export function mpEncode(files:FileInit[]):Uint8Array{
-    const archive = new Uint8Array(files.reduce((size, [k, v]) => size + sizeName + sizeBody + u8Encode(k).byteLength + v.byteLength, 0));
+export function mpEncode(files:DataMap[]):Uint8Array{
+    const archive = new Uint8Array(files.reduce((size, {name, body}) => size + sizeName + sizeBody + u8Encode(name).byteLength + body.byteLength, 0));
 
     let i = 0;
-    for(const [k, v] of files){
-        const name = u8Encode(k);
-        const body = v;
+    for(const {name, body} of files){
+        const u8name = u8Encode(name);
 
-        new DataView(archive.buffer, i).setUint8(0, name.byteLength);
+        new DataView(archive.buffer, i).setUint8(0, u8name.byteLength);
         i += sizeName;
 
         new DataView(archive.buffer, i).setUint32(0, body.byteLength);
         i += sizeBody;
 
-        archive.set(name, i);
-        i += name.byteLength;
+        archive.set(u8name, i);
+        i += u8name.byteLength;
 
         archive.set(body, i);
         i += body.byteLength;
@@ -58,8 +60,8 @@ export function mpEncode(files:FileInit[]):Uint8Array{
 * const decode = mpDecode(encode);
 * ```
 */
-export function mpDecode(archive:Uint8Array):FileInit[]{
-    const files:FileInit[] = [];
+export function mpDecode(archive:Uint8Array):DataMap[]{
+    const files:DataMap[] = [];
 
     for(let i = 0; i < archive.byteLength;){
         const ns = new DataView(archive.buffer, i).getUint8(0);
@@ -68,10 +70,10 @@ export function mpDecode(archive:Uint8Array):FileInit[]{
         const bs = new DataView(archive.buffer, i).getUint32(0);
         i += sizeBody;
 
-        const name = u8Decode(archive.subarray(i, i += ns));
-        const body = archive.subarray(i, i += bs);
-
-        files.push([name, body]);
+        files.push({
+            name: u8Decode(archive.subarray(i, i += ns)),
+            body: archive.slice(i, i += bs)
+        });
     }
 
     return files;

@@ -18,8 +18,10 @@ function hasObject(data:Record<string | number | symbol, unknown>, key:string){
 * });
 * ```
 */
-export function deepClone<T extends Opt<T>>(data:T):T{
-    return structuredClone(data);
+export function deepClone<T extends Opt<T>>(data:T, transfers?:(Transferable | ArrayBufferView)[]):T{
+    return structuredClone(data, {
+        transfer: transfers?.map(v => "buffer" in v ? v.buffer : v)
+    });
 }
 
 /**

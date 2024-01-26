@@ -1,9 +1,4 @@
 /**
-* TypedArray also automatically unwrap to `ArrayBuffer`.
-*/
-export type TaskTransfer = Transferable | ArrayBufferView;
-
-/**
 * Content of processing run by worker thread.
 */
 export type TaskAction<T extends unknown, K extends unknown> = (message:T) => TaskMessage<K> | Promise<TaskMessage<K>>;
@@ -11,14 +6,14 @@ export type TaskAction<T extends unknown, K extends unknown> = (message:T) => Ta
 /**
 * Run registered `TaskAction` in worker thread.
 */
-export type TaskContext<T extends unknown, K extends unknown> = (message:T, transfers?:TaskTransfer[]) => Promise<K>;
+export type TaskContext<T extends unknown, K extends unknown> = (message:T, transfers?:(Transferable | ArrayBufferView)[]) => Promise<K>;
 
 /**
 * Communication content between main thread and worker thread.
 */
 export interface TaskMessage<T extends unknown>{
     message: T;
-    transfers?: TaskTransfer[];
+    transfers?: (Transferable | ArrayBufferView)[];
 }
 
 /**
