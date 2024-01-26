@@ -82,8 +82,8 @@ export function homePath():string{
 * ```
 */
 export function mainPath():string{
-    const {hostname, pathname} = new URL(Deno.mainModule);
-    const path = pathname.replace(/\/[^/]*$/, "");
+    const {protocol, origin, pathname} = new URL(Deno.mainModule);
+    const path = pathname.replace(/[^/]*$/, "");
 
-    return osWin && !hostname ? path.replace(/^\//, "") : path;
+    return protocol === "file:" ? osWin ? path.replace(/^\//, "") : path : `${origin}${path}`;
 }

@@ -1,11 +1,7 @@
-import {assertEquals, fromFileUrl} from "../../deps.test.ts";
+import {assertEquals} from "../../deps.test.ts";
 import {excelDecode, excelCell, excelTrimHead} from "../../src/pure_ext/excel.ts";
 
-function rp(p:string){
-    return fromFileUrl(import.meta.resolve(p));
-}
-
-const file = await Deno.readFile(rp("../asset/test.xlsx"));
+const file = await Deno.readFile(new URL(import.meta.resolve("../asset/test.xlsx")));
 
 Deno.test({
     name: "EXCEL: Parse Book",
