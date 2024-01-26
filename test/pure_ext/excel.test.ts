@@ -5,7 +5,7 @@ function rp(p:string){
     return fromFileUrl(import.meta.resolve(p));
 }
 
-const file = await Deno.readFile(rp("./asset/test.xlsx"));
+const file = await Deno.readFile(rp("../asset/test.xlsx"));
 
 Deno.test({
     name: "EXCEL: Parse Book",
