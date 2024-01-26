@@ -37,13 +37,13 @@ export async function blobConvert<T extends keyof BlobType>(blob:Blob, type:T):P
 * const byte = byteConcat(new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6]));
 * ```
 */
-export function byteConcat(...parts:BufferSource[]):Uint8Array{
-    const output = new Uint8Array(parts.reduce((n, {byteLength}) => n + byteLength , 0));
+export function byteConcat(...sources:BufferSource[]):Uint8Array{
+    const output = new Uint8Array(sources.reduce((n, {byteLength}) => n + byteLength , 0));
 
     let i = 0;
-    for(const part of parts){
-        output.set(new Uint8Array("buffer" in part ? part.buffer : part), i);
-        i += part.byteLength;
+    for(const source of sources){
+        output.set(new Uint8Array("buffer" in source ? source.buffer : source), i);
+        i += source.byteLength;
     }
 
     return output;
