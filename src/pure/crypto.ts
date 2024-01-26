@@ -55,14 +55,15 @@ export function generateRandom(n:number):Uint8Array{
 
 /**
 * Derive SHA2 hash value from binary.
+* Default is SHA-256.
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const hash = await deriveHash(256, bin);
+* const hash = await deriveHash(bin);
 * ```
 */
-export async function deriveHash(bit:256 | 384 | 512, data:Uint8Array):Promise<Uint8Array>{
-    return new Uint8Array(await crypto.subtle.digest(`SHA-${bit}`, data));
+export async function deriveHash(data:Uint8Array, sha?:`SHA-${256 | 384 | 512}`):Promise<Uint8Array>{
+    return new Uint8Array(await crypto.subtle.digest(sha ?? "SHA-256", data));
 }
 
 /**

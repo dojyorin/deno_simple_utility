@@ -26,7 +26,7 @@ Deno.test({
 Deno.test({
     name: "Crypto: Hash",
     async fn(){
-        const hash = await deriveHash(512, sample);
+        const hash = await deriveHash(sample, "SHA-512");
 
         assertEquals(hash, hashResult);
     }
