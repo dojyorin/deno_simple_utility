@@ -7,33 +7,43 @@
 Useful snippet collection.
 
 # Details
-Collection of thin snippets to improve usability, some features are unique to this module.
-This section describes the unique features of this module.
+Collection of utilities to improve usability.
 
-## Minipack
+### Minipack
 "Minipack" is file archive format unique to this module.
 
 Originally developed for browser, purpose was concatenate multiple files input with DOM File API to single binary.
 So no concept of filesystem, features by simple and minimal structure that stores only binary and name.
 
-The actual binary structure looks like this:
+Actual binary structure looks like this:
 
-|Index|Type|Title|Size|
-|:--|:--|:--|:--|
-|1|Header|NameSize|1|
-|2|Header|ContentSize|4|
-|3|Body|Name|Max 255 (Defined in NameSize)|
-|4|Body|Content|Max 4294967295 (Defined in ContentSize)|
+|Index|Label|Size (byte)|
+|:--|:--|:--|
+|1|NameSize|1|
+|2|BodySize|4|
+|3|Name|Max 255 (by NameSize)|
+|4|Body|Max 4294967295 (by BodySize)|
 
-This structure is repeats for the number of files.
+This structure is repeats for number of files.
 
-# Browser
-Collected only parts of this module that not use the `Deno` namespace and prepared as browser-compatible pure JavaScript to [`mod.pure.ts`](./mod.pure.ts).
+# Export
+This module has several variations depending on usage.
 
-You can use script from [esm.sh](https://esm.sh).
+|Module<br>Name|No<br>Dependency|Browser<br>Compatible|Description|
+|:--|:-:|:-:|:--|
+|[`mod.ts`](./mod.ts)|✅|➖|Most standard, basically using with Deno.|
+|[`mod.full.ts`](./mod.full.ts)|➖|➖|All features available.|
+|[`mod.pure.ts`](./mod.pure.ts)|✅|✅|Without `Deno`, basically using with browser.|
+|[`mod.pure.full.ts`](./mod.pure.full.ts)|➖|✅|All features of pure script available.|
 
-```ts
-import {fetchExtend} from "https://esm.sh/gh/dojyorin/deno_simple_utility@version/mod.pure.ts?bundle&target=esnext";
+Export without external dependencies have fewer features than full, but not susceptible to external module vulnerabilities.
+
+When used in browser available via [esm.sh](https://esm.sh).
+
+```html
+<script>
+    import {fetchExtend} from "https://esm.sh/gh/dojyorin/deno_simple_utility@version/mod.pure.ts?bundle&target=esnext";
+</script>
 ```
 
 # API
