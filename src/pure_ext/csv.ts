@@ -3,11 +3,6 @@ import {deepClone} from "../pure/deep.ts";
 import {primitiveParseX} from "../pure/primitive.ts";
 
 /**
-* Object containing string, number, or boolean.
-*/
-export type OptCSV<T> = Record<keyof T, string | number | boolean>;
-
-/**
 * Convert from object array to CSV string.
 * @see https://deno.land/std/csv
 * @example
@@ -18,11 +13,11 @@ export type OptCSV<T> = Record<keyof T, string | number | boolean>;
 * }]);
 * ```
 */
-export function csvEncode<T extends OptCSV<T>>(data:T[], bom?:boolean):string{
+export function csvEncode<T extends Record<keyof T, string | number | boolean>>(data:T[], bom?:boolean):string{
     return stringify(data, {
         bom: bom,
         columns: Object.keys(data[0])
-    });
+    }).replace(/\r/g, "").trim();
 }
 
 /**
@@ -38,7 +33,7 @@ export function csvEncode<T extends OptCSV<T>>(data:T[], bom?:boolean):string{
 * });
 * ```
 */
-export function csvDecode<T extends OptCSV<T>>(data:string, def:T):T[]{
+export function csvDecode<T extends Record<keyof T, string | number | boolean>>(data:string, def:T):T[]{
     const csv = parse(data, {
         skipFirstRow: true,
         trimLeadingSpace: true
@@ -50,8 +45,8 @@ export function csvDecode<T extends OptCSV<T>>(data:string, def:T):T[]{
         const props:Partial<T> = {};
         type K = keyof T;
 
-        for(const k in element){
-            props[<K>k] = <T[K]>primitiveParseX(element[k], def[<K>k]);
+        for(const [k, v] of Object.entries(element)){
+            props[<K>k] = <T[K]>primitiveParseX(v, def[<K>k]);
         }
 
         records.push(deepClone(<T>props));

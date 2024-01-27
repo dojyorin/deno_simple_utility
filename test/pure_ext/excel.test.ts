@@ -1,31 +1,45 @@
 import {assertEquals} from "../../deps.test.ts";
-import {excelDecode, excelCell, excelTrimHead} from "../../src/pure_ext/excel.ts";
+import {type RawWorkBook, excelEncodeRaw, excelEncode, excelDecodeRaw, excelDecode} from "../../src/pure_ext/excel.ts";
 
-const file = await Deno.readFile(new URL(import.meta.resolve("../asset/test.xlsx")));
+const sample1 = {
+    "test": [
+        ["foo", "bar"]
+    ]
+};
+
+const sample2:RawWorkBook = {
+    SheetNames: ["test"],
+    Sheets: {
+        "test": {
+            "!ref": "A1:A1",
+            "!data": [
+                [{
+                    t: "s",
+                    v: "foo",
+                    h: "foo",
+                    w: "foo"
+                }]
+            ]
+        }
+    }
+};
 
 Deno.test({
-    name: "EXCEL: Parse Book",
+    name: "EXCEL: Encode and Decode",
     fn(){
-        const result = excelDecode(file);
+        const encode = excelEncode(sample1);
+        const decode = excelDecode(encode);
 
-        assertEquals(Object.keys(result)[0], "test");
+        assertEquals(decode, sample1);
     }
 });
 
 Deno.test({
-    name: "EXCEL: Cell",
+    name: "EXCEL: Raw Encode and Decode",
     fn(){
-        const sheets = excelDecode(file);
+        const encode = excelEncodeRaw(sample2);
+        const decode = excelDecodeRaw(encode);
 
-        assertEquals(excelCell(sheets["test"][0][0]), "abc");
-    }
-});
-
-Deno.test({
-    name: "EXCEL: Trim Head",
-    fn(){
-        const sheets = excelDecode(file);
-
-        assertEquals(excelTrimHead(sheets["test"], 1).length, 0);
+        assertEquals(decode.Sheets, sample2.Sheets);
     }
 });
