@@ -29,12 +29,12 @@ This structure is repeats for number of files.
 # Export
 This module has several variations depending on usage.
 
-|Module<br>Name|No<br>Dependency|Browser<br>Compatible|Description|
-|:--|:-:|:-:|:--|
-|[`mod.ts`](./mod.ts)|✅|➖|Most standard, basically using with Deno.|
-|[`mod.full.ts`](./mod.full.ts)|➖|➖|All features available.|
-|[`mod.pure.ts`](./mod.pure.ts)|✅|✅|Without `Deno`, basically using with browser.|
-|[`mod.pure.full.ts`](./mod.pure.full.ts)|➖|✅|All features of pure script available.|
+|Module<br>Name|Multi<br>Functional|No<br>Dependency|Browser<br>Compatible|Description|
+|:--|:-:|:-:|:-:|:--|
+|[`mod.ts`](./mod.ts)|➖|✅|➖|Most standard, basically using with Deno.|
+|[`mod.full.ts`](./mod.full.ts)|✅|➖|➖|All features available.|
+|[`mod.pure.ts`](./mod.pure.ts)|➖|✅|✅|Without `Deno`, basically using with browser.|
+|[`mod.pure.full.ts`](./mod.pure.full.ts)|✅|➖|✅|All features of pure script available.|
 
 Export without external dependencies have fewer features than full, but not susceptible to external module vulnerabilities.
 
