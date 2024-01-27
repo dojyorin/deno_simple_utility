@@ -1,9 +1,6 @@
 import {b64Encode} from "./base64.ts";
 
-/**
-* Assignment of types convertible from blob.
-*/
-export interface BlobType{
+interface BlobType{
     "text": string;
     "base64": string;
     "byte": Uint8Array;

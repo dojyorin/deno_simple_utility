@@ -1,5 +1,19 @@
 import {b64Encode} from "./base64.ts";
 
+interface ResponseType{
+    "text": string;
+    "base64": string;
+    "json": unknown;
+    "form": FormData;
+    "byte": Uint8Array;
+    "buffer": ArrayBuffer;
+    "blob": Blob;
+    "ok": boolean;
+    "code": number;
+    "header": Headers;
+    "response": Response;
+}
+
 /**
 * `RequestInit` with added `query` property that can specify query string.
 */
@@ -17,23 +31,6 @@ export interface FetchInit extends Omit<RequestInit, "integrity" | "window">{
         id: string;
         pw: string;
     };
-}
-
-/**
-* Map of fetch response type and string specify them.
-*/
-export interface ResponseType{
-    "text": string;
-    "base64": string;
-    "json": unknown;
-    "form": FormData;
-    "byte": Uint8Array;
-    "buffer": ArrayBuffer;
-    "blob": Blob;
-    "ok": boolean;
-    "code": number;
-    "header": Headers;
-    "response": Response;
 }
 
 /**

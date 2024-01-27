@@ -1,22 +1,8 @@
-/**
-* Infer data type from literal type.
-*/
-export type WidenLiteral<T> = T extends string ? string : T extends number ? number : T extends boolean ? boolean : T;
+type WidenLiteral<T> = T extends string ? string : T extends number ? number : T extends boolean ? boolean : T;
+type MaybeString = string | null | undefined;
+type TypeStrict<T extends unknown, U extends boolean> = U extends true ? T : T | undefined;
 
-/**
-* Something that might be string.
-*/
-export type MaybeString = string | null | undefined;
-
-/**
-* Whether to allow `undefined`.
-*/
-export type TypeStrict<T extends unknown, U extends boolean> = U extends true ? T : T | undefined;
-
-/**
-* Map of primitive types and string that specify them.
-*/
-export interface PrimitiveMap{
+interface PrimitiveMap{
     "string": string;
     "number": number;
     "boolean": boolean;
