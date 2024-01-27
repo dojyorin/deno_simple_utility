@@ -29,7 +29,7 @@ This structure is repeats for number of files.
 # Export
 This module has several variations depending on usage.
 
-|Module<br>Name|Multi<br>Functional|No<br>Dependency|Browser<br>Compatible|Description|
+|Module<br>Name|All<br>Features|No<br>Dependency|Browser<br>Compatible|Description|
 |:--|:-:|:-:|:-:|:--|
 |[`mod.ts`](./mod.ts)|➖|✅|➖|Most standard, basically using with Deno.|
 |[`mod.full.ts`](./mod.full.ts)|✅|➖|➖|All features available.|
