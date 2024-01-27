@@ -11,7 +11,7 @@ const sample2:RawWorkBook = {
     SheetNames: ["test"],
     Sheets: {
         "test": {
-            "!ref": "A1:A1",
+            "!ref": "A1",
             "!data": [
                 [{
                     t: "s",
