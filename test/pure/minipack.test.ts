@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {mpEncode, mpDecode} from "../../src/pure/minipack.ts";
+import {minipackEncode, minipackDecode} from "../../src/pure/minipack.ts";
 
 const samples = [{
     name: "random.bin",
@@ -9,8 +9,8 @@ const samples = [{
 Deno.test({
     name: "Minipack: Encode and Decode",
     fn(){
-        const encode = mpEncode(samples);
-        const decode = mpDecode(encode);
+        const encode = minipackEncode(samples);
+        const decode = minipackDecode(encode);
 
         assertEquals(decode, samples);
     }

@@ -20,11 +20,11 @@ export interface DataMap{
 *     ["file1", await Deno.readFile("./file1")],
 *     ["file2", await Deno.readFile("./file2")]
 * ];
-* const encode = mpEncode(files);
-* const decode = mpDecode(encode);
+* const encode = minipackEncode(files);
+* const decode = minipackDecode(encode);
 * ```
 */
-export function mpEncode(files:DataMap[]):Uint8Array{
+export function minipackEncode(files:DataMap[]):Uint8Array{
     const archive = new Uint8Array(files.reduce((size, {name, body}) => size + sizeName + sizeBody + u8Encode(name).byteLength + body.byteLength, 0));
 
     let i = 0;
@@ -56,11 +56,11 @@ export function mpEncode(files:DataMap[]):Uint8Array{
 *     ["file1", await Deno.readFile("./file1")],
 *     ["file2", await Deno.readFile("./file2")]
 * ];
-* const encode = mpEncode(files);
-* const decode = mpDecode(encode);
+* const encode = minipackEncode(files);
+* const decode = minipackDecode(encode);
 * ```
 */
-export function mpDecode(archive:Uint8Array):DataMap[]{
+export function minipackDecode(archive:Uint8Array):DataMap[]{
     const files:DataMap[] = [];
 
     for(let i = 0; i < archive.byteLength;){
