@@ -1,4 +1,5 @@
 import {type Element, DOMParser} from "../../deps.deno_ext.ts";
+import {type FetchInit, fetchExtend} from "../pure/fetch.ts";
 import {deepClone} from "../pure/deep.ts";
 import {cleanText} from "../pure/text.ts";
 
@@ -30,15 +31,27 @@ function extractValue(element?:Element){
 }
 
 /**
+* Download and parse web page.
+* @see https://deno.land/x/deno_dom
+* @example
+* ```ts
+* const element = await fetchDOM("https://www.google.com");
+* ```
+*/
+export async function fetchDOM(path:string, option?:FetchInit):Promise<Element>{
+    return parseDOM(await fetchExtend(path, "text", option));
+}
+
+/**
 * Convert from HTML to DOM.
 * @see https://deno.land/x/deno_dom
 * @example
 * ```ts
 * const html = "<div>foo</div>";
-* const element = parseHtml(html);
+* const element = parseDOM(html);
 * ```
 */
-export function parseHtml(html:string):Element{
+export function parseDOM(html:string):Element{
     const element = new DOMParser().parseFromString(html, "text/html")?.documentElement;
 
     if(!element){
