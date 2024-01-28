@@ -10,8 +10,3 @@ export * from "./src/pure/stream.ts";
 export * from "./src/pure/text.ts";
 export * from "./src/pure/time.ts";
 export * from "./src/pure/worker.ts";
-
-export * from "./src/deno/json.ts";
-export * from "./src/deno/os.ts";
-export * from "./src/deno/path.ts";
-export * from "./src/deno/process.ts";
