@@ -61,7 +61,7 @@ export function configPath():string{
 }
 
 /**
-* System-wide home path for each OS.
+* System-wide home directory path for each OS.
 * `${HOME}` for UNIX and `%USERPROFILE%` for Windows.
 * @example
 * ```ts

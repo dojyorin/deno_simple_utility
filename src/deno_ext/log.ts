@@ -5,9 +5,8 @@ function logRecord(date:Date, level:string, message:string){
 }
 
 /**
-* Instantiate logger with general configuration.
-* Output to console and also to file if `name` is defined.
-* Log file default save path is `${Deno.mainModule}/${name}.log`.
+* Start logging.
+* Output to console for general and also write to file if `path` is defined.
 * @see https://deno.land/std/log
 * @example
 * ```ts

@@ -8,7 +8,7 @@ function hasObject(data:Record<string | number | symbol, unknown>, key:string){
 }
 
 /**
-* `structuredClone()` with argument type added to return value.
+* `structuredClone()` with argument type added.
 * @example
 * ```ts
 * const clone = deepClone({

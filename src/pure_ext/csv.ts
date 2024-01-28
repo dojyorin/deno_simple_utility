@@ -22,7 +22,7 @@ export function csvEncode<T extends Record<keyof T, string | number | boolean>>(
 
 /**
 * Convert from CSV string to object array.
-* If cannot be parsed cell value, use default (`def`) value.
+* If parsing failed of cell value use default (`def`) value.
 * Convert to same type as default value.
 * @see https://deno.land/std/csv
 * @example

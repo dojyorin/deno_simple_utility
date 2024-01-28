@@ -2,7 +2,8 @@
 * Convert from binary to stream.
 * @example
 * ```ts
-* const rs = streamEncode(new Uint8Array([0x00, 0x01, 0x02]));
+* const stream = streamEncode(new Uint8Array([0x00, 0x01, 0x02]));
+* const data = await streamDecode(stream);
 * ```
 */
 export function streamEncode(data:Uint8Array):ReadableStream<Uint8Array>{
@@ -19,10 +20,10 @@ export function streamEncode(data:Uint8Array):ReadableStream<Uint8Array>{
 * Convert from stream to binary.
 * @example
 * ```ts
-* const rs = streamEncode(new Uint8Array([0x00, 0x01, 0x02]));
-* const data = await streamDecode(rs);
+* const stream = streamEncode(new Uint8Array([0x00, 0x01, 0x02]));
+* const data = await streamDecode(stream);
 * ```
 */
-export async function streamDecode(rs:ReadableStream<Uint8Array>):Promise<Uint8Array>{
-    return new Uint8Array(await new Response(rs).arrayBuffer());
+export async function streamDecode(stream:ReadableStream<Uint8Array>):Promise<Uint8Array>{
+    return new Uint8Array(await new Response(stream).arrayBuffer());
 }

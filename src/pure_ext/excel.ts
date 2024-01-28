@@ -1,7 +1,7 @@
-import {type WorkBook, type WorkSheet, type CellObject, xlsxcp, set_cptable, xlsxRead, xlsxWrite, xlsxUtil} from "../../deps.pure_ext.ts";
+import {type RawWorkBook, type RawWorkSheet, type RawWorkCell, xlsxcp, set_cptable, xlsxRead, xlsxWrite, xlsxUtil} from "../../deps.pure_ext.ts";
 import {deepClone} from "../pure/deep.ts";
 
-export type {WorkBook as RawWorkBook, WorkSheet as RawWorkSheet, CellObject as RawWorkCell};
+export type {RawWorkBook, RawWorkSheet, RawWorkCell};
 
 set_cptable(xlsxcp);
 
@@ -15,7 +15,7 @@ set_cptable(xlsxcp);
 * const enc = excelEncodeRaw(book);
 * ```
 */
-export function excelEncodeRaw(book:WorkBook, cp?:number, pw?:string):Uint8Array{
+export function excelEncodeRaw(book:RawWorkBook, cp?:number, pw?:string):Uint8Array{
     const buf = <ArrayBuffer>xlsxWrite(book, {
         type: "array",
         compression: true,
@@ -36,13 +36,13 @@ export function excelEncodeRaw(book:WorkBook, cp?:number, pw?:string):Uint8Array
 * ```
 */
 export function excelEncode(sheets:Record<string, string[][]>, cp?:number, pw?:string):Uint8Array{
-    const book:Record<string, WorkSheet> = {};
+    const book:Record<string, RawWorkSheet> = {};
 
     for(const [name, sheet] of Object.entries(sheets)){
-        const rows:CellObject[][] = [];
+        const rows:RawWorkCell[][] = [];
 
         for(const row of sheet){
-            const columns:CellObject[] = [];
+            const columns:RawWorkCell[] = [];
 
             for(const column of row){
                 columns.push({
@@ -76,7 +76,7 @@ export function excelEncode(sheets:Record<string, string[][]>, cp?:number, pw?:s
 * const enc = excelEncodeRaw(book);
 * ```
 */
-export function excelDecodeRaw(data:Uint8Array, cp?:number, pw?:string):WorkBook{
+export function excelDecodeRaw(data:Uint8Array, cp?:number, pw?:string):RawWorkBook{
     return xlsxRead(data, {
         type: "array",
         dense: true,

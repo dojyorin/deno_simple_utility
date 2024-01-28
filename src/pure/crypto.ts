@@ -100,17 +100,17 @@ export async function pkGenerateECDSA():Promise<PortableCryptoKeyPair>{
 * const bin = await Deno.readFile("./file");
 * const k1 = await pkGenerateECDH();
 * const k2 = await pkGenerateECDH();
-* const cipher = await pkEncrypt({
+* const cipher = await pkEncrypt(bin, {
 *     publicKey: k1.publicKey,
 *     privateKey: k2.privateKey
-* }, bin);
-* const decrypt = await pkDecrypt({
+* });
+* const decrypt = await pkDecrypt(cipher, {
 *     publicKey: k2.publicKey,
 *     privateKey: k1.privateKey
-* }, cipher);
+* });
 * ```
 */
-export async function pkEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
+export async function pkEncrypt(data:Uint8Array, {publicKey, privateKey}:PortableCryptoKeyPair):Promise<Uint8Array>{
     const aes = {
         name: AES_MODE,
         iv: generateRandom(12)
@@ -132,17 +132,17 @@ export async function pkEncrypt({publicKey, privateKey}:PortableCryptoKeyPair, d
 * const bin = await Deno.readFile("./file");
 * const k1 = await pkGenerateECDH();
 * const k2 = await pkGenerateECDH();
-* const cipher = await pkEncrypt({
+* const cipher = await pkEncrypt(bin, {
 *     publicKey: k1.publicKey,
 *     privateKey: k2.privateKey
-* }, bin);
-* const decrypt = await pkDecrypt({
+* });
+* const decrypt = await pkDecrypt(cipher, {
 *     publicKey: k2.publicKey,
 *     privateKey: k1.privateKey
-* }, cipher);
+* });
 * ```
 */
-export async function pkDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, data:Uint8Array):Promise<Uint8Array>{
+export async function pkDecrypt(data:Uint8Array, {publicKey, privateKey}:PortableCryptoKeyPair):Promise<Uint8Array>{
     const aes = {
         name: AES_MODE,
         iv: data.subarray(0, 12)
@@ -157,11 +157,11 @@ export async function pkDecrypt({publicKey, privateKey}:PortableCryptoKeyPair, d
 * ```ts
 * const bin = await Deno.readFile("./file");
 * const {publicKey, privateKey} = await pkGenerateECDSA();
-* const sign = await pkSign(privateKey, bin);
-* const verify = await pkVerify(publicKey, sign, bin);
+* const sign = await pkSign(bin, privateKey);
+* const verify = await pkVerify(bin, publicKey, sign);
 * ```
 */
-export async function pkSign(key:Uint8Array, data:Uint8Array):Promise<Uint8Array>{
+export async function pkSign(data:Uint8Array, key:Uint8Array):Promise<Uint8Array>{
     return new Uint8Array(await crypto.subtle.sign(MAC_ECDSA, await crypto.subtle.importKey(FORMAT_PRI, key, CURVE_ECDSA, false, ["sign"]), data));
 }
 
@@ -171,10 +171,10 @@ export async function pkSign(key:Uint8Array, data:Uint8Array):Promise<Uint8Array
 * ```ts
 * const bin = await Deno.readFile("./file");
 * const {publicKey, privateKey} = await pkGenerateECDSA();
-* const sign = await pkSign(privateKey, bin);
-* const verify = await pkVerify(publicKey, sign, bin);
+* const sign = await pkSign(bin, privateKey);
+* const verify = await pkVerify(bin, publicKey, sign);
 * ```
 */
-export async function pkVerify(key:Uint8Array, sign:Uint8Array, data:Uint8Array):Promise<boolean>{
+export async function pkVerify(data:Uint8Array, key:Uint8Array, sign:Uint8Array):Promise<boolean>{
     return await crypto.subtle.verify(MAC_ECDSA, await crypto.subtle.importKey(FORMAT_PUB, key, CURVE_ECDSA, false, ["verify"]), sign, data);
 }

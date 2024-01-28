@@ -10,7 +10,7 @@ Deno.test({
     async fn(){
         await smtpSend(cs, {
             from: em,
-            to: em,
+            to: [em],
             title: "CI Test",
             body: "CI Test"
         });

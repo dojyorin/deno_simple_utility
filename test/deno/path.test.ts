@@ -1,5 +1,5 @@
 import {assertEquals, dirname, fromFileUrl} from "../../deps.test.ts";
-import {slashU, slashW, tmpPath, dataPath, homePath, mainPath} from "../../src/deno/path.ts";
+import {slashU, slashW, tmpPath, dataPath, configPath, homePath, mainPath} from "../../src/deno/path.ts";
 
 const {HOME, USERPROFILE} = Deno.env.toObject();
 const ep = `${fromFileUrl(dirname(Deno.mainModule))}/`;
@@ -21,6 +21,7 @@ Deno.test({
     fn(){
         assertEquals(tmpPath(), "C:/Windows/Temp");
         assertEquals(dataPath(), "C:/ProgramData");
+        assertEquals(configPath(), `${slashU(USERPROFILE)}/AppData/Roaming`);
         assertEquals(homePath(), slashU(USERPROFILE));
         assertEquals(mainPath(), slashU(ep));
     }
@@ -32,6 +33,7 @@ Deno.test({
     fn(){
         assertEquals(tmpPath(), "/tmp");
         assertEquals(dataPath(), "/var");
+        assertEquals(configPath(), `${HOME}/.config`);
         assertEquals(homePath(), HOME);
         assertEquals(mainPath(), ep);
     }

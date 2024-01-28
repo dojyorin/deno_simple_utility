@@ -26,6 +26,8 @@ Deno.test({
     name: "Time: Delay",
     async fn(){
         await delay(100);
+
+        assertEquals(true, true);
     }
 });
 

@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {u8Encode, u8Decode, sjisDecode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment, pad0} from "../../src/pure/text.ts";
+import {u8Encode, u8Decode, textDecode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment, pad0} from "../../src/pure/text.ts";
 
 const sampleText = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
 const sampleBin = new Uint8Array([
@@ -23,9 +23,9 @@ Deno.test({
 });
 
 Deno.test({
-    name: "Text: SHIFT-JIS Decode",
+    name: "Text: Any Text Decode",
     fn(){
-        const decode = sjisDecode(sjisBin);
+        const decode = textDecode(sjisBin);
 
         assertEquals(decode, "こんにちは");
     }

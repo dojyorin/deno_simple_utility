@@ -15,7 +15,7 @@ interface ResponseType{
 }
 
 /**
-* `RequestInit` with added `query` property that can specify query string.
+* Added `query` which allows you to specify query string and `secret` which allows you to specify secret value to `RequestInit`.
 */
 export interface FetchInit extends Omit<RequestInit, "integrity" | "window">{
     signal?: AbortSignal;

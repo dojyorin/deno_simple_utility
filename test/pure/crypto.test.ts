@@ -38,15 +38,15 @@ Deno.test({
         const key1 = await pkGenerateECDH();
         const key2 = await pkGenerateECDH();
 
-        const encrypt = await pkEncrypt({
+        const encrypt = await pkEncrypt(sample, {
             publicKey: key1.publicKey,
             privateKey: key2.privateKey
-        }, sample);
+        });
 
-        const decrypt = await pkDecrypt({
+        const decrypt = await pkDecrypt(encrypt, {
             publicKey: key2.publicKey,
             privateKey: key1.privateKey
-        }, encrypt);
+        });
 
         assertEquals(decrypt, sample);
     }
@@ -56,8 +56,8 @@ Deno.test({
     name: "Crypto: Sign and Verify",
     async fn(){
         const key = await pkGenerateECDSA();
-        const signature = await pkSign(key.privateKey, sample);
-        const verify = await pkVerify(key.publicKey, signature, sample);
+        const signature = await pkSign(sample, key.privateKey);
+        const verify = await pkVerify(sample, key.publicKey, signature);
 
         assertEquals(verify, true);
     }

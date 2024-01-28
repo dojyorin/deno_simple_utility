@@ -1,8 +1,9 @@
 import {pad0} from "./text.ts";
 
 /**
-* Return UNIX time in seconds.
-* If no argument will be calculate at current time.
+* UNIX time in seconds.
+* If no args will be current time.
+* Note that in seconds not milliseconds.
 * @example
 * ```ts
 * const time = utEncode();
@@ -14,7 +15,7 @@ export function utEncode(date?:Date):number{
 }
 
 /**
-* Return `Date` from UNIX time.
+* `Date` from UNIX time.
 * Note that in seconds not milliseconds.
 * @example
 * ```ts
@@ -41,13 +42,18 @@ export function utParse(ds:string):number{
 
 /**
 * Wait for specified time.
+* Return actual elapsed wait time.
 * @example
 * ```ts
 * await delay(1000);
 * ```
 */
-export async function delay(ms:number):Promise<void>{
-    await new Promise<void>(done => setTimeout(done, ms));
+export async function delay(time:number):Promise<number>{
+    const t0 = performance.now();
+    await new Promise<void>(done => setTimeout(done, time));
+    const t1 = performance.now();
+
+    return Math.ceil(t1 - t0);
 }
 
 /**

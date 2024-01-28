@@ -1,10 +1,12 @@
 import {streamEncode, streamDecode} from "./stream.ts";
 
-const DEFLATE_CODEC = "deflate-raw";
+type CompressCodec = "gzip" | "deflate" | "deflate-raw";
+
+const COMPRESS_CODEC = "deflate-raw";
 
 /**
-* Compress binary with "deflate" format.
-* Does not contain header such as "gzip" (RFC1952) or "zlib" (RFC1950).
+* Compress binary with DEFLATE format.
+* Default codec is DEFLATE with no header (RFC-1951) and name in WebAPI specification is `"deflate-raw"`.
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
@@ -12,13 +14,13 @@ const DEFLATE_CODEC = "deflate-raw";
 * const decode = await deflateDecode(encode);
 * ```
 */
-export async function deflateEncode(data:Uint8Array, codec?:string):Promise<Uint8Array>{
-    return await streamDecode(streamEncode(data).pipeThrough(new CompressionStream(codec ?? DEFLATE_CODEC)));
+export async function deflateEncode(data:Uint8Array, codec?:CompressCodec):Promise<Uint8Array>{
+    return await streamDecode(streamEncode(data).pipeThrough(new CompressionStream(codec ?? COMPRESS_CODEC)));
 }
 
 /**
-* Decompress "deflate" format binary.
-* Cannot decompress such as "gzip" (RFC1952) or "zlib" (RFC1950) that contain header.
+* Decompress DEFLATE format binary.
+* Default codec is DEFLATE with no header (RFC-1951) and name in WebAPI specification is `"deflate-raw"`.
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
@@ -26,6 +28,6 @@ export async function deflateEncode(data:Uint8Array, codec?:string):Promise<Uint
 * const decode = await deflateDecode(encode);
 * ```
 */
-export async function deflateDecode(data:Uint8Array, codec?:string):Promise<Uint8Array>{
-    return await streamDecode(streamEncode(data).pipeThrough(new DecompressionStream(codec ?? DEFLATE_CODEC)));
+export async function deflateDecode(data:Uint8Array, codec?:CompressCodec):Promise<Uint8Array>{
+    return await streamDecode(streamEncode(data).pipeThrough(new DecompressionStream(codec ?? COMPRESS_CODEC)));
 }

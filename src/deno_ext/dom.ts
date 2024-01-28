@@ -1,26 +1,21 @@
 import {type Element, DOMParser} from "../../deps.deno_ext.ts";
 import {type FetchInit, fetchExtend} from "../pure/fetch.ts";
 import {deepClone} from "../pure/deep.ts";
-import {cleanText} from "../pure/text.ts";
 
 function selectedElement(elements:Element[], attribute:"checked" | "selected"){
-    return elements.find(e => typeof e.getAttribute(attribute) === "string");
-}
-
-function getContent({textContent}:Element){
-    return cleanText(textContent);
+    return elements.find(v => typeof v.getAttribute(attribute) === "string");
 }
 
 function getValue(element?:Element){
-    return cleanText(element?.getAttribute("value") ?? "");
+    return element?.getAttribute("value") ?? "";
+}
+
+function getContent({textContent}:Element){
+    return textContent;
 }
 
 function extractValue(element?:Element){
-    if(!element){
-        return "";
-    }
-
-    switch(element.tagName){
+    switch(element?.tagName){
         case "SELECT": return getValue(selectedElement(element.getElementsByTagName("option"), "selected"));
         case "DATALIST": return getValue(selectedElement(element.getElementsByTagName("option"), "selected"));
         case "OPTION": return getValue(element);
@@ -35,7 +30,7 @@ function extractValue(element?:Element){
 * @see https://deno.land/x/deno_dom
 * @example
 * ```ts
-* const element = await fetchDOM("https://www.google.com");
+* const dom = await fetchDOM("https://www.google.com");
 * ```
 */
 export async function fetchDOM(path:string, option?:FetchInit):Promise<Element>{
@@ -47,8 +42,7 @@ export async function fetchDOM(path:string, option?:FetchInit):Promise<Element>{
 * @see https://deno.land/x/deno_dom
 * @example
 * ```ts
-* const html = "<div>foo</div>";
-* const element = parseDOM(html);
+* const dom = parseDOM("<div>foo</div>");
 * ```
 */
 export function parseDOM(html:string):Element{
@@ -65,28 +59,27 @@ export function parseDOM(html:string):Element{
 * Find all `input` `textarea` elements with `id` attribute and convert them to key-value record.
 * @example
 * ```ts
-* const html = "<input id='foo'><textarea id='bar'></textarea>";
-* const element = parseHtml(html);
-* const result = collectInputById(element);
+* const dom = parseDOM("<input id='foo'><textarea id='bar'></textarea>");
+* const result = collectInputById(dom);
 * ```
 */
 export function collectInputById(element:Element):Record<string, string>{
     const records:Record<string, string> = {};
 
-    for(const e of element.getElementsByTagName("INPUT")){
-        if(!e.id){
+    for(const input of element.getElementsByTagName("INPUT")){
+        if(!input.id){
             continue;
         }
 
-        records[e.id] = getValue(e);
+        records[input.id] = getValue(input);
     }
 
-    for(const e of element.getElementsByTagName("TEXTAREA")){
-        if(!e.id){
+    for(const textarea of element.getElementsByTagName("TEXTAREA")){
+        if(!textarea.id){
             continue;
         }
 
-        records[e.id] = getContent(e);
+        records[textarea.id] = getContent(textarea);
     }
 
     return deepClone(records);
@@ -96,23 +89,21 @@ export function collectInputById(element:Element):Record<string, string>{
 * Find all elements with `name` attribute.
 * @example
 * ```ts
-* const html = "<input name='foo'>";
-* const element = parseHtml(html);
-* const result = getElementsByName(element, "foo");
+* const dom = parseDOM("<input name='foo'>");
+* const result = getElementsByName(dom, "foo");
 * ```
 */
 export function getElementsByName(element:Element, name:string):Element[]{
-    return element.getElementsByTagName("*").filter(e => e.getAttribute("name") === name);
+    return element.getElementsByTagName("*").filter(v => v.getAttribute("name") === name);
 }
 
 /**
 * Get value by `id` search.
 * `.value` for `<input>`, `.textContent` for `<textarea>` and `.value` of `.selected` for `<select>` `<dataset>`.
 * @example
-* ```ts
-* const html = "<input id='foo'>";
-* const element = parseHtml(html);
-* const result = getValueById(element, "foo");
+* ```ts\
+* const dom = parseDOM("<input id='foo'>");
+* const result = getValueById(dom, "foo");
 * ```
 */
 export function getValueById(element:Element, id:string):string{
@@ -124,28 +115,26 @@ export function getValueById(element:Element, id:string):string{
 * `.value` for `<input>`, `.textContent` for `<textarea>` and `.value` of `.selected` for `<select>` `<dataset>`.
 * @example
 * ```ts
-* const html = "<input name='foo'>";
-* const element = parseHtml(html);
-* const result = getValuesByName(element, "foo");
+* const dom = parseDOM("<input name='foo'>");
+* const result = getValuesByName(dom, "foo");
 * ```
 */
 export function getValuesByName(element:Element, name:string):string[]{
-    return getElementsByName(element, name).map(e => extractValue(e));
+    return getElementsByName(element, name).map(v => extractValue(v));
 }
 
 /**
 * Gets value of `.checked` in group of radio buttons.
 * @example
 * ```ts
-* const html = "<input type='radio' name='foo' value='1' checked><input type='radio' name='foo' value='2'>";
-* const element = parseHtml(html);
-* const result = getValueByRadioActive(element, "foo");
+* const dom = parseDOM("<input type='radio' name='foo' value='1' checked><input type='radio' name='foo' value='2'>");
+* const result = getValueByRadioActive(dom, "foo");
 * ```
 */
 export function getValueByRadioActive(element:Element, name:string):string{
     const elements = getElementsByName(element, name);
 
-    if(elements.some(e => e.tagName !== "INPUT" || e.getAttribute("type") !== "radio")){
+    if(elements.some(v => v.tagName !== "INPUT" || v.getAttribute("type") !== "radio")){
         return "";
     }
 

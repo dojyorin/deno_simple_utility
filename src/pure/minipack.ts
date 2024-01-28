@@ -16,10 +16,10 @@ export interface DataMap{
 * @see https://deno.land/x/simple_utility#minipack
 * @example
 * ```ts
-* const files = [
-*     ["file1", await Deno.readFile("./file1")],
-*     ["file2", await Deno.readFile("./file2")]
-* ];
+* const files = [{
+*     name: "foo.txt",
+*     body: await Deno.readFile("./foo.txt")
+* }];
 * const encode = minipackEncode(files);
 * const decode = minipackDecode(encode);
 * ```
@@ -48,14 +48,14 @@ export function minipackEncode(files:DataMap[]):Uint8Array{
 }
 
 /**
-* Decode byte array in "minipack" format.
+* Decode binary of "minipack" format.
 * @see https://deno.land/x/simple_utility#minipack
 * @example
 * ```ts
-* const files = [
-*     ["file1", await Deno.readFile("./file1")],
-*     ["file2", await Deno.readFile("./file2")]
-* ];
+* const files = [{
+*     name: "foo.txt",
+*     body: await Deno.readFile("./foo.txt")
+* }];
 * const encode = minipackEncode(files);
 * const decode = minipackDecode(encode);
 * ```

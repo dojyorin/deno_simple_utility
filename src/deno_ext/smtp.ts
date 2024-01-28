@@ -6,11 +6,11 @@ import {type DataMap} from "../pure/minipack.ts";
 */
 export interface MailMessage{
     from: string;
-    to: string | string[];
-    cc?: string | string[];
-    bcc?: string | string[];
+    to: string[];
     title: string;
     body: string;
+    cc?: string[];
+    bcc?: string[];
     files?: DataMap[];
 }
 
@@ -19,9 +19,9 @@ export interface MailMessage{
 * @see https://www.npmjs.com/package/nodemailer
 * @example
 * ```ts
-* const ok = await smtpSend("smtp://smtp.example.com:25", {
-*     from: "mike@xxx.com",
-*     to: "john@xxx.com",
+* await smtpSend("smtp://smtp.example.com:25", {
+*     from: "mike@example.com",
+*     to: ["john@example.com"],
 *     title: "test",
 *     body: "test mail."
 * });

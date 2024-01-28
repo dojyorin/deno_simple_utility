@@ -1,3 +1,8 @@
+interface TaskMessage<T extends unknown>{
+    message: T;
+    transfers?: (Transferable | ArrayBufferView)[];
+}
+
 /**
 * Content of processing run by worker thread.
 */
@@ -9,14 +14,6 @@ export type TaskAction<T extends unknown, K extends unknown> = (message:T) => Ta
 export type TaskContext<T extends unknown, K extends unknown> = (message:T, transfers?:(Transferable | ArrayBufferView)[]) => Promise<K>;
 
 /**
-* Communication content between main thread and worker thread.
-*/
-export interface TaskMessage<T extends unknown>{
-    message: T;
-    transfers?: (Transferable | ArrayBufferView)[];
-}
-
-/**
 * Register `TaskAction` and return reusable task execution context.
 * `Worker` instance is created and destroyed each time they run `TaskContext`.
 * `import` can only use "syntax", not "declaration".
@@ -24,13 +21,13 @@ export interface TaskMessage<T extends unknown>{
 * ```ts
 * const task = createTask<number, number>(async(data)=>{
 *     const {delay} = await import("https://deno.land/std/async/mod.ts");
-*     await delay(1000);
+*     await delay(data);
 *     return {
 *         message: data * 2
 *     };
 * });
-* const result1 = await task(1);
-* const result2 = await task(2);
+* const result1 = await task(10);
+* const result2 = await task(20);
 * ```
 */
 export function createTask<T extends unknown, K extends unknown>(task:TaskAction<T, K>):TaskContext<T, K>{

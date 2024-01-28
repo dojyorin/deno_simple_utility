@@ -12,8 +12,8 @@ interface BlobType{
 * Convert from blob to specified data type.
 * @example
 * ```ts
-* const file = new File(["my-text"], "example.txt");
-* const data = await blobConvert(file, "text");
+* const blob = new Blob(["my-text"]);
+* const data = await blobConvert(blob, "text");
 * ```
 */
 export async function blobConvert<T extends keyof BlobType>(blob:Blob, type:T):Promise<BlobType[T]>{
@@ -28,14 +28,14 @@ export async function blobConvert<T extends keyof BlobType>(blob:Blob, type:T):P
 }
 
 /**
-* Concat multiple buffer sources into single Uint8Array.
+* Concat multiple buffer sources into single binary.
 * @example
 * ```ts
 * const byte = byteConcat(new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6]));
 * ```
 */
 export function byteConcat(...sources:BufferSource[]):Uint8Array{
-    const output = new Uint8Array(sources.reduce((n, {byteLength}) => n + byteLength , 0));
+    const output = new Uint8Array(sources.reduce((v, {byteLength}) => v + byteLength , 0));
 
     let i = 0;
     for(const source of sources){

@@ -8,7 +8,7 @@ interface PrimitiveMap{
     "boolean": boolean;
 }
 
-function undef(strict?:boolean){
+function strictUndef(strict?:boolean){
     if(strict){
         throw new Error();
     }
@@ -18,7 +18,7 @@ function undef(strict?:boolean){
 
 /**
 * Convert from dirty text to specified type.
-* Enabling `strict` flag will throw exception if parsing is not possible.
+* Enabling `strict` flag will throw exception if parsing failed.
 * @example
 * ```ts
 * const value = primitiveParse("123", "number", true);
@@ -30,7 +30,7 @@ export function primitiveParse<T extends keyof PrimitiveMap, U extends boolean>(
             const v = String(text);
 
             if(text === undefined || text === null){
-                return <TypeStrict<PrimitiveMap[T], U>>undef(strict);
+                return <TypeStrict<PrimitiveMap[T], U>>strictUndef(strict);
             }
 
             return <TypeStrict<PrimitiveMap[T], U>>v;
@@ -40,7 +40,7 @@ export function primitiveParse<T extends keyof PrimitiveMap, U extends boolean>(
             const v = Number(text);
 
             if(text === undefined || text === null || isNaN(v)){
-                return <TypeStrict<PrimitiveMap[T], U>>undef(strict);
+                return <TypeStrict<PrimitiveMap[T], U>>strictUndef(strict);
             }
 
             return <TypeStrict<PrimitiveMap[T], U>>v;
@@ -50,7 +50,7 @@ export function primitiveParse<T extends keyof PrimitiveMap, U extends boolean>(
             switch(text){
                 case "true": return <TypeStrict<PrimitiveMap[T], U>>true;
                 case "false": return <TypeStrict<PrimitiveMap[T], U>>false;
-                default: return <TypeStrict<PrimitiveMap[T], U>>undef(strict);
+                default: return <TypeStrict<PrimitiveMap[T], U>>strictUndef(strict);
             }
         }
 
@@ -60,7 +60,7 @@ export function primitiveParse<T extends keyof PrimitiveMap, U extends boolean>(
 
 /**
 * Convert from dirty text to specified type.
-* If cannot be parsed, use default (`def`) value.
+* If parsing failed use default (`def`) value.
 * Convert to same type as default value.
 * @example
 * ```ts

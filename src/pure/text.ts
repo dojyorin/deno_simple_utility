@@ -25,15 +25,16 @@ export function u8Decode(data:Uint8Array):string{
 }
 
 /**
-* Convert from SHIFT-JIS binary to hex string.
+* Convert from any encoded binary to string.
+* Default codec is SHIFT-JIS.
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const decode = sjisDecode(bin);
+* const decode = textDecode(bin);
 * ```
 */
-export function sjisDecode(data:Uint8Array):string{
-    return new TextDecoder("shift-jis").decode(data);
+export function textDecode(data:Uint8Array, codec?:string):string{
+    return new TextDecoder(codec ?? "shift-jis").decode(data);
 }
 
 /**
@@ -66,8 +67,7 @@ export function hexDecode(data:string):Uint8Array{
 * Trim head and tail blank, remove CR and consecutive space (tab, LF) to single space (tab, LF).
 * @example
 * ```ts
-* const text = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
-* const format = trimExtend(text);
+* const format = trimExtend("  Lorem ipsum\r dolor   sit  \r\r amet. ");
 * ```
 */
 export function trimExtend(data:string):string{
@@ -75,11 +75,10 @@ export function trimExtend(data:string):string{
 }
 
 /**
-* Convert half-width Japanese kana to full-width and full-width alphanumeric symbols to half-width.
+* Convert half-width string (ex: Japanese Kana) to full-width and full-width alphanumeric symbols to half-width.
 * @example
 * ```ts
-* const text = "１＋１＝２";
-* const format = fixWidth(text);
+* const format = fixWidth("１＋１＝２");
 * ```
 */
 export function fixWidth(data:string):string{
@@ -118,8 +117,7 @@ export function fixWidth(data:string):string{
 * Clean up text with `fixWidth()` and `trimExtend()`.
 * @example
 * ```ts
-* const text = "１  ＋  １  ＝  ２  ";
-* const format = cleanText(text);
+* const format = cleanText("１  ＋  １  ＝  ２  ");
 * ```
 */
 export function cleanText(data:string):string{
@@ -131,8 +129,7 @@ export function cleanText(data:string):string{
 * Useful for calculate number of characters with string contains emoji.
 * @example
 * ```ts
-* const text = "😀😃😄😁😆😅😂🤣";
-* const characters = accurateSegment(text);
+* const characters = accurateSegment("😀😃😄😁😆😅😂🤣");
 * ```
 */
 export function accurateSegment(data:string):string[]{
@@ -144,8 +141,7 @@ export function accurateSegment(data:string):string[]{
 * Output is 2 digits by default.
 * @example
 * ```ts
-* const num = 8;
-* const pad = pad0(num);
+* const pad = pad0(8);
 * ```
 */
 export function pad0(data:number, digit?:number, radix?:number):string{
