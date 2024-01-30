@@ -13,10 +13,10 @@ Deno.test({
     async fn(){
         const server = Deno.serve({
             hostname: "127.0.0.1",
-            port: 62000,
+            port: 10080,
         }, () => new Response(sample));
 
-        const result = await fetchExtend("http://127.0.0.1:62000", "byte");
+        const result = await fetchExtend("http://127.0.0.1:10080", "byte");
         await server.shutdown();
 
         assertEquals(result, sample);
