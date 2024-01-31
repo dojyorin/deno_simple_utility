@@ -5,10 +5,12 @@
 ![shields:release](https://img.shields.io/github/release/dojyorin/deno_simple_utility)
 ![deno:module](https://shield.deno.dev/x/simple_utility)
 
-Useful snippet collection.
+Simplify processing for Deno.
 
 # Details
-Collection of utilities to improve usability.
+Pack frequently used binary, text and WebAPI processing into one function.
+
+For example, provide BASE64, Deflate, WebCrypto, WebWorker and `fetch` in easier-to-use format.
 
 ### Minipack
 "Minipack" is file archive format unique to this module.
@@ -37,9 +39,9 @@ This module has several variations depending on usage.
 |[`mod.pure.ts`](./mod.pure.ts)|➖|✅|✅|Without `Deno`, basically using with browser.|
 |[`mod.pure.full.ts`](./mod.pure.full.ts)|✅|➖|✅|All features of pure script available.|
 
-Export without external dependencies have fewer features than full, but not susceptible to external module vulnerabilities.
+Export without external modules have fewer features than full, but not susceptible to external module vulnerabilities.
 
-When used in browser available via [esm.sh](https://esm.sh).
+Can be used from browser via [esm.sh](https://esm.sh).
 
 ```html
 <script>
