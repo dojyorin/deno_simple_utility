@@ -3,6 +3,7 @@
 ![actions:release](https://github.com/dojyorin/deno_simple_utility/actions/workflows/release.yaml/badge.svg)
 ![shields:license](https://img.shields.io/github/license/dojyorin/deno_simple_utility)
 ![shields:release](https://img.shields.io/github/release/dojyorin/deno_simple_utility)
+![deno:module](https://shield.deno.dev/x/simple_utility)
 
 Useful snippet collection.
 
