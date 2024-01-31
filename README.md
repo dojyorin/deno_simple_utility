@@ -10,7 +10,7 @@ Simplify processing for Deno.
 # Details
 Pack frequently used binary, text and WebAPI processing into one function.
 
-For example, provide BASE64, Deflate, WebCrypto, WebWorker and `fetch` in easier-to-use format.
+For example provide BASE64, Deflate, WebCrypto, WebWorker and Fetch in easier-to-use format.
 
 ### Minipack
 "Minipack" is file archive format unique to this module.

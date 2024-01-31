@@ -103,11 +103,11 @@ export function excelDecode(data:Uint8Array, cp?:number, pw?:string):Record<stri
     for(const [name, sheet] of Object.entries(Sheets)){
         const rows:string[][] = [];
 
-        for(const row of sheet["!data"] ?? []){
+        for(const row of <(RawWorkCell[] | undefined)[]>sheet["!data"] ?? []){
             const columns:string[] = [];
 
-            for(const {t, w} of row){
-                columns.push(t === "e" ? "" : w ?? "");
+            for(const column of <(RawWorkCell | undefined)[]>row ?? []){
+                columns.push(!column || column.t === "e" ? "" : column.w ?? "");
             }
 
             rows.push(columns);
