@@ -1,5 +1,4 @@
 import {type Element, DOMParser} from "../../deps.deno_ext.ts";
-import {type FetchInit, fetchExtend} from "../pure/fetch.ts";
 import {deepClone} from "../pure/deep.ts";
 
 function selectedElement(elements:Element[], attribute:"checked" | "selected"){
@@ -23,18 +22,6 @@ function extractValue(element?:Element){
         case "TEXTAREA": return getContent(element);
         default: return "";
     }
-}
-
-/**
-* Download and parse web page.
-* @see https://deno.land/x/deno_dom
-* @example
-* ```ts
-* const dom = await fetchDOM("https://www.google.com");
-* ```
-*/
-export async function fetchDOM(path:string, option?:FetchInit):Promise<Element>{
-    return parseDOM(await fetchExtend(path, "text", option));
 }
 
 /**
