@@ -17,7 +17,11 @@ const sample2:RawWorkBook = {
                     t: "s",
                     v: "foo",
                     h: "foo",
-                    w: "foo"
+                    w: "foo",
+                    z: "General",
+                    s: {
+                        patternType: "none"
+                    }
                 }]
             ]
         }
