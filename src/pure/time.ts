@@ -63,8 +63,10 @@ export async function delay(time:number):Promise<number>{
 * const format = dtSerial();
 * ```
 */
-export function dtSerial(date?:Date):string{
+export function dtSerial(date?:Date, split?:boolean):string{
     const d = date ?? new Date();
+    const ss = split ? "/" : "";
+    const sc = split ? ":" : "";
 
-    return `${d.getFullYear()}${pad0(d.getMonth() + 1)}${pad0(d.getDate())}${pad0(d.getHours())}${pad0(d.getMinutes())}${pad0(d.getSeconds())}`;
+    return `${d.getFullYear()}${ss}${pad0(d.getMonth() + 1)}${ss}${pad0(d.getDate())}${split ? " " : ""}${pad0(d.getHours())}${sc}${pad0(d.getMinutes())}${sc}${pad0(d.getSeconds())}`;
 }

@@ -1,5 +1,6 @@
 import {type RawWorkBook, type RawWorkSheet, type RawWorkCell, xlsxcp, set_cptable, xlsxRead, xlsxWrite, xlsxUtil} from "../../deps.pure_ext.ts";
 import {deepClone} from "../pure/deep.ts";
+import {dtSerial} from "../pure/time.ts";
 
 export type {RawWorkBook, RawWorkSheet, RawWorkCell};
 
@@ -19,6 +20,8 @@ export function excelEncodeRaw(book:RawWorkBook, cp?:number, pw?:string):Uint8Ar
     const buf = <ArrayBuffer>xlsxWrite(book, {
         type: "array",
         compression: true,
+        cellStyles: true,
+        cellDates: true,
         codepage: cp,
         password: pw
     });
@@ -81,6 +84,8 @@ export function excelDecodeRaw(data:Uint8Array, cp?:number, pw?:string):RawWorkB
         type: "array",
         dense: true,
         raw: true,
+        cellStyles: true,
+        cellDates: true,
         codepage: cp,
         password: pw
     });
@@ -107,7 +112,16 @@ export function excelDecode(data:Uint8Array, cp?:number, pw?:string):Record<stri
             const columns:string[] = [];
 
             for(const column of <(RawWorkCell | undefined)[]>row ?? []){
-                columns.push(!column || column.t === "e" ? "" : column.w ?? "");
+                if(!column || column.t === "e" || column.v === undefined){
+                    columns.push("");
+                }
+                else if(column.v instanceof Date){
+                    column.v.setMinutes(new Date().getTimezoneOffset());
+                    columns.push(dtSerial(column.v, true));
+                }
+                else{
+                    columns.push(`${column.v}`);
+                }
             }
 
             rows.push(columns);
