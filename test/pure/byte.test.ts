@@ -1,16 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {blobConvert, byteConcat} from "../../src/pure/byte.ts";
-
-const sample = "hello!";
-
-Deno.test({
-    name: "Byte: Blob Convert",
-    async fn(){
-        const data = await blobConvert(new Blob([sample]), "text");
-
-        assertEquals(data, sample);
-    }
-});
+import {byteConcat} from "../../src/pure/byte.ts";
 
 Deno.test({
     name: "Byte: Concat",

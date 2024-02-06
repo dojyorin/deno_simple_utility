@@ -1,4 +1,4 @@
-export {parse, stringify} from "https://deno.land/std@0.213.0/csv/mod.ts";
+export {parse, stringify} from "https://deno.land/std@0.214.0/csv/mod.ts";
 
 export {ZipReader, ZipWriter, Uint8ArrayReader, Uint8ArrayWriter} from "https://deno.land/x/zipjs@v2.7.34/index.js";
 
