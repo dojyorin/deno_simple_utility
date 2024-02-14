@@ -1,5 +1,5 @@
-export {Logger, ConsoleHandler, FileHandler} from "https://deno.land/std@0.214.0/log/mod.ts";
-export {format} from "https://deno.land/std@0.214.0/datetime/mod.ts";
+export {Logger, ConsoleHandler, FileHandler} from "https://deno.land/std@0.215.0/log/mod.ts";
+export {format} from "https://deno.land/std@0.215.0/datetime/mod.ts";
 
 export {type Element, DOMParser} from "https://deno.land/x/deno_dom@v0.1.45/deno-dom-wasm.ts";
 
