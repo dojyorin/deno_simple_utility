@@ -1,3 +1,6 @@
+import {b64DataURL} from "./base64.ts";
+import {u8Encode} from "./text.ts";
+
 interface TaskMessage<T extends unknown>{
     message: T;
     transfers?: (Transferable | ArrayBufferView)[];
@@ -31,10 +34,9 @@ export type TaskContext<T extends unknown, K extends unknown> = (message:T, tran
 * ```
 */
 export function createTask<T extends unknown, K extends unknown>(task:TaskAction<T, K>):TaskContext<T, K>{
-    const script = task.toString();
-    const regist = /*js*/`
+    const script = /*js*/`
         globalThis.onmessage = async({data})=>{
-            const {message, transfers} = await(${script})(data);
+            const {message, transfers} = await(${task.toString()})(data);
             globalThis.postMessage(message, {
                 transfer: transfers?.map(v => "buffer" in v ? v.buffer : v)
             });
@@ -43,29 +45,23 @@ export function createTask<T extends unknown, K extends unknown>(task:TaskAction
 
     return (message, transfers)=>{
         return new Promise<K>((res, rej)=>{
-            const url = URL.createObjectURL(new Blob([regist]));
-            const worker = new Worker(url, {
+            const worker = new Worker(b64DataURL(u8Encode(script), "text/javascript"), {
                 type: "module"
             });
 
-            function disposeWorker(){
-                worker.terminate();
-                URL.revokeObjectURL(url);
-            }
-
             worker.onmessage = ({data})=>{
                 res(data);
-                disposeWorker();
+                worker.terminate();
             };
 
             worker.onerror = (e)=>{
                 rej(e);
-                disposeWorker();
+                worker.terminate();
             };
 
             worker.onmessageerror = (e)=>{
                 rej(e);
-                disposeWorker();
+                worker.terminate();
             };
 
             worker.postMessage(message, {

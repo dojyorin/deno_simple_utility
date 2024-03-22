@@ -1,3 +1,5 @@
+import {byteConcat} from "./byte.ts";
+
 /**
 * Serialized `CryptoKeyPair`.
 */
@@ -116,11 +118,7 @@ export async function pkEncrypt(data:Uint8Array, {publicKey, privateKey}:Portabl
         iv: generateRandom(12)
     };
 
-    const output = new Uint8Array(aes.iv.byteLength + data.byteLength + 16);
-    output.set(aes.iv, 0);
-    output.set(new Uint8Array(await crypto.subtle.encrypt(aes, await deriveKey({publicKey, privateKey}), data)), aes.iv.byteLength);
-
-    return output;
+    return byteConcat(aes.iv, await crypto.subtle.encrypt(aes, await deriveKey({publicKey, privateKey}), data));
 }
 
 /**
