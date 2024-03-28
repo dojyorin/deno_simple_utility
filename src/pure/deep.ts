@@ -8,23 +8,6 @@ function hasObject(data:Record<string | number | symbol, unknown>, key:string){
 }
 
 /**
-* `structuredClone()` with argument type added.
-* @example
-* ```ts
-* const clone = deepClone({
-*     aaa: {
-*         bbb: true
-*     }
-* });
-* ```
-*/
-export function deepClone<T extends Opt<T>>(data:T, transfers?:(Transferable | ArrayBufferView)[]):T{
-    return structuredClone(data, {
-        transfer: transfers?.map(v => "buffer" in v ? v.buffer : v)
-    });
-}
-
-/**
 * Applies `Object.freeze()` recursively.
 * @example
 * ```ts

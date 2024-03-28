@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {deepClone, deepFreeze, deepSeal} from "../../src/pure/deep.ts";
+import {deepFreeze, deepSeal} from "../../src/pure/deep.ts";
 
 const sample = {
     aaa: {
@@ -12,7 +12,7 @@ const sample = {
 Deno.test({
     name: "Deep: Freeze",
     fn(){
-        const freeze = deepFreeze(deepClone(sample));
+        const freeze = deepFreeze(structuredClone(sample));
 
         const desc = Object.getOwnPropertyDescriptor(freeze.aaa.bbb, "ccc");
         assertEquals(desc?.configurable, false);
@@ -23,7 +23,7 @@ Deno.test({
 Deno.test({
     name: "Deep: Seal",
     fn(){
-        const seal = deepSeal(deepClone(sample));
+        const seal = deepSeal(structuredClone(sample));
 
         const desc = Object.getOwnPropertyDescriptor(seal.aaa.bbb, "ccc");
         assertEquals(desc?.configurable, false);
