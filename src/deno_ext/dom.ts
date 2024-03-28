@@ -1,5 +1,4 @@
 import {type Element, DOMParser} from "../../deps.deno_ext.ts";
-import {deepClone} from "../pure/deep.ts";
 
 function selectedElement(elements:Element[], attribute:"checked" | "selected"){
     return elements.find(v => typeof v.getAttribute(attribute) === "string");
@@ -69,7 +68,7 @@ export function collectInputById(element:Element):Record<string, string>{
         records[textarea.id] = getContent(textarea);
     }
 
-    return deepClone(records);
+    return structuredClone(records);
 }
 
 /**

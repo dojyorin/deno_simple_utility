@@ -1,5 +1,4 @@
 import {type RawWorkBook, type RawWorkSheet, type RawWorkCell, xlsxcp, set_cptable, xlsxRead, xlsxWrite, xlsxUtil} from "../../deps.pure_ext.ts";
-import {deepClone} from "../pure/deep.ts";
 import {dtSerial} from "../pure/time.ts";
 
 export type {RawWorkBook, RawWorkSheet, RawWorkCell};
@@ -130,5 +129,5 @@ export function excelDecode(data:Uint8Array, cp?:number, pw?:string):Record<stri
         book[name] = rows;
     }
 
-    return deepClone(book);
+    return structuredClone(book);
 }

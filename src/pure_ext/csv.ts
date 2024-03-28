@@ -1,5 +1,4 @@
 import {parse, stringify} from "../../deps.pure_ext.ts";
-import {deepClone} from "../pure/deep.ts";
 import {primitiveParseX} from "../pure/primitive.ts";
 
 /**
@@ -49,7 +48,7 @@ export function csvDecode<T extends Record<keyof T, string | number | boolean>>(
             props[<K>k] = <T[K]>primitiveParseX(v, def[<K>k]);
         }
 
-        records.push(deepClone(<T>props));
+        records.push(structuredClone(<T>props));
     }
 
     return records;
