@@ -3,7 +3,7 @@ import {u8Encode} from "./text.ts";
 
 interface TaskMessage<T extends unknown>{
     message: T;
-    transfers?: (Transferable | ArrayBufferView)[];
+    transfers?: Transferable[];
 }
 
 /**
@@ -14,7 +14,7 @@ export type TaskAction<T extends unknown, K extends unknown> = (message:T) => Ta
 /**
 * Run registered `TaskAction` in worker thread.
 */
-export type TaskContext<T extends unknown, K extends unknown> = (message:T, transfers?:(Transferable | ArrayBufferView)[]) => Promise<K>;
+export type TaskContext<T extends unknown, K extends unknown> = (message:T, transfers?:Transferable[]) => Promise<K>;
 
 /**
 * Register `TaskAction` and return reusable task execution context.
@@ -38,7 +38,7 @@ export function createTask<T extends unknown, K extends unknown>(task:TaskAction
         globalThis.onmessage = async({data})=>{
             const {message, transfers} = await(${task.toString()})(data);
             globalThis.postMessage(message, {
-                transfer: transfers?.map(v => "buffer" in v ? v.buffer : v)
+                transfer: transfers
             });
         };
     `;
@@ -65,7 +65,7 @@ export function createTask<T extends unknown, K extends unknown>(task:TaskAction
             };
 
             worker.postMessage(message, {
-                transfer: transfers?.map(v => "buffer" in v ? v.buffer : v)
+                transfer: transfers
             });
         });
     };
