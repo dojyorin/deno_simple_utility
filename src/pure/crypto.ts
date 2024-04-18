@@ -73,11 +73,11 @@ export async function deriveHash(data:Uint8Array, sha?:`SHA-${256 | 384 | 512}`)
 * Curve algorithm is "NIST P-256".
 * @example
 * ```ts
-* const k1 = await pkGenerateECDH();
-* const k2 = await pkGenerateECDH();
+* const k1 = await generateEncryptKey();
+* const k2 = await generateEncryptKey();
 * ```
 */
-export async function pkGenerateECDH():Promise<PortableCryptoKeyPair>{
+export async function generateEncryptKey():Promise<PortableCryptoKeyPair>{
     return await generateKey(CURVE_ECDH, ["deriveKey"]);
 }
 
@@ -86,10 +86,10 @@ export async function pkGenerateECDH():Promise<PortableCryptoKeyPair>{
 * Curve algorithm is "NIST P-256".
 * @example
 * ```ts
-* const {publicKey, privateKey} = await pkGenerateECDSA();
+* const {publicKey, privateKey} = await generateSignKey();
 * ```
 */
-export async function pkGenerateECDSA():Promise<PortableCryptoKeyPair>{
+export async function generateSignKey():Promise<PortableCryptoKeyPair>{
     return await generateKey(CURVE_ECDSA, ["sign", "verify"]);
 }
 
@@ -100,19 +100,19 @@ export async function pkGenerateECDSA():Promise<PortableCryptoKeyPair>{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const k1 = await pkGenerateECDH();
-* const k2 = await pkGenerateECDH();
-* const cipher = await pkEncrypt(bin, {
+* const k1 = await generateEncryptKey();
+* const k2 = await generateEncryptKey();
+* const cipher = await encryptData(bin, {
 *     publicKey: k1.publicKey,
 *     privateKey: k2.privateKey
 * });
-* const decrypt = await pkDecrypt(cipher, {
+* const decrypt = await decryptData(cipher, {
 *     publicKey: k2.publicKey,
 *     privateKey: k1.privateKey
 * });
 * ```
 */
-export async function pkEncrypt(data:Uint8Array, {publicKey, privateKey}:PortableCryptoKeyPair):Promise<Uint8Array>{
+export async function encryptData(data:Uint8Array, {publicKey, privateKey}:PortableCryptoKeyPair):Promise<Uint8Array>{
     const aes = {
         name: AES_MODE,
         iv: generateRandom(12)
@@ -128,19 +128,19 @@ export async function pkEncrypt(data:Uint8Array, {publicKey, privateKey}:Portabl
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const k1 = await pkGenerateECDH();
-* const k2 = await pkGenerateECDH();
-* const cipher = await pkEncrypt(bin, {
+* const k1 = await generateEncryptKey();
+* const k2 = await generateEncryptKey();
+* const cipher = await encryptData(bin, {
 *     publicKey: k1.publicKey,
 *     privateKey: k2.privateKey
 * });
-* const decrypt = await pkDecrypt(cipher, {
+* const decrypt = await decryptData(cipher, {
 *     publicKey: k2.publicKey,
 *     privateKey: k1.privateKey
 * });
 * ```
 */
-export async function pkDecrypt(data:Uint8Array, {publicKey, privateKey}:PortableCryptoKeyPair):Promise<Uint8Array>{
+export async function decryptData(data:Uint8Array, {publicKey, privateKey}:PortableCryptoKeyPair):Promise<Uint8Array>{
     const aes = {
         name: AES_MODE,
         iv: data.subarray(0, 12)
@@ -154,12 +154,12 @@ export async function pkDecrypt(data:Uint8Array, {publicKey, privateKey}:Portabl
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const {publicKey, privateKey} = await pkGenerateECDSA();
-* const sign = await pkSign(bin, privateKey);
-* const verify = await pkVerify(bin, publicKey, sign);
+* const {publicKey, privateKey} = await generateSignKey();
+* const sign = await deriveSign(bin, privateKey);
+* const verify = await verifySign(bin, publicKey, sign);
 * ```
 */
-export async function pkSign(data:Uint8Array, key:Uint8Array):Promise<Uint8Array>{
+export async function deriveSign(data:Uint8Array, key:Uint8Array):Promise<Uint8Array>{
     return new Uint8Array(await crypto.subtle.sign(MAC_ECDSA, await crypto.subtle.importKey(FORMAT_PRI, key, CURVE_ECDSA, false, ["sign"]), data));
 }
 
@@ -168,11 +168,11 @@ export async function pkSign(data:Uint8Array, key:Uint8Array):Promise<Uint8Array
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const {publicKey, privateKey} = await pkGenerateECDSA();
-* const sign = await pkSign(bin, privateKey);
-* const verify = await pkVerify(bin, publicKey, sign);
+* const {publicKey, privateKey} = await generateSignKey();
+* const sign = await deriveSign(bin, privateKey);
+* const verify = await verifySign(bin, publicKey, sign);
 * ```
 */
-export async function pkVerify(data:Uint8Array, key:Uint8Array, sign:Uint8Array):Promise<boolean>{
+export async function verifySign(data:Uint8Array, key:Uint8Array, sign:Uint8Array):Promise<boolean>{
     return await crypto.subtle.verify(MAC_ECDSA, await crypto.subtle.importKey(FORMAT_PUB, key, CURVE_ECDSA, false, ["verify"]), sign, data);
 }
