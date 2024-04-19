@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {u8Encode, u8Decode, textDecode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment, pad0} from "../../src/pure/text.ts";
+import {u8Encode, u8Decode, textDecode, hexEncode, hexDecode, trimExtend, fixWidth, textAdjust, splitSegment, padZero} from "../../src/pure/text.ts";
 
 const sampleText = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
 const sampleBin = new Uint8Array([
@@ -62,7 +62,7 @@ Deno.test({
 Deno.test({
     name: "Text: Clean Up",
     fn(){
-        const result = cleanText("１  ＋  １  ＝  ２  ");
+        const result = textAdjust("１  ＋  １  ＝  ２  ");
 
         assertEquals(result, "1 + 1 = 2");
     }
@@ -71,7 +71,7 @@ Deno.test({
 Deno.test({
     name: "Text: Segment",
     fn(){
-        const {length} = accurateSegment("😄😁😆😅😂");
+        const {length} = splitSegment("😄😁😆😅😂");
 
         assertEquals(length, 5);
     }
@@ -80,7 +80,7 @@ Deno.test({
 Deno.test({
     name: "Text: Pad 0",
     fn(){
-        const pad = pad0(8);
+        const pad = padZero(8);
 
         assertEquals(pad, "08");
     }

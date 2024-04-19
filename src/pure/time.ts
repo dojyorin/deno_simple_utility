@@ -1,4 +1,4 @@
-import {pad0} from "./text.ts";
+import {padZero} from "./text.ts";
 
 /**
 * UNIX time in seconds.
@@ -60,13 +60,13 @@ export async function delay(time:number):Promise<number>{
 * Generate serialized string from current or any `Date` to "yyyyMMddhhmmss".
 * @example
 * ```ts
-* const format = dtSerial();
+* const format = timeSerial();
 * ```
 */
-export function dtSerial(date?:Date, split?:boolean):string{
+export function timeSerial(date?:Date, split?:boolean):string{
     const d = date ?? new Date();
     const ss = split ? "/" : "";
     const sc = split ? ":" : "";
 
-    return `${d.getFullYear()}${ss}${pad0(d.getMonth() + 1)}${ss}${pad0(d.getDate())}${split ? " " : ""}${pad0(d.getHours())}${sc}${pad0(d.getMinutes())}${sc}${pad0(d.getSeconds())}`;
+    return `${d.getFullYear()}${ss}${padZero(d.getMonth() + 1)}${ss}${padZero(d.getDate())}${split ? " " : ""}${padZero(d.getHours())}${sc}${padZero(d.getMinutes())}${sc}${padZero(d.getSeconds())}`;
 }

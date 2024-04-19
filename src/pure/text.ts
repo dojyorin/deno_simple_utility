@@ -47,7 +47,7 @@ export function textDecode(data:Uint8Array, codec?:string):string{
 * ```
 */
 export function hexEncode(data:Uint8Array):string{
-    return [...data].map(v => pad0(v, 2, 16)).join("");
+    return [...data].map(v => padZero(v, 2, 16)).join("");
 }
 
 /**
@@ -117,10 +117,10 @@ export function fixWidth(data:string):string{
 * Clean up text with `fixWidth()` and `trimExtend()`.
 * @example
 * ```ts
-* const format = cleanText("１  ＋  １  ＝  ２  ");
+* const format = textAdjust("１  ＋  １  ＝  ２  ");
 * ```
 */
-export function cleanText(data:string):string{
+export function textAdjust(data:string):string{
     return trimExtend(fixWidth(data));
 }
 
@@ -129,10 +129,10 @@ export function cleanText(data:string):string{
 * Useful for calculate number of characters with string contains emoji.
 * @example
 * ```ts
-* const characters = accurateSegment("😀😃😄😁😆😅😂🤣");
+* const characters = splitSegment("😀😃😄😁😆😅😂🤣");
 * ```
 */
-export function accurateSegment(data:string):string[]{
+export function splitSegment(data:string):string[]{
     return [...new Intl.Segmenter().segment(data)].map(({segment}) => segment);
 }
 
@@ -141,9 +141,9 @@ export function accurateSegment(data:string):string[]{
 * Output is 2 digits by default.
 * @example
 * ```ts
-* const pad = pad0(8);
+* const pad = padZero(8);
 * ```
 */
-export function pad0(data:number, digit?:number, radix?:number):string{
+export function padZero(data:number, digit?:number, radix?:number):string{
     return data.toString(radix).toUpperCase().padStart(digit ?? 2, "0");
 }

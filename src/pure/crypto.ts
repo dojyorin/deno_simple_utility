@@ -10,17 +10,17 @@ const AES_BIT = 128;
 const FORMAT_PUB = "spki";
 const FORMAT_PRI = "pkcs8";
 
-const CURVE_ECDH = Object.freeze({
+const CURVE_ECDH = Object.freeze<EcKeyAlgorithm>({
     name: "ECDH",
     namedCurve: "P-256"
 });
 
-const CURVE_ECDSA = Object.freeze({
+const CURVE_ECDSA = Object.freeze<EcKeyAlgorithm>({
     name: "ECDSA",
     namedCurve: "P-256"
 });
 
-const MAC_ECDSA = Object.freeze({
+const MAC_ECDSA = Object.freeze<EcdsaParams>({
     name: "ECDSA",
     hash: "SHA-256"
 });
