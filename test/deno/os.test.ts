@@ -2,7 +2,7 @@ import {assertEquals} from "../../deps.test.ts";
 import {osWindows, osMac, osLinux} from "../../src/deno/os.ts";
 
 Deno.test({
-    ignore: Deno.build.os === "windows",
+    ignore: Deno.build.os !== "windows",
     name: "OS: Windows",
     fn(){
         assertEquals(osWindows, true);
@@ -12,7 +12,7 @@ Deno.test({
 });
 
 Deno.test({
-    ignore: Deno.build.os === "darwin",
+    ignore: Deno.build.os !== "darwin",
     name: "OS: Mac",
     fn(){
         assertEquals(osWindows, false);
@@ -22,7 +22,7 @@ Deno.test({
 });
 
 Deno.test({
-    ignore: Deno.build.os === "linux",
+    ignore: Deno.build.os !== "linux",
     name: "OS: Linux",
     fn(){
         assertEquals(osWindows, false);
