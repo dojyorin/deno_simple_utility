@@ -1,4 +1,4 @@
-import {b64DataURL} from "./base64.ts";
+import {base64DataURL} from "./base64.ts";
 import {u8Encode} from "./text.ts";
 
 interface TaskMessage<T extends unknown>{
@@ -22,7 +22,7 @@ export type TaskContext<T extends unknown, K extends unknown> = (message:T, tran
 * `import` can only use "syntax", not "declaration".
 * @example
 * ```ts
-* const task = createTask<number, number>(async(data)=>{
+* const task = workerTask<number, number>(async(data)=>{
 *     const {delay} = await import("https://deno.land/std/async/mod.ts");
 *     await delay(data);
 *     return {
@@ -33,7 +33,7 @@ export type TaskContext<T extends unknown, K extends unknown> = (message:T, tran
 * const result2 = await task(20);
 * ```
 */
-export function createTask<T extends unknown, K extends unknown>(task:TaskAction<T, K>):TaskContext<T, K>{
+export function workerTask<T extends unknown, K extends unknown>(task:TaskAction<T, K>):TaskContext<T, K>{
     const script = /*js*/`
         globalThis.onmessage = async({data})=>{
             const {message, transfers} = await(${task.toString()})(data);
@@ -45,7 +45,7 @@ export function createTask<T extends unknown, K extends unknown>(task:TaskAction
 
     return (message, transfers)=>{
         return new Promise<K>((res, rej)=>{
-            const worker = new Worker(b64DataURL(u8Encode(script), "text/javascript"), {
+            const worker = new Worker(base64DataURL(u8Encode(script), "text/javascript"), {
                 type: "module"
             });
 

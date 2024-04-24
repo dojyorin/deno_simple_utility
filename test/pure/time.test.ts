@@ -1,13 +1,13 @@
 import {assertEquals} from "../../deps.test.ts";
-import {utEncode, utDecode, utParse, delay, timeSerial} from "../../src/pure/time.ts";
+import {delay, timeEncodeEpoch, timeDecodeEpoch, timeParseEpoch, timeSerial} from "../../src/pure/time.ts";
 
 const sample = new Date(2000, 0, 1, 0, 0, 0, 0);
 
 Deno.test({
     name: "Time: Encode and Decode",
     fn(){
-        const encode = utEncode(sample);
-        const decode = utDecode(encode);
+        const encode = timeEncodeEpoch(sample);
+        const decode = timeDecodeEpoch(encode);
 
         assertEquals(decode, sample);
     }
@@ -16,7 +16,7 @@ Deno.test({
 Deno.test({
     name: "Time: Parse",
     fn(){
-        const result = utParse(sample.toISOString());
+        const result = timeParseEpoch(sample.toISOString());
 
         assertEquals(result, 946684800);
     }
