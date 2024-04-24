@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {generateRandom, deriveHash, generateEncryptKey, generateSignKey, encryptData, decryptData, deriveSign, verifySign} from "../../src/pure/crypto.ts";
+import {cryptoRandom, cryptoHash, cryptoGenerateEncryptKey, cryptoGenerateSignKey, cryptoEncrypt, cryptoDecrypt, cryptoSign, cryptoVerify} from "../../src/pure/crypto.ts";
 
 const sample = new Uint8Array([0x02, 0xF2, 0x5D, 0x1F, 0x1C, 0x34, 0xB9, 0x2F]);
 
@@ -17,7 +17,7 @@ const hashResult = new Uint8Array([
 Deno.test({
     name: "Crypto: Random",
     fn(){
-        const {byteLength} = generateRandom(16);
+        const {byteLength} = cryptoRandom(16);
 
         assertEquals(byteLength, 16);
     }
@@ -26,7 +26,7 @@ Deno.test({
 Deno.test({
     name: "Crypto: Hash",
     async fn(){
-        const hash = await deriveHash(sample, "SHA-512");
+        const hash = await cryptoHash(sample, "SHA-512");
 
         assertEquals(hash, hashResult);
     }
@@ -35,15 +35,15 @@ Deno.test({
 Deno.test({
     name: "Crypto: Encrypt and Decrypt",
     async fn(){
-        const key1 = await generateEncryptKey();
-        const key2 = await generateEncryptKey();
+        const key1 = await cryptoGenerateEncryptKey();
+        const key2 = await cryptoGenerateEncryptKey();
 
-        const encrypt = await encryptData(sample, {
+        const encrypt = await cryptoEncrypt(sample, {
             publicKey: key1.publicKey,
             privateKey: key2.privateKey
         });
 
-        const decrypt = await decryptData(encrypt, {
+        const decrypt = await cryptoDecrypt(encrypt, {
             publicKey: key2.publicKey,
             privateKey: key1.privateKey
         });
@@ -55,9 +55,9 @@ Deno.test({
 Deno.test({
     name: "Crypto: Sign and Verify",
     async fn(){
-        const key = await generateSignKey();
-        const signature = await deriveSign(sample, key.privateKey);
-        const verify = await verifySign(sample, key.publicKey, signature);
+        const key = await cryptoGenerateSignKey();
+        const signature = await cryptoSign(sample, key.privateKey);
+        const verify = await cryptoVerify(sample, key.publicKey, signature);
 
         assertEquals(verify, true);
     }
