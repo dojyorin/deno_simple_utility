@@ -1,14 +1,14 @@
-import {osWin} from "./os.ts";
+import {osWindows} from "./os.ts";
 
 /**
 * Convert from backslash to slash.
 * Useful for converting from Windows path to UNIX path.
 * @example
 * ```ts
-* const path = slashU("C:\\file");
+* const path = pathSepL("C:\\file");
 * ```
 */
-export function slashU(path:string):string{
+export function pathSepL(path:string):string{
     return path.replace(/\\/g, "/");
 }
 
@@ -17,10 +17,10 @@ export function slashU(path:string):string{
 * Useful for converting from UNIX path to Windows path.
 * @example
 * ```ts
-* const path = slashW("C:/file");
+* const path = pathSepW("C:/file");
 * ```
 */
-export function slashW(path:string):string{
+export function pathSepW(path:string):string{
     return path.replace(/\//g, "\\");
 }
 
@@ -29,11 +29,11 @@ export function slashW(path:string):string{
 * `/tmp` for UNIX and `C:/Windows/Temp` for Windows.
 * @example
 * ```ts
-* const path = tmpPath();
+* const path = pathTmp();
 * ```
 */
-export function tmpPath():string{
-    return osWin ? "C:/Windows/Temp" : "/tmp";
+export function pathTmp():string{
+    return osWindows ? "C:/Windows/Temp" : "/tmp";
 }
 
 /**
@@ -41,11 +41,11 @@ export function tmpPath():string{
 * `/var` for UNIX and `C:/ProgramData` for Windows.
 * @example
 * ```ts
-* const path = dataPath();
+* const path = pathVar();
 * ```
 */
-export function dataPath():string{
-    return osWin ? "C:/ProgramData" : "/var";
+export function pathVar():string{
+    return osWindows ? "C:/ProgramData" : "/var";
 }
 
 /**
@@ -53,11 +53,11 @@ export function dataPath():string{
 * `~/.config` for UNIX and `~/AppData/Roaming` for Windows.
 * @example
 * ```ts
-* const path = configPath();
+* const path = pathConfig();
 * ```
 */
-export function configPath():string{
-    return `${homePath()}/${osWin ? "AppData/Roaming" : ".config"}`;
+export function pathConfig():string{
+    return `${pathHome()}/${osWindows ? "AppData/Roaming" : ".config"}`;
 }
 
 /**
@@ -65,25 +65,24 @@ export function configPath():string{
 * `${HOME}` for UNIX and `%USERPROFILE%` for Windows.
 * @example
 * ```ts
-* const path = homePath();
+* const path = pathHome();
 * ```
 */
-export function homePath():string{
+export function pathHome():string{
     const {HOME, USERPROFILE} = Deno.env.toObject();
 
-    return osWin ? slashU(USERPROFILE) : HOME;
+    return osWindows ? pathSepL(USERPROFILE) : HOME;
 }
 
 /**
 * Directory of `Deno.mainModule`.
 * @example
 * ```ts
-* const path = mainPath();
+* const path = pathMain();
 * ```
 */
-export function mainPath():string{
-    const {protocol, origin, pathname} = new URL(Deno.mainModule);
-    const path = pathname.replace(/[^/]*$/, "");
+export function pathMain():string{
+    const directory = new URL(Deno.mainModule).pathname.replace(/[^/]*$/, "");
 
-    return protocol === "file:" ? osWin ? path.replace(/^\//, "") : path : `${origin}${path}`;
+    return osWindows ? directory.replace(/^\//, "") : directory;
 }
