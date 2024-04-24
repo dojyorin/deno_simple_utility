@@ -1,4 +1,4 @@
-import {u8Encode, u8Decode} from "./text.ts";
+import {textEncode, textDecode} from "./text.ts";
 
 const MINIPACK_NAME = 1;
 const MINIPACK_BODY = 4;
@@ -25,11 +25,11 @@ export interface DataMap{
 * ```
 */
 export function minipackEncode(files:DataMap[]):Uint8Array{
-    const archive = new Uint8Array(files.reduce((size, {name, body}) => size + MINIPACK_NAME + MINIPACK_BODY + u8Encode(name).byteLength + body.byteLength, 0));
+    const archive = new Uint8Array(files.reduce((size, {name, body}) => size + MINIPACK_NAME + MINIPACK_BODY + textEncode(name).byteLength + body.byteLength, 0));
 
     let i = 0;
     for(const {name, body} of files){
-        const u8name = u8Encode(name);
+        const u8name = textEncode(name);
 
         new DataView(archive.buffer, i).setUint8(0, u8name.byteLength);
         i += MINIPACK_NAME;
@@ -71,7 +71,7 @@ export function minipackDecode(archive:Uint8Array):DataMap[]{
         i += MINIPACK_BODY;
 
         files.push({
-            name: u8Decode(archive.subarray(i, i += ns)),
+            name: textDecode(archive.subarray(i, i += ns)),
             body: archive.slice(i, i += bs)
         });
     }

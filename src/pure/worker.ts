@@ -1,5 +1,5 @@
 import {base64DataURL} from "./base64.ts";
-import {u8Encode} from "./text.ts";
+import {textEncode} from "./text.ts";
 
 interface TaskMessage<T extends unknown>{
     message: T;
@@ -45,7 +45,7 @@ export function workerTask<T extends unknown, K extends unknown>(task:TaskAction
 
     return (message, transfers)=>{
         return new Promise<K>((res, rej)=>{
-            const worker = new Worker(base64DataURL(u8Encode(script), "text/javascript"), {
+            const worker = new Worker(base64DataURL(textEncode(script), "text/javascript"), {
                 type: "module"
             });
 

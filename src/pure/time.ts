@@ -1,4 +1,4 @@
-import {padZero} from "./text.ts";
+import {textPadZero} from "./text.ts";
 
 /**
 * Wait for specified time.
@@ -68,5 +68,5 @@ export function timeSerial(date?:Date, split?:boolean):string{
     const ss = split ? "/" : "";
     const sc = split ? ":" : "";
 
-    return `${d.getFullYear()}${ss}${padZero(d.getMonth() + 1)}${ss}${padZero(d.getDate())}${split ? " " : ""}${padZero(d.getHours())}${sc}${padZero(d.getMinutes())}${sc}${padZero(d.getSeconds())}`;
+    return `${d.getFullYear()}${ss}${textPadZero(d.getMonth() + 1)}${ss}${textPadZero(d.getDate())}${split ? " " : ""}${textPadZero(d.getHours())}${sc}${textPadZero(d.getMinutes())}${sc}${textPadZero(d.getSeconds())}`;
 }
