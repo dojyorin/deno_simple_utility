@@ -42,11 +42,11 @@ export function textDecodeAny(data:Uint8Array, codec?:string):string{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const encode = textEncodeHex(bin);
-* const decode = textDecodeHex(encode);
+* const encode = textHexEncode(bin);
+* const decode = textHexDecode(encode);
 * ```
 */
-export function textEncodeHex(data:Uint8Array):string{
+export function textHexEncode(data:Uint8Array):string{
     return [...data].map(v => textPadZero(v, 2, 16)).join("");
 }
 
@@ -55,11 +55,11 @@ export function textEncodeHex(data:Uint8Array):string{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const encode = textEncodeHex(bin);
-* const decode = textDecodeHex(encode);
+* const encode = textHexEncode(bin);
+* const decode = textHexDecode(encode);
 * ```
 */
-export function textDecodeHex(data:string):Uint8Array{
+export function textHexDecode(data:string):Uint8Array{
     return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(v => Number(`0x${v}`)) ?? []);
 }
 
@@ -129,10 +129,10 @@ export function textGetReady(data:string):string{
 * Useful for calculate number of characters with string contains emoji.
 * @example
 * ```ts
-* const characters = textSplit("😀😃😄😁😆😅😂🤣");
+* const characters = textSplitBySegment("😀😃😄😁😆😅😂🤣");
 * ```
 */
-export function textSplit(data:string):string[]{
+export function textSplitBySegment(data:string):string[]{
     return [...new Intl.Segmenter().segment(data)].map(({segment}) => segment);
 }
 

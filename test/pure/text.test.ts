@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {textEncode, textDecode, textDecodeAny, textEncodeHex, textDecodeHex, textPurgeSuperfluous, textFixWidth, textGetReady, textSplit, textPadZero} from "../../src/pure/text.ts";
+import {textEncode, textDecode, textDecodeAny, textHexEncode, textHexDecode, textPurgeSuperfluous, textFixWidth, textGetReady, textSplitBySegment, textPadZero} from "../../src/pure/text.ts";
 
 const sampleText = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
 const sampleBin = new Uint8Array([
@@ -34,8 +34,8 @@ Deno.test({
 Deno.test({
     name: "Text: HEX Encode and Decode",
     fn(){
-        const encode = textEncodeHex(sampleBin);
-        const decode = textDecodeHex(encode);
+        const encode = textHexEncode(sampleBin);
+        const decode = textHexDecode(encode);
 
         assertEquals(decode, sampleBin);
     }
@@ -71,7 +71,7 @@ Deno.test({
 Deno.test({
     name: "Text: Segment",
     fn(){
-        const {length} = textSplit("😄😁😆😅😂");
+        const {length} = textSplitBySegment("😄😁😆😅😂");
 
         assertEquals(length, 5);
     }

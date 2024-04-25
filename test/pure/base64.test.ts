@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {base64Encode, base64Decode, base64DataURL} from "../../src/pure/base64.ts";
+import {base64Encode, base64Decode, base64EncodeDataURL} from "../../src/pure/base64.ts";
 
 const sample1 = new Uint8Array([
     0x58, 0x0D, 0xC7, 0x64, 0x21, 0x42, 0x27, 0x76,
@@ -31,7 +31,7 @@ Deno.test({
 Deno.test({
     name: "Base64: DataURL",
     fn(){
-        const encode = base64DataURL(sample1);
+        const encode = base64EncodeDataURL(sample1);
 
         assertEquals(encode, `data:application/octet-stream;base64,${sample2}`);
     }
