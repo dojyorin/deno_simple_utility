@@ -1,5 +1,11 @@
 import {textPadZero} from "./text.ts";
 
+function dateFormat(date:string){
+    const [y, m, d, h, mi, s] = date.split(/[/ :TZ_.-]/i).map(v => Number(v));
+
+    return new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0);
+}
+
 /**
 * Wait for specified time.
 * Return actual elapsed wait time.
@@ -17,56 +23,47 @@ export async function delay(time:number):Promise<number>{
 }
 
 /**
-* UNIX time in seconds.
+* UNIX time from `Date` or formatted datetime string.
 * If no args will be current time.
 * Note that in seconds not milliseconds.
 * @example
 * ```ts
-* const time = timeEncodeEpoch();
-* const date = timeDecodeEpoch(time);
+* const time = timeEncode();
+* const date = timeDecode(time);
 * ```
 */
-export function timeEncodeEpoch(date?:Date):number{
-    return Math.floor((date ?? new Date()).getTime() / 1000);
+export function timeEncode(dt?:Date | string):number{
+    return Math.floor((dt instanceof Date ? dt : typeof dt === "string" ? dateFormat(dt) : new Date()).getTime() / 1000);
 }
 
 /**
-* `Date` from UNIX time.
+* `Date` from UNIX time or formatted datetime string.
 * Note that in seconds not milliseconds.
 * @example
 * ```ts
-* const time = timeEncodeEpoch();
-* const date = timeDecodeEpoch(time);
+* const time = timeEncode();
+* const date = timeDecode(time);
 * ```
 */
-export function timeDecodeEpoch(time:number):Date{
-    return new Date(time * 1000);
+export function timeDecode(dt?:number | string):Date{
+    switch(typeof dt){
+        case "string": return dateFormat(dt);
+        case "number": return new Date(dt * 1000);
+        default: return new Date();
+    }
 }
 
 /**
-* Convert from formatted datetime string such as ISO8601 to UNIX time in seconds.
+* Generate serialized string from current or any `Date` or UNIX time to "yyyyMMddhhmmss".
 * @example
 * ```ts
-* const time = timeParseEpoch("2023-05-18T08:31:32.292Z");
+* const format = timeFormatSerialize();
 * ```
 */
-export function timeParseEpoch(ds:string):number{
-    const [y, m, d, h, mi, s] = ds.split(/[/ :TZ_.-]/i).map(v => Number(v));
-
-    return timeEncodeEpoch(new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0));
-}
-
-/**
-* Generate serialized string from current or any `Date` to "yyyyMMddhhmmss".
-* @example
-* ```ts
-* const format = timeSerial();
-* ```
-*/
-export function timeSerial(date?:Date, split?:boolean):string{
-    const d = date ?? new Date();
+export function timeFormatSerialize(dt?:Date | number | string, split?:boolean):string{
     const ss = split ? "/" : "";
     const sc = split ? ":" : "";
+    const date = dt instanceof Date ? dt : timeDecode(dt);
 
-    return `${d.getFullYear()}${ss}${textPadZero(d.getMonth() + 1)}${ss}${textPadZero(d.getDate())}${split ? " " : ""}${textPadZero(d.getHours())}${sc}${textPadZero(d.getMinutes())}${sc}${textPadZero(d.getSeconds())}`;
+    return `${date.getFullYear()}${ss}${textPadZero(date.getMonth() + 1)}${ss}${textPadZero(date.getDate())}${split ? " " : ""}${textPadZero(date.getHours())}${sc}${textPadZero(date.getMinutes())}${sc}${textPadZero(date.getSeconds())}`;
 }
