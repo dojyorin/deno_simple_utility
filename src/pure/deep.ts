@@ -1,5 +1,5 @@
 /**
-* Make interfaces acceptable in `Record` type arguments.
+* Make interface acceptable in `Record` type argument.
 */
 export type Opt<T> = Partial<Record<keyof T, unknown>>;
 
@@ -8,7 +8,7 @@ function hasObject(data:Record<string | number | symbol, unknown>, key:string){
 }
 
 /**
-* Applies `Object.freeze()` recursively.
+* Apply `Object.freeze()` recursive.
 * @example
 * ```ts
 * const freeze = deepFreeze({
@@ -18,7 +18,7 @@ function hasObject(data:Record<string | number | symbol, unknown>, key:string){
 * });
 * ```
 */
-export function deepFreeze<T extends Opt<T>>(data:T):T{
+export function deepFreeze<T extends Opt<T>>(data:T):Readonly<T>{
     Object.freeze(data);
 
     for(const key in data){
@@ -31,7 +31,7 @@ export function deepFreeze<T extends Opt<T>>(data:T):T{
 }
 
 /**
-* Applies `Object.seal()` recursively.
+* Apply `Object.seal()` recursive.
 * @example
 * ```ts
 * const seal = deepSeal({

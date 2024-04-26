@@ -3,11 +3,11 @@
 * @example
 * ```ts
 * const text = "HelloWorld!";
-* const encode = u8Encode(text);
-* const decode = u8Decode(encode);
+* const encode = textEncode(text);
+* const decode = textDecode(encode);
 * ```
 */
-export function u8Encode(data:string):Uint8Array{
+export function textEncode(data:string):Uint8Array{
     return new TextEncoder().encode(data);
 }
 
@@ -16,11 +16,11 @@ export function u8Encode(data:string):Uint8Array{
 * @example
 * ```ts
 * const text = "HelloWorld!";
-* const encode = u8Encode(text);
-* const decode = u8Decode(encode);
+* const encode = textEncode(text);
+* const decode = textDecode(encode);
 * ```
 */
-export function u8Decode(data:Uint8Array):string{
+export function textDecode(data:Uint8Array):string{
     return new TextDecoder().decode(data);
 }
 
@@ -30,10 +30,10 @@ export function u8Decode(data:Uint8Array):string{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const decode = textDecode(bin);
+* const decode = textDecodeAny(bin);
 * ```
 */
-export function textDecode(data:Uint8Array, codec?:string):string{
+export function textDecodeAny(data:Uint8Array, codec?:string):string{
     return new TextDecoder(codec ?? "shift-jis").decode(data);
 }
 
@@ -42,12 +42,12 @@ export function textDecode(data:Uint8Array, codec?:string):string{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const encode = hexEncode(bin);
-* const decode = hexDecode(encode);
+* const encode = textHexEncode(bin);
+* const decode = textHexDecode(encode);
 * ```
 */
-export function hexEncode(data:Uint8Array):string{
-    return [...data].map(v => pad0(v, 2, 16)).join("");
+export function textHexEncode(data:Uint8Array):string{
+    return [...data].map(v => textPadZero(v, 2, 16)).join("");
 }
 
 /**
@@ -55,22 +55,22 @@ export function hexEncode(data:Uint8Array):string{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const encode = hexEncode(bin);
-* const decode = hexDecode(encode);
+* const encode = textHexEncode(bin);
+* const decode = textHexDecode(encode);
 * ```
 */
-export function hexDecode(data:string):Uint8Array{
+export function textHexDecode(data:string):Uint8Array{
     return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(v => Number(`0x${v}`)) ?? []);
 }
 
 /**
-* Trim head and tail blank, remove CR and consecutive space (tab, LF) to single space (tab, LF).
+* Trim head and tail blank, remove CR and consecutive space, tab, LF to single space, tab, LF.
 * @example
 * ```ts
-* const format = trimExtend("  Lorem ipsum\r dolor   sit  \r\r amet. ");
+* const format = textPurgeSuperfluous("  Lorem ipsum\r dolor   sit  \r\r amet. ");
 * ```
 */
-export function trimExtend(data:string):string{
+export function textPurgeSuperfluous(data:string):string{
     return data.trim().replace(/\r/g, "").replace(/ +/g, " ").replace(/\t+/g, "\t").replace(/\n+/g, "\n").replace(/^ /mg, "").replace(/ $/mg, "");
 }
 
@@ -78,10 +78,10 @@ export function trimExtend(data:string):string{
 * Convert half-width string (ex: Japanese Kana) to full-width and full-width alphanumeric symbols to half-width.
 * @example
 * ```ts
-* const format = fixWidth("１＋１＝２");
+* const format = textFixWidth("１＋１＝２");
 * ```
 */
-export function fixWidth(data:string):string{
+export function textFixWidth(data:string):string{
     return Object.entries({
         "ｳﾞ": "ヴ",
         "ｶﾞ": "ガ", "ｷﾞ": "ギ", "ｸﾞ": "グ", "ｹﾞ": "ゲ", "ｺﾞ": "ゴ",
@@ -114,14 +114,14 @@ export function fixWidth(data:string):string{
 }
 
 /**
-* Clean up text with `fixWidth()` and `trimExtend()`.
+* Combined `textFixWidth()` and `textPurgeSuperfluous()`.
 * @example
 * ```ts
-* const format = cleanText("１  ＋  １  ＝  ２  ");
+* const format = textGetReady("１  ＋  １  ＝  ２  ");
 * ```
 */
-export function cleanText(data:string):string{
-    return trimExtend(fixWidth(data));
+export function textGetReady(data:string):string{
+    return textPurgeSuperfluous(textFixWidth(data));
 }
 
 /**
@@ -129,10 +129,10 @@ export function cleanText(data:string):string{
 * Useful for calculate number of characters with string contains emoji.
 * @example
 * ```ts
-* const characters = accurateSegment("😀😃😄😁😆😅😂🤣");
+* const emojis = textSplitBySegment("😀😃😄😁😆😅😂🤣");
 * ```
 */
-export function accurateSegment(data:string):string[]{
+export function textSplitBySegment(data:string):string[]{
     return [...new Intl.Segmenter().segment(data)].map(({segment}) => segment);
 }
 
@@ -141,9 +141,9 @@ export function accurateSegment(data:string):string[]{
 * Output is 2 digits by default.
 * @example
 * ```ts
-* const pad = pad0(8);
+* const pad = textPadZero(8);
 * ```
 */
-export function pad0(data:number, digit?:number, radix?:number):string{
+export function textPadZero(data:number, digit?:number, radix?:number):string{
     return data.toString(radix).toUpperCase().padStart(digit ?? 2, "0");
 }

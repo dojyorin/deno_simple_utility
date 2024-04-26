@@ -1,43 +1,9 @@
-import {pad0} from "./text.ts";
+import {textPadZero} from "./text.ts";
 
-/**
-* UNIX time in seconds.
-* If no args will be current time.
-* Note that in seconds not milliseconds.
-* @example
-* ```ts
-* const time = utEncode();
-* const date = utDecode(time);
-* ```
-*/
-export function utEncode(date?:Date):number{
-    return Math.floor((date ?? new Date()).getTime() / 1000);
-}
+function dateFormat(date:string){
+    const [y, m, d, h, mi, s] = date.split(/[/ :TZ_.-]/i).map(v => Number(v));
 
-/**
-* `Date` from UNIX time.
-* Note that in seconds not milliseconds.
-* @example
-* ```ts
-* const time = utEncode();
-* const date = utDecode(time);
-* ```
-*/
-export function utDecode(time:number):Date{
-    return new Date(time * 1000);
-}
-
-/**
-* Convert from formatted datetime string such as ISO8601 to UNIX time in seconds.
-* @example
-* ```ts
-* const time = utParse("2023-05-18T08:31:32.292Z");
-* ```
-*/
-export function utParse(ds:string):number{
-    const [y, m, d, h, mi, s] = ds.split(/[/ :TZ_.-]/i).map(v => Number(v));
-
-    return utEncode(new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0));
+    return new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0);
 }
 
 /**
@@ -57,16 +23,49 @@ export async function delay(time:number):Promise<number>{
 }
 
 /**
-* Generate serialized string from current or any `Date` to "yyyyMMddhhmmss".
+* Convert from `Date` or formatted datetime string to UNIXTIME.
+* If no args will be current time.
+* Note that in seconds not milliseconds.
 * @example
 * ```ts
-* const format = dtSerial();
+* const time = timeEncode();
+* const date = timeDecode(time);
 * ```
 */
-export function dtSerial(date?:Date, split?:boolean):string{
-    const d = date ?? new Date();
+export function timeEncode(dt?:Date | string):number{
+    return Math.floor((dt instanceof Date ? dt : typeof dt === "string" ? dateFormat(dt) : new Date()).getTime() / 1000);
+}
+
+/**
+* Convert from UNIXTIME or formatted datetime string to `Date`.
+* If no args will be current time.
+* Note that in seconds not milliseconds.
+* @example
+* ```ts
+* const time = timeEncode();
+* const date = timeDecode(time);
+* ```
+*/
+export function timeDecode(dt?:number | string):Date{
+    switch(typeof dt){
+        case "string": return dateFormat(dt);
+        case "number": return new Date(dt * 1000);
+        default: return new Date();
+    }
+}
+
+/**
+* Serialize from `Date` or UNIXTIME or formatted datetime string to "yyyyMMddhhmmss".
+* If no args will be current time.
+* @example
+* ```ts
+* const format = timeFormatSerialize();
+* ```
+*/
+export function timeFormatSerialize(dt?:Date | number | string, split?:boolean):string{
     const ss = split ? "/" : "";
     const sc = split ? ":" : "";
+    const date = dt instanceof Date ? dt : timeDecode(dt);
 
-    return `${d.getFullYear()}${ss}${pad0(d.getMonth() + 1)}${ss}${pad0(d.getDate())}${split ? " " : ""}${pad0(d.getHours())}${sc}${pad0(d.getMinutes())}${sc}${pad0(d.getSeconds())}`;
+    return `${date.getFullYear()}${ss}${textPadZero(date.getMonth() + 1)}${ss}${textPadZero(date.getDate())}${split ? " " : ""}${textPadZero(date.getHours())}${sc}${textPadZero(date.getMinutes())}${sc}${textPadZero(date.getSeconds())}`;
 }

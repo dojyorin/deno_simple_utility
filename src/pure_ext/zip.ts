@@ -11,6 +11,7 @@ import {type DataMap} from "../pure/minipack.ts";
 *     body: await Deno.readFile("./foo.txt")
 * }];
 * const zip = await zipEncode(files);
+* const files = await zipDecode(zip);
 * ```
 */
 export async function zipEncode(files:DataMap[], pw?:string, weak?:boolean):Promise<Uint8Array>{
@@ -33,7 +34,11 @@ export async function zipEncode(files:DataMap[], pw?:string, weak?:boolean):Prom
 * @see https://deno.land/x/zipjs
 * @example
 * ```ts
-* const zip = await Deno.readFile("./foo.zip");
+* const files = [{
+*     name: "foo.txt",
+*     body: await Deno.readFile("./foo.txt")
+* }];
+* const zip = await zipEncode(files);
 * const files = await zipDecode(zip);
 * ```
 */

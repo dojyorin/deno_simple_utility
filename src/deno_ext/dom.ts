@@ -8,17 +8,13 @@ function getValue(element?:Element){
     return element?.getAttribute("value") ?? "";
 }
 
-function getContent({textContent}:Element){
-    return textContent;
-}
-
 function extractValue(element?:Element){
     switch(element?.tagName){
         case "SELECT": return getValue(selectedElement(element.getElementsByTagName("option"), "selected"));
         case "DATALIST": return getValue(selectedElement(element.getElementsByTagName("option"), "selected"));
         case "OPTION": return getValue(element);
         case "INPUT": return getValue(element);
-        case "TEXTAREA": return getContent(element);
+        case "TEXTAREA": return element.textContent;
         default: return "";
     }
 }
@@ -28,10 +24,10 @@ function extractValue(element?:Element){
 * @see https://deno.land/x/deno_dom
 * @example
 * ```ts
-* const dom = parseDOM("<div>foo</div>");
+* const dom = domDecode("<div>foo</div>");
 * ```
 */
-export function parseDOM(html:string):Element{
+export function domDecode(html:string):Element{
     const element = new DOMParser().parseFromString(html, "text/html")?.documentElement;
 
     if(!element){
@@ -45,11 +41,11 @@ export function parseDOM(html:string):Element{
 * Find all `input` `textarea` elements with `id` attribute and convert them to key-value record.
 * @example
 * ```ts
-* const dom = parseDOM("<input id='foo'><textarea id='bar'></textarea>");
-* const result = collectInputById(dom);
+* const dom = domDecode("<input id='foo'>");
+* const result = domValuesPerId(dom);
 * ```
 */
-export function collectInputById(element:Element):Record<string, string>{
+export function domValuesPerId(element:Element):Record<string, string>{
     const records:Record<string, string> = {};
 
     for(const input of element.getElementsByTagName("INPUT")){
@@ -65,22 +61,10 @@ export function collectInputById(element:Element):Record<string, string>{
             continue;
         }
 
-        records[textarea.id] = getContent(textarea);
+        records[textarea.id] = textarea.textContent;
     }
 
     return structuredClone(records);
-}
-
-/**
-* Find all elements with `name` attribute.
-* @example
-* ```ts
-* const dom = parseDOM("<input name='foo'>");
-* const result = getElementsByName(dom, "foo");
-* ```
-*/
-export function getElementsByName(element:Element, name:string):Element[]{
-    return element.getElementsByTagName("*").filter(v => v.getAttribute("name") === name);
 }
 
 /**
@@ -88,12 +72,24 @@ export function getElementsByName(element:Element, name:string):Element[]{
 * `.value` for `<input>`, `.textContent` for `<textarea>` and `.value` of `.selected` for `<select>` `<dataset>`.
 * @example
 * ```ts\
-* const dom = parseDOM("<input id='foo'>");
-* const result = getValueById(dom, "foo");
+* const dom = domDecode("<input id='foo'>");
+* const result = domValueById(dom, "foo");
 * ```
 */
-export function getValueById(element:Element, id:string):string{
+export function domValueById(element:Element, id:string):string{
     return extractValue(element.getElementById(id) ?? undefined);
+}
+
+/**
+* Find all elements with `name` attribute.
+* @example
+* ```ts
+* const dom = domDecode("<input name='foo'>");
+* const result = domElementsByName(dom, "foo");
+* ```
+*/
+export function domElementsByName(element:Element, name:string):Element[]{
+    return element.getElementsByTagName("*").filter(v => v.getAttribute("name") === name);
 }
 
 /**
@@ -101,24 +97,24 @@ export function getValueById(element:Element, id:string):string{
 * `.value` for `<input>`, `.textContent` for `<textarea>` and `.value` of `.selected` for `<select>` `<dataset>`.
 * @example
 * ```ts
-* const dom = parseDOM("<input name='foo'>");
-* const result = getValuesByName(dom, "foo");
+* const dom = domDecode("<input name='foo'>");
+* const result = domValuesByName(dom, "foo");
 * ```
 */
-export function getValuesByName(element:Element, name:string):string[]{
-    return getElementsByName(element, name).map(v => extractValue(v));
+export function domValuesByName(element:Element, name:string):string[]{
+    return domElementsByName(element, name).map(v => extractValue(v));
 }
 
 /**
-* Gets value of `.checked` in group of radio buttons.
+* Get value of `.checked` in group of radio buttons.
 * @example
 * ```ts
-* const dom = parseDOM("<input type='radio' name='foo' value='1' checked><input type='radio' name='foo' value='2'>");
-* const result = getValueByRadioActive(dom, "foo");
+* const dom = domDecode("<input type='radio' name='foo' value='1' checked><input type='radio' name='foo' value='2'>");
+* const result = domValueByRadioActive(dom, "foo");
 * ```
 */
-export function getValueByRadioActive(element:Element, name:string):string{
-    const elements = getElementsByName(element, name);
+export function domValueByRadioActive(element:Element, name:string):string{
+    const elements = domElementsByName(element, name);
 
     if(elements.some(v => v.tagName !== "INPUT" || v.getAttribute("type") !== "radio")){
         return "";

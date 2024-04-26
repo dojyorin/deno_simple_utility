@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {u8Encode, u8Decode, textDecode, hexEncode, hexDecode, trimExtend, fixWidth, cleanText, accurateSegment, pad0} from "../../src/pure/text.ts";
+import {textEncode, textDecode, textDecodeAny, textHexEncode, textHexDecode, textPurgeSuperfluous, textFixWidth, textGetReady, textSplitBySegment, textPadZero} from "../../src/pure/text.ts";
 
 const sampleText = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
 const sampleBin = new Uint8Array([
@@ -15,8 +15,8 @@ const sjisBin = new Uint8Array([0x82, 0xB1, 0x82, 0xF1, 0x82, 0xC9, 0x82, 0xBF, 
 Deno.test({
     name: "Text: UTF-8 Encode and Decode",
     fn(){
-        const encode = u8Encode(sampleText);
-        const decode = u8Decode(encode);
+        const encode = textEncode(sampleText);
+        const decode = textDecode(encode);
 
         assertEquals(decode, sampleText);
     }
@@ -25,7 +25,7 @@ Deno.test({
 Deno.test({
     name: "Text: Any Text Decode",
     fn(){
-        const decode = textDecode(sjisBin);
+        const decode = textDecodeAny(sjisBin);
 
         assertEquals(decode, "こんにちは");
     }
@@ -34,8 +34,8 @@ Deno.test({
 Deno.test({
     name: "Text: HEX Encode and Decode",
     fn(){
-        const encode = hexEncode(sampleBin);
-        const decode = hexDecode(encode);
+        const encode = textHexEncode(sampleBin);
+        const decode = textHexDecode(encode);
 
         assertEquals(decode, sampleBin);
     }
@@ -44,7 +44,7 @@ Deno.test({
 Deno.test({
     name: "Text: Trim",
     fn(){
-        const result = trimExtend(sampleText);
+        const result = textPurgeSuperfluous(sampleText);
 
         assertEquals(result, "Lorem ipsum dolor sit amet.");
     }
@@ -53,7 +53,7 @@ Deno.test({
 Deno.test({
     name: "Text: Fix Width",
     fn(){
-        const result = fixWidth("１＋１＝２");
+        const result = textFixWidth("１＋１＝２");
 
         assertEquals(result, "1+1=2");
     }
@@ -62,7 +62,7 @@ Deno.test({
 Deno.test({
     name: "Text: Clean Up",
     fn(){
-        const result = cleanText("１  ＋  １  ＝  ２  ");
+        const result = textGetReady("１  ＋  １  ＝  ２  ");
 
         assertEquals(result, "1 + 1 = 2");
     }
@@ -71,7 +71,7 @@ Deno.test({
 Deno.test({
     name: "Text: Segment",
     fn(){
-        const {length} = accurateSegment("😄😁😆😅😂");
+        const {length} = textSplitBySegment("😄😁😆😅😂");
 
         assertEquals(length, 5);
     }
@@ -80,7 +80,7 @@ Deno.test({
 Deno.test({
     name: "Text: Pad 0",
     fn(){
-        const pad = pad0(8);
+        const pad = textPadZero(8);
 
         assertEquals(pad, "08");
     }

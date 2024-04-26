@@ -10,17 +10,17 @@ const AES_BIT = 128;
 const FORMAT_PUB = "spki";
 const FORMAT_PRI = "pkcs8";
 
-const CURVE_ECDH = Object.freeze({
+const CURVE_ECDH = Object.freeze<EcKeyAlgorithm>({
     name: "ECDH",
     namedCurve: "P-256"
 });
 
-const CURVE_ECDSA = Object.freeze({
+const CURVE_ECDSA = Object.freeze<EcKeyAlgorithm>({
     name: "ECDSA",
     namedCurve: "P-256"
 });
 
-const MAC_ECDSA = Object.freeze({
+const MAC_ECDSA = Object.freeze<EcdsaParams>({
     name: "ECDSA",
     hash: "SHA-256"
 });
@@ -48,10 +48,10 @@ async function deriveKey({publicKey, privateKey}:PortableCryptoKeyPair){
 * Generate random binary with any number of bytes.
 * @example
 * ```ts
-* const random = generateRandom(16);
+* const random = cryptoRandom(16);
 * ```
 */
-export function generateRandom(n:number):Uint8Array{
+export function cryptoRandom(n:number):Uint8Array{
     return crypto.getRandomValues(new Uint8Array(n));
 }
 
@@ -61,10 +61,10 @@ export function generateRandom(n:number):Uint8Array{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const hash = await deriveHash(bin);
+* const hash = await cryptoHash(bin);
 * ```
 */
-export async function deriveHash(data:Uint8Array, sha?:`SHA-${256 | 384 | 512}`):Promise<Uint8Array>{
+export async function cryptoHash(data:Uint8Array, sha?:`SHA-${256 | 384 | 512}`):Promise<Uint8Array>{
     return new Uint8Array(await crypto.subtle.digest(sha ?? "SHA-256", data));
 }
 
@@ -73,11 +73,11 @@ export async function deriveHash(data:Uint8Array, sha?:`SHA-${256 | 384 | 512}`)
 * Curve algorithm is "NIST P-256".
 * @example
 * ```ts
-* const k1 = await pkGenerateECDH();
-* const k2 = await pkGenerateECDH();
+* const k1 = await cryptoGenerateEncryptKey();
+* const k2 = await cryptoGenerateEncryptKey();
 * ```
 */
-export async function pkGenerateECDH():Promise<PortableCryptoKeyPair>{
+export async function cryptoGenerateEncryptKey():Promise<PortableCryptoKeyPair>{
     return await generateKey(CURVE_ECDH, ["deriveKey"]);
 }
 
@@ -86,10 +86,10 @@ export async function pkGenerateECDH():Promise<PortableCryptoKeyPair>{
 * Curve algorithm is "NIST P-256".
 * @example
 * ```ts
-* const {publicKey, privateKey} = await pkGenerateECDSA();
+* const {publicKey, privateKey} = await cryptoGenerateSignKey();
 * ```
 */
-export async function pkGenerateECDSA():Promise<PortableCryptoKeyPair>{
+export async function cryptoGenerateSignKey():Promise<PortableCryptoKeyPair>{
     return await generateKey(CURVE_ECDSA, ["sign", "verify"]);
 }
 
@@ -100,22 +100,22 @@ export async function pkGenerateECDSA():Promise<PortableCryptoKeyPair>{
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const k1 = await pkGenerateECDH();
-* const k2 = await pkGenerateECDH();
-* const cipher = await pkEncrypt(bin, {
+* const k1 = await cryptoGenerateEncryptKey();
+* const k2 = await cryptoGenerateEncryptKey();
+* const cipher = await cryptoEncrypt(bin, {
 *     publicKey: k1.publicKey,
 *     privateKey: k2.privateKey
 * });
-* const decrypt = await pkDecrypt(cipher, {
+* const decrypt = await cryptoDecrypt(cipher, {
 *     publicKey: k2.publicKey,
 *     privateKey: k1.privateKey
 * });
 * ```
 */
-export async function pkEncrypt(data:Uint8Array, {publicKey, privateKey}:PortableCryptoKeyPair):Promise<Uint8Array>{
+export async function cryptoEncrypt(data:Uint8Array, {publicKey, privateKey}:PortableCryptoKeyPair):Promise<Uint8Array>{
     const aes = {
         name: AES_MODE,
-        iv: generateRandom(12)
+        iv: cryptoRandom(12)
     };
 
     return byteConcat(aes.iv, await crypto.subtle.encrypt(aes, await deriveKey({publicKey, privateKey}), data));
@@ -128,19 +128,19 @@ export async function pkEncrypt(data:Uint8Array, {publicKey, privateKey}:Portabl
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const k1 = await pkGenerateECDH();
-* const k2 = await pkGenerateECDH();
-* const cipher = await pkEncrypt(bin, {
+* const k1 = await cryptoGenerateEncryptKey();
+* const k2 = await cryptoGenerateEncryptKey();
+* const cipher = await cryptoEncrypt(bin, {
 *     publicKey: k1.publicKey,
 *     privateKey: k2.privateKey
 * });
-* const decrypt = await pkDecrypt(cipher, {
+* const decrypt = await cryptoDecrypt(cipher, {
 *     publicKey: k2.publicKey,
 *     privateKey: k1.privateKey
 * });
 * ```
 */
-export async function pkDecrypt(data:Uint8Array, {publicKey, privateKey}:PortableCryptoKeyPair):Promise<Uint8Array>{
+export async function cryptoDecrypt(data:Uint8Array, {publicKey, privateKey}:PortableCryptoKeyPair):Promise<Uint8Array>{
     const aes = {
         name: AES_MODE,
         iv: data.subarray(0, 12)
@@ -154,12 +154,12 @@ export async function pkDecrypt(data:Uint8Array, {publicKey, privateKey}:Portabl
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const {publicKey, privateKey} = await pkGenerateECDSA();
-* const sign = await pkSign(bin, privateKey);
-* const verify = await pkVerify(bin, publicKey, sign);
+* const {publicKey, privateKey} = await cryptoGenerateSignKey();
+* const sign = await cryptoSign(bin, privateKey);
+* const verify = await cryptoVerify(bin, publicKey, sign);
 * ```
 */
-export async function pkSign(data:Uint8Array, key:Uint8Array):Promise<Uint8Array>{
+export async function cryptoSign(data:Uint8Array, key:Uint8Array):Promise<Uint8Array>{
     return new Uint8Array(await crypto.subtle.sign(MAC_ECDSA, await crypto.subtle.importKey(FORMAT_PRI, key, CURVE_ECDSA, false, ["sign"]), data));
 }
 
@@ -168,11 +168,11 @@ export async function pkSign(data:Uint8Array, key:Uint8Array):Promise<Uint8Array
 * @example
 * ```ts
 * const bin = await Deno.readFile("./file");
-* const {publicKey, privateKey} = await pkGenerateECDSA();
-* const sign = await pkSign(bin, privateKey);
-* const verify = await pkVerify(bin, publicKey, sign);
+* const {publicKey, privateKey} = await cryptoGenerateSignKey();
+* const sign = await cryptoSign(bin, privateKey);
+* const verify = await cryptoVerify(bin, publicKey, sign);
 * ```
 */
-export async function pkVerify(data:Uint8Array, key:Uint8Array, sign:Uint8Array):Promise<boolean>{
+export async function cryptoVerify(data:Uint8Array, key:Uint8Array, sign:Uint8Array):Promise<boolean>{
     return await crypto.subtle.verify(MAC_ECDSA, await crypto.subtle.importKey(FORMAT_PUB, key, CURVE_ECDSA, false, ["verify"]), sign, data);
 }

@@ -1,24 +1,15 @@
 import {assertEquals} from "../../deps.test.ts";
-import {utEncode, utDecode, utParse, delay, dtSerial} from "../../src/pure/time.ts";
+import {delay, timeEncode, timeDecode, timeFormatSerialize} from "../../src/pure/time.ts";
 
 const sample = new Date(2000, 0, 1, 0, 0, 0, 0);
 
 Deno.test({
     name: "Time: Encode and Decode",
     fn(){
-        const encode = utEncode(sample);
-        const decode = utDecode(encode);
+        const encode = timeEncode(sample);
+        const decode = timeDecode(encode);
 
         assertEquals(decode, sample);
-    }
-});
-
-Deno.test({
-    name: "Time: Parse",
-    fn(){
-        const result = utParse(sample.toISOString());
-
-        assertEquals(result, 946684800);
     }
 });
 
@@ -34,7 +25,7 @@ Deno.test({
 Deno.test({
     name: "Time: Serial",
     fn(){
-        const result = dtSerial(sample);
+        const result = timeFormatSerialize(sample);
 
         assertEquals(result, "20000101000000");
     }
