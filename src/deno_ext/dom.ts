@@ -106,7 +106,7 @@ export function domValuesByName(element:Element, name:string):string[]{
 }
 
 /**
-* Gets value of `checked` in group of radio buttons.
+* Gets value of `.checked` in group of radio buttons.
 * @example
 * ```ts
 * const dom = domDecode("<input type='radio' name='foo' value='1' checked><input type='radio' name='foo' value='2'>");
