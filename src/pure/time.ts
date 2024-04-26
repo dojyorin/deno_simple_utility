@@ -23,7 +23,7 @@ export async function delay(time:number):Promise<number>{
 }
 
 /**
-* UNIX time from `Date` or formatted datetime string.
+* Convert from `Date` or formatted datetime string to UNIXTIME.
 * If no args will be current time.
 * Note that in seconds not milliseconds.
 * @example
@@ -37,7 +37,8 @@ export function timeEncode(dt?:Date | string):number{
 }
 
 /**
-* `Date` from UNIX time or formatted datetime string.
+* Convert from UNIXTIME or formatted datetime string to `Date`.
+* If no args will be current time.
 * Note that in seconds not milliseconds.
 * @example
 * ```ts
@@ -54,7 +55,8 @@ export function timeDecode(dt?:number | string):Date{
 }
 
 /**
-* Generate serialized string from current or any `Date` or UNIX time to "yyyyMMddhhmmss".
+* Serialize from `Date` or UNIXTIME or formatted datetime string to "yyyyMMddhhmmss".
+* If no args will be current time.
 * @example
 * ```ts
 * const format = timeFormatSerialize();

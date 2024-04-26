@@ -4,7 +4,7 @@ const MINIPACK_NAME = 1;
 const MINIPACK_BODY = 4;
 
 /**
-* Simple name and data pair.
+* Simple name and body pair.
 */
 export interface DataMap{
     name: string;
@@ -12,7 +12,7 @@ export interface DataMap{
 }
 
 /**
-* Concatenate files with "minipack" format.
+* Concat files with "minipack" format.
 * @see https://deno.land/x/simple_utility#minipack
 * @example
 * ```ts

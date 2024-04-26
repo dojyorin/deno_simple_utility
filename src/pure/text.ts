@@ -64,7 +64,7 @@ export function textHexDecode(data:string):Uint8Array{
 }
 
 /**
-* Trim head and tail blank, remove CR and consecutive space (tab, LF) to single space (tab, LF).
+* Trim head and tail blank, remove CR and consecutive space, tab, LF to single space, tab, LF.
 * @example
 * ```ts
 * const format = textPurgeSuperfluous("  Lorem ipsum\r dolor   sit  \r\r amet. ");
@@ -114,7 +114,7 @@ export function textFixWidth(data:string):string{
 }
 
 /**
-* Clean up text with `textFixWidth()` and `textPurgeSuperfluous()`.
+* Combined `textFixWidth()` and `textPurgeSuperfluous()`.
 * @example
 * ```ts
 * const format = textGetReady("１  ＋  １  ＝  ２  ");
@@ -129,7 +129,7 @@ export function textGetReady(data:string):string{
 * Useful for calculate number of characters with string contains emoji.
 * @example
 * ```ts
-* const characters = textSplitBySegment("😀😃😄😁😆😅😂🤣");
+* const emojis = textSplitBySegment("😀😃😄😁😆😅😂🤣");
 * ```
 */
 export function textSplitBySegment(data:string):string[]{

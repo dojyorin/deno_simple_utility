@@ -1,5 +1,5 @@
 /**
-* Concat multiple buffer sources into single binary.
+* Concat multiple sources into single binary.
 * @example
 * ```ts
 * const byte = byteConcat(new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6]));
