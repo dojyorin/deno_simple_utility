@@ -30,7 +30,7 @@ export async function jsonWrite<T extends Opt<T>>(path:string, data:T):Promise<v
 * Argument default value also act as type definition.
 * @example
 * ```ts
-* import data from "./data.json" assert {type: "json"};
+* import data from "./data.json" with {type: "json"};
 * const json = await jsonLoad("./data.json", data);
 * ```
 */
