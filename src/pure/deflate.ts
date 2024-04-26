@@ -2,7 +2,7 @@ import {streamEncode, streamDecode} from "./stream.ts";
 
 type CompressCodec = "gzip" | "deflate" | "deflate-raw";
 
-const COMPRESS_CODEC = "deflate-raw";
+const COMPRESS_CODEC:CompressCodec = "deflate-raw";
 
 /**
 * Compress binary with DEFLATE format.
