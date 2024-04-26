@@ -8,17 +8,13 @@ function getValue(element?:Element){
     return element?.getAttribute("value") ?? "";
 }
 
-function getContent({textContent}:Element){
-    return textContent;
-}
-
 function extractValue(element?:Element){
     switch(element?.tagName){
         case "SELECT": return getValue(selectedElement(element.getElementsByTagName("option"), "selected"));
         case "DATALIST": return getValue(selectedElement(element.getElementsByTagName("option"), "selected"));
         case "OPTION": return getValue(element);
         case "INPUT": return getValue(element);
-        case "TEXTAREA": return getContent(element);
+        case "TEXTAREA": return element.textContent;
         default: return "";
     }
 }
@@ -28,10 +24,10 @@ function extractValue(element?:Element){
 * @see https://deno.land/x/deno_dom
 * @example
 * ```ts
-* const dom = domParse("<div>foo</div>");
+* const dom = domDecode("<div>foo</div>");
 * ```
 */
-export function domParse(html:string):Element{
+export function domDecode(html:string):Element{
     const element = new DOMParser().parseFromString(html, "text/html")?.documentElement;
 
     if(!element){
@@ -45,7 +41,7 @@ export function domParse(html:string):Element{
 * Find all `input` `textarea` elements with `id` attribute and convert them to key-value record.
 * @example
 * ```ts
-* const dom = domParse("<input id='foo'><textarea id='bar'></textarea>");
+* const dom = domDecode("<input id='foo'><textarea id='bar'></textarea>");
 * const result = domValuesPerId(dom);
 * ```
 */
@@ -65,7 +61,7 @@ export function domValuesPerId(element:Element):Record<string, string>{
             continue;
         }
 
-        records[textarea.id] = getContent(textarea);
+        records[textarea.id] = textarea.textContent;
     }
 
     return structuredClone(records);
@@ -75,7 +71,7 @@ export function domValuesPerId(element:Element):Record<string, string>{
 * Find all elements with `name` attribute.
 * @example
 * ```ts
-* const dom = domParse("<input name='foo'>");
+* const dom = domDecode("<input name='foo'>");
 * const result = domElementsByName(dom, "foo");
 * ```
 */
@@ -88,7 +84,7 @@ export function domElementsByName(element:Element, name:string):Element[]{
 * `.value` for `<input>`, `.textContent` for `<textarea>` and `.value` of `.selected` for `<select>` `<dataset>`.
 * @example
 * ```ts\
-* const dom = domParse("<input id='foo'>");
+* const dom = domDecode("<input id='foo'>");
 * const result = domValueById(dom, "foo");
 * ```
 */
@@ -101,7 +97,7 @@ export function domValueById(element:Element, id:string):string{
 * `.value` for `<input>`, `.textContent` for `<textarea>` and `.value` of `.selected` for `<select>` `<dataset>`.
 * @example
 * ```ts
-* const dom = domParse("<input name='foo'>");
+* const dom = domDecode("<input name='foo'>");
 * const result = domValuesByName(dom, "foo");
 * ```
 */
@@ -113,7 +109,7 @@ export function domValuesByName(element:Element, name:string):string[]{
 * Gets value of `.checked` in group of radio buttons.
 * @example
 * ```ts
-* const dom = domParse("<input type='radio' name='foo' value='1' checked><input type='radio' name='foo' value='2'>");
+* const dom = domDecode("<input type='radio' name='foo' value='1' checked><input type='radio' name='foo' value='2'>");
 * const result = domValueByRadioActive(dom, "foo");
 * ```
 */
