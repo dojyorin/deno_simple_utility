@@ -1,5 +1,5 @@
 import {assertEquals, DOMParser} from "../../deps.test.ts";
-import {domDecode, domValuesPerId, domElementsByName, domValueById, domValuesByName, domValueByRadioActive} from "../../src/deno_ext/dom.ts";
+import {domDecode, domValuesPerId, domValueById, domElementsByName, domValuesByName, domValueByRadioActive} from "../../src/deno_ext/dom.ts";
 
 const sample1 = "<input type='radio' id='aaa' name='aaa' value='123' checked><input type='radio' name='aaa' value='456'>";
 const sample2 = new DOMParser().parseFromString(sample1, "text/html")?.documentElement;
