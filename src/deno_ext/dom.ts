@@ -41,7 +41,7 @@ export function domDecode(html:string):Element{
 * Find all `input` `textarea` elements with `id` attribute and convert them to key-value record.
 * @example
 * ```ts
-* const dom = domDecode("<input id='foo'><textarea id='bar'></textarea>");
+* const dom = domDecode("<input id='foo'>");
 * const result = domValuesPerId(dom);
 * ```
 */
@@ -68,18 +68,6 @@ export function domValuesPerId(element:Element):Record<string, string>{
 }
 
 /**
-* Find all elements with `name` attribute.
-* @example
-* ```ts
-* const dom = domDecode("<input name='foo'>");
-* const result = domElementsByName(dom, "foo");
-* ```
-*/
-export function domElementsByName(element:Element, name:string):Element[]{
-    return element.getElementsByTagName("*").filter(v => v.getAttribute("name") === name);
-}
-
-/**
 * Get value by `id` search.
 * `.value` for `<input>`, `.textContent` for `<textarea>` and `.value` of `.selected` for `<select>` `<dataset>`.
 * @example
@@ -90,6 +78,18 @@ export function domElementsByName(element:Element, name:string):Element[]{
 */
 export function domValueById(element:Element, id:string):string{
     return extractValue(element.getElementById(id) ?? undefined);
+}
+
+/**
+* Find all elements with `name` attribute.
+* @example
+* ```ts
+* const dom = domDecode("<input name='foo'>");
+* const result = domElementsByName(dom, "foo");
+* ```
+*/
+export function domElementsByName(element:Element, name:string):Element[]{
+    return element.getElementsByTagName("*").filter(v => v.getAttribute("name") === name);
 }
 
 /**
@@ -106,7 +106,7 @@ export function domValuesByName(element:Element, name:string):string[]{
 }
 
 /**
-* Gets value of `.checked` in group of radio buttons.
+* Gets value of `checked` in group of radio buttons.
 * @example
 * ```ts
 * const dom = domDecode("<input type='radio' name='foo' value='1' checked><input type='radio' name='foo' value='2'>");
