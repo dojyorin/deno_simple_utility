@@ -15,8 +15,8 @@ const CURVE_DSA = Object.freeze<EcKeyAlgorithm & EcdsaParams>({
     hash: "SHA-256"
 });
 
-async function generateKey(alg:Algorithm, usage:KeyUsage[]){
-    const {publicKey, privateKey} = <CryptoKeyPair>await crypto.subtle.generateKey(alg, true, usage);
+async function generateKey(alg:EcKeyAlgorithm, usage:KeyUsage[]){
+    const {publicKey, privateKey} = await crypto.subtle.generateKey(alg, true, usage);
 
     return <PubKey>{
         pub: new Uint8Array(await crypto.subtle.exportKey("spki", publicKey)),
