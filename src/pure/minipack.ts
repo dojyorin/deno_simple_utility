@@ -6,7 +6,7 @@ const MINIPACK_BODY = 4;
 /**
 * Simple name and body pair.
 */
-export interface DataMap{
+export interface DataMap {
     name: string;
     body: Uint8Array;
 }

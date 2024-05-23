@@ -1,6 +1,6 @@
 import {base64Encode} from "./base64.ts";
 
-interface ResponseType{
+interface ResponseType {
     "text": string;
     "base64": string;
     "json": unknown;
@@ -18,7 +18,7 @@ interface ResponseType{
 /**
 * Added `query` which allows you to specify query string to `RequestInit`.
 */
-export interface FetchInit extends Omit<RequestInit, "integrity" | "window">{
+export interface FetchInit extends Omit<RequestInit, "integrity" | "window"> {
     signal?: AbortSignal;
     headers?: Headers;
     body?: BodyInit;

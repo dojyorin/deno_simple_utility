@@ -1,7 +1,7 @@
 import {base64EncodeDataURL} from "./base64.ts";
 import {textEncode} from "./text.ts";
 
-interface TaskMessage<T extends unknown>{
+interface TaskMessage<T extends unknown> {
     message: T;
     transfers?: Transferable[];
 }

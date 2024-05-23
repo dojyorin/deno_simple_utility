@@ -1,7 +1,7 @@
 import {textPadZero} from "./text.ts";
 
 function dateFormat(date:string){
-    const [y, m, d, h, mi, s] = date.split(/[/ :TZ_.-]/i).map(v => Number(v));
+    const [y, m, d, h, mi, s] = date.split(/[/ :TZ_.-]/i).map(v => parseInt(v));
 
     return new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0);
 }

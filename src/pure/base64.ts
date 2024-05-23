@@ -8,7 +8,7 @@
 * ```
 */
 export function base64Encode(data:Uint8Array):string{
-    return btoa([...data].map(v => String.fromCharCode(v)).join(""));
+    return btoa(Array.from(data, v => String.fromCharCode(v)).join(""));
 }
 
 /**
@@ -34,5 +34,5 @@ export function base64EncodeDataURL(data:Uint8Array, type?:string):string{
 * ```
 */
 export function base64Decode(data:string):Uint8Array{
-    return new Uint8Array([...atob(data)].map(v => v.charCodeAt(0)));
+    return new Uint8Array(Array.from(atob(data), v => v.charCodeAt(0)));
 }

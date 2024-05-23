@@ -4,7 +4,7 @@ import {type DataMap} from "../pure/minipack.ts";
 /**
 * E-MAIL message.
 */
-export interface MailMessage{
+export interface MailMessage {
     from: string;
     to: string[];
     title: string;
@@ -36,7 +36,7 @@ export async function smtpSend(path:string, message:MailMessage):Promise<void>{
 
     const smtp = createTransport({
         host: hostname,
-        port: Number(port),
+        port: parseInt(port),
         secure: protocol === "smtps:",
         auth: username ? {
             user: decodeURIComponent(username),
@@ -48,10 +48,10 @@ export async function smtpSend(path:string, message:MailMessage):Promise<void>{
         from: message.from,
         to: message.to,
         cc: message.cc,
-        attachments: message.files?.map(({name, body}) => ({filename: name, content: body})),
         bcc: message.bcc,
         subject: message.title,
-        text: message.body
+        text: message.body,
+        attachments: <typeof smtp.options.attachments>message.files?.map(({name, body}) => ({filename: name, content: body}))
     });
 
     smtp.close();
