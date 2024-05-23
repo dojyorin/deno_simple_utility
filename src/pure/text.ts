@@ -12,7 +12,7 @@ export function textEncode(data:string):Uint8Array{
 }
 
 /**
-* Convert from UTF-8 binary to string.
+* Convert from encoded binary to string.
 * @example
 * ```ts
 * const text = "HelloWorld!";
@@ -20,21 +20,8 @@ export function textEncode(data:string):Uint8Array{
 * const decode = textDecode(encode);
 * ```
 */
-export function textDecode(data:Uint8Array):string{
-    return new TextDecoder().decode(data);
-}
-
-/**
-* Convert from any encoded binary to string.
-* Default codec is SHIFT-JIS.
-* @example
-* ```ts
-* const bin = await Deno.readFile("./file");
-* const decode = textDecodeAny(bin);
-* ```
-*/
-export function textDecodeAny(data:Uint8Array, codec?:string):string{
-    return new TextDecoder(codec ?? "shift-jis").decode(data);
+export function textDecode(data:Uint8Array, codec?:string):string{
+    return new TextDecoder(codec).decode(data);
 }
 
 /**

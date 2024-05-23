@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {textEncode, textDecode, textDecodeAny, textHexEncode, textHexDecode, textPurgeSuperfluous, textFixWidth, textGetReady, textSplitBySegment, textPadZero} from "../../src/pure/text.ts";
+import {textEncode, textDecode, textHexEncode, textHexDecode, textPurgeSuperfluous, textFixWidth, textGetReady, textSplitBySegment, textPadZero} from "../../src/pure/text.ts";
 
 const sampleText = "  Lorem ipsum\r dolor   sit  \r\r amet. ";
 const sampleBin = new Uint8Array([
@@ -10,8 +10,6 @@ const sampleBin = new Uint8Array([
     0x65, 0x74, 0x2E, 0x20
 ]);
 
-const sjisBin = new Uint8Array([0x82, 0xB1, 0x82, 0xF1, 0x82, 0xC9, 0x82, 0xBF, 0x82, 0xCD]);
-
 Deno.test({
     name: "Text: UTF-8 Encode and Decode",
     fn(){
@@ -19,15 +17,6 @@ Deno.test({
         const decode = textDecode(encode);
 
         assertEquals(decode, sampleText);
-    }
-});
-
-Deno.test({
-    name: "Text: Any Text Decode",
-    fn(){
-        const decode = textDecodeAny(sjisBin);
-
-        assertEquals(decode, "こんにちは");
     }
 });
 
