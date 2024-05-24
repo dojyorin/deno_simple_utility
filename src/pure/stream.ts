@@ -6,14 +6,8 @@
 * const data = await streamDecode(stream);
 * ```
 */
-export function streamEncode(data:Uint8Array):ReadableStream<Uint8Array>{
-    const {body} = new Response(data);
-
-    if(!body){
-        throw new Error();
-    }
-
-    return body;
+export function streamEncode(...data:Uint8Array[]):ReadableStream<Uint8Array>{
+    return new Blob(data).stream();
 }
 
 /**
@@ -24,6 +18,6 @@ export function streamEncode(data:Uint8Array):ReadableStream<Uint8Array>{
 * const data = await streamDecode(stream);
 * ```
 */
-export async function streamDecode(stream:ReadableStream<Uint8Array>):Promise<Uint8Array>{
-    return new Uint8Array(await new Response(stream).arrayBuffer());
+export async function streamDecode(rs:ReadableStream<Uint8Array>):Promise<Uint8Array>{
+    return new Uint8Array(await new Blob(await Array.fromAsync(rs)).arrayBuffer());
 }

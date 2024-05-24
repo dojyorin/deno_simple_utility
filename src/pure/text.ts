@@ -12,7 +12,7 @@ export function textEncode(data:string):Uint8Array{
 }
 
 /**
-* Convert from UTF-8 binary to string.
+* Convert from encoded binary to string.
 * @example
 * ```ts
 * const text = "HelloWorld!";
@@ -20,21 +20,8 @@ export function textEncode(data:string):Uint8Array{
 * const decode = textDecode(encode);
 * ```
 */
-export function textDecode(data:Uint8Array):string{
-    return new TextDecoder().decode(data);
-}
-
-/**
-* Convert from any encoded binary to string.
-* Default codec is SHIFT-JIS.
-* @example
-* ```ts
-* const bin = await Deno.readFile("./file");
-* const decode = textDecodeAny(bin);
-* ```
-*/
-export function textDecodeAny(data:Uint8Array, codec?:string):string{
-    return new TextDecoder(codec ?? "shift-jis").decode(data);
+export function textDecode(data:Uint8Array, codec?:string):string{
+    return new TextDecoder(codec).decode(data);
 }
 
 /**
@@ -47,7 +34,7 @@ export function textDecodeAny(data:Uint8Array, codec?:string):string{
 * ```
 */
 export function textHexEncode(data:Uint8Array):string{
-    return [...data].map(v => textPadZero(v, 2, 16)).join("");
+    return Array.from(data, v => textPadZero(v, 2, 16)).join("");
 }
 
 /**
@@ -60,7 +47,7 @@ export function textHexEncode(data:Uint8Array):string{
 * ```
 */
 export function textHexDecode(data:string):Uint8Array{
-    return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(v => Number(`0x${v}`)) ?? []);
+    return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(v => parseInt(v, 16)) ?? []);
 }
 
 /**
@@ -133,7 +120,7 @@ export function textGetReady(data:string):string{
 * ```
 */
 export function textSplitBySegment(data:string):string[]{
-    return [...new Intl.Segmenter().segment(data)].map(({segment}) => segment);
+    return Array.from(new Intl.Segmenter().segment(data), ({segment}) => segment);
 }
 
 /**
@@ -145,5 +132,5 @@ export function textSplitBySegment(data:string):string[]{
 * ```
 */
 export function textPadZero(data:number, digit?:number, radix?:number):string{
-    return data.toString(radix).toUpperCase().padStart(digit ?? 2, "0");
+    return data.toString(radix).padStart(digit ?? 2, "0");
 }

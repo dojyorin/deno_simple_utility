@@ -1,7 +1,7 @@
-import {base64EncodeDataURL} from "./base64.ts";
+import {base64Encode} from "./base64.ts";
 import {textEncode} from "./text.ts";
 
-interface TaskMessage<T extends unknown>{
+interface TaskMessage<T extends unknown> {
     message: T;
     transfers?: Transferable[];
 }
@@ -45,7 +45,7 @@ export function workerTask<T extends unknown, K extends unknown>(task:TaskAction
 
     return (message, transfers)=>{
         return new Promise<K>((res, rej)=>{
-            const worker = new Worker(base64EncodeDataURL(textEncode(script), "text/javascript"), {
+            const worker = new Worker(`data:text/javascript;base64,${base64Encode(textEncode(script))}`, {
                 type: "module"
             });
 

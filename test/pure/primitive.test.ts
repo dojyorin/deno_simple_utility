@@ -14,9 +14,9 @@ Deno.test({
         assertEquals(result1, "foo");
         assertEquals(result2, undefined);
         assertEquals(result3, 12345);
-        assertEquals(result4, undefined);
+        assertEquals(result4, NaN);
         assertEquals(result5, true);
-        assertEquals(result6, undefined);
+        assertEquals(result6, false);
     }
 });
 

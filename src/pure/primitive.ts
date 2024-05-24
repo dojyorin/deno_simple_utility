@@ -2,7 +2,7 @@ type WidenLiteral<T> = T extends string ? string : T extends number ? number : T
 type MaybeString = string | null | undefined;
 type TypeStrict<T extends unknown, U extends boolean> = U extends true ? T : T | undefined;
 
-interface PrimitiveMap{
+interface TypeMap {
     "string": string;
     "number": number;
     "boolean": boolean;
@@ -24,36 +24,15 @@ function strictUndef(strict?:boolean){
 * const value = primitiveParse("123", "number", true);
 * ```
 */
-export function primitiveParse<T extends keyof PrimitiveMap, U extends boolean>(text:MaybeString, type:T, strict?:U):TypeStrict<PrimitiveMap[T], U>{
+export function primitiveParse<T extends keyof TypeMap, U extends boolean>(text:MaybeString, type:T, strict?:U):TypeStrict<TypeMap[T], U>{
+    if(text === undefined || text === null){
+        return <TypeStrict<TypeMap[T], U>>strictUndef(strict);
+    }
+
     switch(type){
-        case "string": {
-            const v = String(text);
-
-            if(text === undefined || text === null){
-                return <TypeStrict<PrimitiveMap[T], U>>strictUndef(strict);
-            }
-
-            return <TypeStrict<PrimitiveMap[T], U>>v;
-        }
-
-        case "number": {
-            const v = Number(text);
-
-            if(text === undefined || text === null || isNaN(v)){
-                return <TypeStrict<PrimitiveMap[T], U>>strictUndef(strict);
-            }
-
-            return <TypeStrict<PrimitiveMap[T], U>>v;
-        }
-
-        case "boolean": {
-            switch(text){
-                case "true": return <TypeStrict<PrimitiveMap[T], U>>true;
-                case "false": return <TypeStrict<PrimitiveMap[T], U>>false;
-                default: return <TypeStrict<PrimitiveMap[T], U>>strictUndef(strict);
-            }
-        }
-
+        case "string": return <TypeStrict<TypeMap[T], U>>text.toString();
+        case "number": return <TypeStrict<TypeMap[T], U>>parseInt(text);
+        case "boolean": return <TypeStrict<TypeMap[T], U>>(text === "true");
         default: throw new Error();
     }
 }
@@ -68,35 +47,14 @@ export function primitiveParse<T extends keyof PrimitiveMap, U extends boolean>(
 * ```
 */
 export function primitiveParseX<T extends string | number | boolean>(text:MaybeString, def:T):WidenLiteral<T>{
+    if(text === undefined || text === null){
+        return <WidenLiteral<T>>def;
+    }
+
     switch(typeof def){
-        case "string": {
-            const v = String(text);
-
-            if(text === undefined || text === null){
-                return <WidenLiteral<T>>def;
-            }
-
-            return <WidenLiteral<T>>v;
-        }
-
-        case "number": {
-            const v = Number(text);
-
-            if(text === undefined || text === null || isNaN(v)){
-                return <WidenLiteral<T>>def;
-            }
-
-            return <WidenLiteral<T>>v;
-        }
-
-        case "boolean": {
-            switch(text){
-                case "true": return <WidenLiteral<T>>true;
-                case "false": return <WidenLiteral<T>>false;
-                default: return <WidenLiteral<T>>def;
-            }
-        }
-
+        case "string": return <WidenLiteral<T>>text.toString();
+        case "number": return <WidenLiteral<T>>parseInt(text);
+        case "boolean": return <WidenLiteral<T>>(text === "true");
         default: throw new Error();
     }
 }

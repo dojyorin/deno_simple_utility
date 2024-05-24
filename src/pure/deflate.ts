@@ -1,8 +1,6 @@
 import {streamEncode, streamDecode} from "./stream.ts";
 
-type CompressCodec = "gzip" | "deflate" | "deflate-raw";
-
-const COMPRESS_CODEC:CompressCodec = "deflate-raw";
+const COMPRESS_CODEC = "deflate-raw";
 
 /**
 * Compress binary with DEFLATE format.
@@ -14,7 +12,7 @@ const COMPRESS_CODEC:CompressCodec = "deflate-raw";
 * const decode = await deflateDecode(encode);
 * ```
 */
-export async function deflateEncode(data:Uint8Array, codec?:CompressCodec):Promise<Uint8Array>{
+export async function deflateEncode(data:Uint8Array, codec?:string):Promise<Uint8Array>{
     return await streamDecode(streamEncode(data).pipeThrough(new CompressionStream(codec ?? COMPRESS_CODEC)));
 }
 
@@ -28,6 +26,6 @@ export async function deflateEncode(data:Uint8Array, codec?:CompressCodec):Promi
 * const decode = await deflateDecode(encode);
 * ```
 */
-export async function deflateDecode(data:Uint8Array, codec?:CompressCodec):Promise<Uint8Array>{
+export async function deflateDecode(data:Uint8Array, codec?:string):Promise<Uint8Array>{
     return await streamDecode(streamEncode(data).pipeThrough(new DecompressionStream(codec ?? COMPRESS_CODEC)));
 }
