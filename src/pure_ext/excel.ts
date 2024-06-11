@@ -1,4 +1,4 @@
-import {type RawWorkBook, type RawWorkSheet, type RawWorkCell, xlsxcp, set_cptable, xlsxRead, xlsxWrite, xlsxUtil} from "../../deps.pure_ext.ts";
+import {type RawWorkBook, type RawWorkSheet, type RawWorkCell, xlsxcp, set_cptable, xlsxRead, xlsxWrite, xlsxUtil} from "../../deps.pure.ts";
 import {timeFormatSerialize} from "../pure/time.ts";
 
 export type {RawWorkBook, RawWorkSheet, RawWorkCell};

@@ -1,4 +1,4 @@
-import {ZipReader, ZipWriter, Uint8ArrayReader, Uint8ArrayWriter} from "../../deps.pure_ext.ts";
+import {ZipReader, ZipWriter, Uint8ArrayReader, Uint8ArrayWriter} from "../../deps.pure.ts";
 import {type DataMap} from "../pure/minipack.ts";
 
 /**

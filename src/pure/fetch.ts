@@ -44,7 +44,7 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
         method: option?.method ?? "GET",
         credentials: option?.credentials ?? "omit",
         mode: option?.mode ?? "cors",
-        cache: option?.cache ?? "no-cache",
+        cache: option?.cache ?? "no-store",
         redirect: option?.redirect ?? "follow",
         keepalive: option?.keepalive ?? false,
         referrerPolicy: option?.referrerPolicy ?? "no-referrer",

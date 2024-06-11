@@ -1,4 +1,4 @@
-import {Logger, ConsoleHandler, FileHandler, format} from "../../deps.deno_ext.ts";
+import {Logger, ConsoleHandler, FileHandler, format} from "../../deps.ts";
 
 function logRecord(date:Date, level:string, message:string){
     return `${format(date, "yyyy-MM-ddTHH:mm:ss")} [${level}] ${message}`;
