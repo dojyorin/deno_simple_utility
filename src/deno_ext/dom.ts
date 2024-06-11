@@ -1,4 +1,4 @@
-import {type Element, DOMParser} from "../../deps.deno_ext.ts";
+import {type Element, DOMParser} from "../../deps.ts";
 
 function selectedElement(elements:Element[], attribute:"checked" | "selected"){
     return elements.find(v => typeof v.getAttribute(attribute) === "string");

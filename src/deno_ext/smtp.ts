@@ -1,4 +1,4 @@
-import {createTransport} from "../../deps.deno_ext.ts";
+import {createTransport} from "../../deps.ts";
 import {type DataMap} from "../pure/minipack.ts";
 
 /**

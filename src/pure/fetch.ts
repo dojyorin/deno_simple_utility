@@ -1,8 +1,5 @@
-import {base64Encode} from "./base64.ts";
-
 interface ResponseType {
     "text": string;
-    "base64": string;
     "json": unknown;
     "form": FormData;
     "byte": Uint8Array;
@@ -44,7 +41,7 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
         method: option?.method ?? "GET",
         credentials: option?.credentials ?? "omit",
         mode: option?.mode ?? "cors",
-        cache: option?.cache ?? "no-cache",
+        cache: option?.cache ?? "no-store",
         redirect: option?.redirect ?? "follow",
         keepalive: option?.keepalive ?? false,
         referrerPolicy: option?.referrerPolicy ?? "no-referrer",
@@ -56,7 +53,6 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
 
     switch(type){
         case "text": return <ResponseType[T]>await response.text();
-        case "base64": return <ResponseType[T]>base64Encode(new Uint8Array(await response.arrayBuffer()));
         case "json": return <ResponseType[T]>await response.json();
         case "form": return <ResponseType[T]>await response.formData();
         case "byte": return <ResponseType[T]>new Uint8Array(await response.arrayBuffer());
