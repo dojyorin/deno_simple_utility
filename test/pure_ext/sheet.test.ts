@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {type RawWorkBook, excelEncodeRaw, excelEncode, excelDecodeRaw, excelDecode} from "../../src/pure_ext/excel.ts";
+import {type RawWorkBook, excelEncodeRaw, excelEncode, excelDecodeRaw, excelDecode} from "../../src/pure_ext/sheet.ts";
 
 const sample1 = {
     "test": [
