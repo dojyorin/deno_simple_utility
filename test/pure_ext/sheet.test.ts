@@ -30,7 +30,7 @@ const sample2:RawWorkBook = {
 
 Deno.test({
     name: "EXCEL: Encode and Decode",
-    fn(){
+    fn() {
         const encode = sheetEncode(sample1);
         const decode = sheetDecode(encode);
 
@@ -40,7 +40,7 @@ Deno.test({
 
 Deno.test({
     name: "EXCEL: Raw Encode and Decode",
-    fn(){
+    fn() {
         const encode = sheetEncodeRaw(sample2);
         const decode = sheetDecodeRaw(encode);
 

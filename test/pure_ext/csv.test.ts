@@ -13,7 +13,7 @@ const sample = [{
 
 Deno.test({
     name: "CSV: Encode and Decode",
-    fn(){
+    fn() {
         const encode = csvEncode(sample);
         const decode = csvDecode<typeof sample[number]>(encode, {
             foo: 0,

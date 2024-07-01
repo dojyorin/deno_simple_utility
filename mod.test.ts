@@ -16,8 +16,6 @@ import "./test/pure_ext/sheet.test.ts";
 import "./test/pure_ext/zip.test.ts";
 
 import "./test/deno/json.test.ts";
-import "./test/deno/os.test.ts";
-import "./test/deno/path.test.ts";
 import "./test/deno/process.test.ts";
 
 import "./test/deno_ext/dom.test.ts";

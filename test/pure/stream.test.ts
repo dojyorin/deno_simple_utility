@@ -10,7 +10,7 @@ const sample = new Uint8Array([
 
 Deno.test({
     name: "Stream: Encode and Decode",
-    async fn(){
+    async fn() {
         const encode = streamEncode(sample);
         const decode = await streamDecode(encode);
 
