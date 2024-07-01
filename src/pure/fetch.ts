@@ -29,11 +29,11 @@ export interface FetchInit extends Omit<RequestInit, "integrity" | "window"> {
 * const response = await fetchExtend("./asset", "byte");
 * ```
 */
-export async function fetchExtend<T extends keyof ResponseType>(path:string, type:T, option?:FetchInit):Promise<ResponseType[T]>{
+export async function fetchExtend<T extends keyof ResponseType>(path:string, type:T, option?:FetchInit):Promise<ResponseType[T]> {
     const u = new URL(path, globalThis?.location?.href);
     u.hash = "";
 
-    for(const [k, v] of option?.query ?? []){
+    for(const [k, v] of option?.query ?? []) {
         u.searchParams.set(k, v);
     }
 
@@ -51,7 +51,7 @@ export async function fetchExtend<T extends keyof ResponseType>(path:string, typ
         body: option?.body
     });
 
-    switch(type){
+    switch(type) {
         case "text": return <ResponseType[T]>await response.text();
         case "json": return <ResponseType[T]>await response.json();
         case "form": return <ResponseType[T]>await response.formData();

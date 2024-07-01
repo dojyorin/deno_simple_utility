@@ -3,7 +3,7 @@ import {primitiveParse, primitiveParseX} from "../../src/pure/primitive.ts";
 
 Deno.test({
     name: "Primitive: Parse",
-    fn(){
+    fn() {
         const result1 = primitiveParse("foo", "string", true);
         const result2 = primitiveParse(null, "string");
         const result3 = primitiveParse("12345", "number", true);
@@ -22,7 +22,7 @@ Deno.test({
 
 Deno.test({
     name: "Primitive: ParseX",
-    fn(){
+    fn() {
         const result1 = primitiveParseX("foo", "");
         const result2 = primitiveParseX("123", 0);
         const result3 = primitiveParseX("true", false);

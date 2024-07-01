@@ -10,7 +10,7 @@ const object = {
 
 Deno.test({
     name: "JSON: Read and Write",
-    async fn(){
+    async fn() {
         const path = "./output.json";
 
         await jsonWrite(path, object);
@@ -22,7 +22,7 @@ Deno.test({
 
 Deno.test({
     name: "JSON: Load and Config",
-    async fn(){
+    async fn() {
         const path = "./resource.json";
 
         const result1 = await jsonLoad(path, object);

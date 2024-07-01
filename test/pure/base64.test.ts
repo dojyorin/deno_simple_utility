@@ -12,7 +12,7 @@ const sample2 = "WA3HZCFCJ3Yupv6eWKOTmpoHV65OWy/Heu/Xr/UfKjo=";
 
 Deno.test({
     name: "Base64: Encode",
-    fn(){
+    fn() {
         const encode = base64Encode(sample1);
 
         assertEquals(encode, sample2);
@@ -21,7 +21,7 @@ Deno.test({
 
 Deno.test({
     name: "Base64: Decode",
-    fn(){
+    fn() {
         const decode = base64Decode(sample2);
 
         assertEquals(decode, sample1);

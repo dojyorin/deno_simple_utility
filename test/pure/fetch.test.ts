@@ -10,7 +10,7 @@ const sample = new Uint8Array([
 
 Deno.test({
     name: "Fetch: Get",
-    async fn(){
+    async fn() {
         const server = Deno.serve({
             hostname: "127.0.0.1",
             port: 10080,

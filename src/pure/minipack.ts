@@ -24,11 +24,11 @@ export interface DataMap {
 * const decode = minipackDecode(encode);
 * ```
 */
-export function minipackEncode(files:DataMap[]):Uint8Array{
+export function minipackEncode(files:DataMap[]):Uint8Array {
     const archive = new Uint8Array(files.reduce((size, {name, body}) => size + NAME_SIZE + BODY_SIZE + textEncode(name).byteLength + body.byteLength, 0));
 
     let i = 0;
-    for(const {name, body} of files){
+    for(const {name, body} of files) {
         const u8name = textEncode(name);
 
         new DataView(archive.buffer, i).setUint8(0, u8name.byteLength);
@@ -60,10 +60,10 @@ export function minipackEncode(files:DataMap[]):Uint8Array{
 * const decode = minipackDecode(encode);
 * ```
 */
-export function minipackDecode(archive:Uint8Array):DataMap[]{
+export function minipackDecode(archive:Uint8Array):DataMap[] {
     const files:DataMap[] = [];
 
-    for(let i = 0; i < archive.byteLength;){
+    for(let i = 0; i < archive.byteLength;) {
         const ns = new DataView(archive.buffer, i).getUint8(0);
         i += NAME_SIZE;
 

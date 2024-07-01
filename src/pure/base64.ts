@@ -7,7 +7,7 @@
 * const decode = base64Decode(encode);
 * ```
 */
-export function base64Encode(data:Uint8Array):string{
+export function base64Encode(data:Uint8Array):string {
     return btoa(Array.from(data, v => String.fromCharCode(v)).join(""));
 }
 
@@ -20,6 +20,6 @@ export function base64Encode(data:Uint8Array):string{
 * const decode = base64Decode(encode);
 * ```
 */
-export function base64Decode(data:string):Uint8Array{
+export function base64Decode(data:string):Uint8Array {
     return new Uint8Array(Array.from(atob(data), v => v.charCodeAt(0)));
 }

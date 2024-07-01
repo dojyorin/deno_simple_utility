@@ -6,8 +6,8 @@ const sample2 = new Uint8Array([2, 4, 6, 8]);
 
 Deno.test({
     name: "Worker: Create Task.",
-    async fn(){
-        const task = workerTask<Uint8Array, Uint8Array>((v)=>{
+    async fn() {
+        const task = workerTask<Uint8Array, Uint8Array>((v) => {
             const result = v.map(n => n * 2);
 
             return {

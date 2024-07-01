@@ -10,10 +10,10 @@ const sample:MailMessage = {
 
 Deno.test({
     name: "SMTP: Send",
-    async fn(){
+    async fn() {
         const server = smtpTest(10025);
-        const result = new Promise<MailMessage>((res)=>{
-            server.bind((_, __, {headers, body})=>{
+        const result = new Promise<MailMessage>((res) => {
+            server.bind((_, __, {headers, body}) => {
                 res({
                     from: <string>headers.from,
                     to: [<string>headers.to],

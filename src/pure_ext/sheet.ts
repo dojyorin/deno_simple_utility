@@ -1,9 +1,9 @@
-import {type RawWorkBook, type RawWorkSheet, type RawWorkCell, xlsxcp, set_cptable, xlsxRead, xlsxWrite, xlsxUtil} from "../../deps.pure.ts";
+import {type RawWorkBook, type RawWorkSheet, type RawWorkCell, excelcp, set_cptable, sheetRead, sheetWrite, sheetUtil} from "../../deps.pure.ts";
 import {timeFormatSerialize} from "../pure/time.ts";
 
 export type {RawWorkBook, RawWorkSheet, RawWorkCell};
 
-set_cptable(xlsxcp);
+set_cptable(excelcp);
 
 /**
 * Convert from sheetjs raw workbook object to EXCEL workbook.
@@ -11,12 +11,12 @@ set_cptable(xlsxcp);
 * @example
 * ```ts
 * const bin = await Deno.readFile("./book.xlsx");
-* const book = excelDecodeRaw(bin);
-* const enc = excelEncodeRaw(book);
+* const book = sheetDecodeRaw(bin);
+* const enc = sheetEncodeRaw(book);
 * ```
 */
-export function excelEncodeRaw(book:RawWorkBook, cp?:number, pw?:string):Uint8Array{
-    const buf = <ArrayBuffer>xlsxWrite(book, {
+export function sheetEncodeRaw(book:RawWorkBook, cp?:number, pw?:string):Uint8Array {
+    const buf:ArrayBuffer = sheetWrite(book, {
         type: "array",
         compression: true,
         cellStyles: true,
@@ -33,20 +33,20 @@ export function excelEncodeRaw(book:RawWorkBook, cp?:number, pw?:string):Uint8Ar
 * @example
 * ```ts
 * const bin = await Deno.readFile("./book.xlsx");
-* const book = excelDecode(bin);
-* const enc = excelEncode(book);
+* const book = sheetDecode(bin);
+* const enc = sheetEncode(book);
 * ```
 */
-export function excelEncode(sheets:Record<string, string[][]>, cp?:number, pw?:string):Uint8Array{
+export function sheetEncode(sheets:Record<string, string[][]>, cp?:number, pw?:string):Uint8Array {
     const book:Record<string, RawWorkSheet> = {};
 
-    for(const [name, sheet] of Object.entries(sheets)){
+    for(const [name, sheet] of Object.entries(sheets)) {
         const rows:RawWorkCell[][] = [];
 
-        for(const row of sheet){
+        for(const row of sheet) {
             const columns:RawWorkCell[] = [];
 
-            for(const column of row){
+            for(const column of row) {
                 columns.push({
                     t: "s",
                     v: column
@@ -58,11 +58,11 @@ export function excelEncode(sheets:Record<string, string[][]>, cp?:number, pw?:s
 
         book[name] = {
             "!data": rows,
-            "!ref": `A1:${xlsxUtil.encode_col(rows.reduce((v, {length}) => Math.max(v, length), -Infinity))}${rows.length}`
+            "!ref": `A1:${sheetUtil.encode_col(rows.reduce((v, {length}) => Math.max(v, length), -Infinity))}${rows.length}`
         };
     }
 
-    return excelEncodeRaw({
+    return sheetEncodeRaw({
         SheetNames: Object.keys(sheets),
         Sheets: book
     }, cp, pw);
@@ -74,12 +74,12 @@ export function excelEncode(sheets:Record<string, string[][]>, cp?:number, pw?:s
 * @example
 * ```ts
 * const bin = await Deno.readFile("./book.xlsx");
-* const book = excelDecodeRaw(bin);
-* const enc = excelEncodeRaw(book);
+* const book = sheetDecodeRaw(bin);
+* const enc = sheetEncodeRaw(book);
 * ```
 */
-export function excelDecodeRaw(data:Uint8Array, cp?:number, pw?:string):RawWorkBook{
-    return xlsxRead(data, {
+export function sheetDecodeRaw(data:Uint8Array, cp?:number, pw?:string):RawWorkBook {
+    return sheetRead(data, {
         type: "array",
         dense: true,
         raw: true,
@@ -95,30 +95,28 @@ export function excelDecodeRaw(data:Uint8Array, cp?:number, pw?:string):RawWorkB
 * @example
 * ```ts
 * const bin = await Deno.readFile("./book.xlsx");
-* const book = excelDecode(bin);
-* const enc = excelEncode(book);
+* const book = sheetDecode(bin);
+* const enc = sheetEncode(book);
 * ```
 */
-export function excelDecode(data:Uint8Array, cp?:number, pw?:string):Record<string, string[][]>{
-    const {Sheets} = excelDecodeRaw(data, cp, pw);
+export function sheetDecode(data:Uint8Array, cp?:number, pw?:string):Record<string, string[][]> {
+    const {Sheets} = sheetDecodeRaw(data, cp, pw);
 
     const book:Record<string, string[][]> = {};
 
-    for(const [name, sheet] of Object.entries(Sheets)){
+    for(const [name, sheet] of Object.entries(Sheets)) {
         const rows:string[][] = [];
 
-        for(const row of <(RawWorkCell[] | undefined)[]>sheet["!data"] ?? []){
+        for(const row of <(RawWorkCell[] | undefined)[]>sheet["!data"] ?? []) {
             const columns:string[] = [];
 
-            for(const column of <(RawWorkCell | undefined)[]>row ?? []){
-                if(!column || column.t === "e" || column.v === undefined){
+            for(const column of <(RawWorkCell | undefined)[]>row ?? []) {
+                if(!column || column.t === "e" || column.v === undefined) {
                     columns.push("");
-                }
-                else if(column.v instanceof Date){
+                } else if(column.v instanceof Date) {
                     column.v.setMinutes(new Date().getTimezoneOffset());
                     columns.push(timeFormatSerialize(column.v, true));
-                }
-                else{
+                } else {
                     columns.push(`${column.v}`);
                 }
             }

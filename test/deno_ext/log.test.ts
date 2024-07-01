@@ -6,7 +6,7 @@ const path = `./${name}.log`;
 
 Deno.test({
     name: "Log: Entry",
-    async fn(){
+    async fn() {
         const log = logEntry(name, path);
 
         log.info("Lorem ipsum dolor sit amet.");
