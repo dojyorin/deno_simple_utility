@@ -1,5 +1,5 @@
 import {ZipReader, ZipWriter, Uint8ArrayReader, Uint8ArrayWriter} from "../../deps.pure.ts";
-import {type DataMap} from "../pure/minipack.ts";
+import {type DataEntry} from "../pure/minipack.ts";
 
 /**
 * Convert from named binary to ZIP archive.
@@ -14,7 +14,7 @@ import {type DataMap} from "../pure/minipack.ts";
 * const files = await zipDecode(zip);
 * ```
 */
-export async function zipEncode(files: DataMap[], pw?: string, weak?: boolean): Promise<Uint8Array> {
+export async function zipEncode(files: DataEntry[], pw?: string, weak?: boolean): Promise<Uint8Array> {
     const zip = new ZipWriter(new Uint8ArrayWriter(), {
         password: pw,
         zipCrypto: weak
@@ -42,8 +42,8 @@ export async function zipEncode(files: DataMap[], pw?: string, weak?: boolean): 
 * const files = await zipDecode(zip);
 * ```
 */
-export async function zipDecode(archive: Uint8Array, pw?: string, encode?: string): Promise<DataMap[]> {
-    const files: DataMap[] = [];
+export async function zipDecode(archive: Uint8Array, pw?: string, encode?: string): Promise<DataEntry[]> {
+    const files: DataEntry[] = [];
     const zip = new ZipReader(new Uint8ArrayReader(archive), {
         useWebWorkers: false,
         filenameEncoding: encode,

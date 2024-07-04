@@ -6,7 +6,7 @@ const BODY_SIZE = 4;
 /**
 * Simple name and body pair.
 */
-export interface DataMap {
+export interface DataEntry {
     name: string;
     body: Uint8Array;
 }
@@ -24,7 +24,7 @@ export interface DataMap {
 * const decode = minipackDecode(encode);
 * ```
 */
-export function minipackEncode(files: DataMap[]): Uint8Array {
+export function minipackEncode(files: DataEntry[]): Uint8Array {
     const archive = new Uint8Array(files.reduce((size, {name, body}) => size + NAME_SIZE + BODY_SIZE + textEncode(name).byteLength + body.byteLength, 0));
 
     let i = 0;
@@ -60,8 +60,8 @@ export function minipackEncode(files: DataMap[]): Uint8Array {
 * const decode = minipackDecode(encode);
 * ```
 */
-export function minipackDecode(archive: Uint8Array): DataMap[] {
-    const files: DataMap[] = [];
+export function minipackDecode(archive: Uint8Array): DataEntry[] {
+    const files: DataEntry[] = [];
 
     for(let i = 0; i < archive.byteLength;) {
         const ns = new DataView(archive.buffer, i).getUint8(0);
