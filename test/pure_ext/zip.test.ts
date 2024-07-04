@@ -8,7 +8,7 @@ const sample = [{
 
 Deno.test({
     name: "ZIP: Encode and Decode",
-    async fn(){
+    async fn() {
         const encode = await zipEncode(sample);
         const decode = await zipDecode(encode);
 

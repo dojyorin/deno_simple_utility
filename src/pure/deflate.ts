@@ -12,7 +12,7 @@ const COMPRESS_CODEC = "deflate-raw";
 * const decode = await deflateDecode(encode);
 * ```
 */
-export async function deflateEncode(data:Uint8Array, codec?:string):Promise<Uint8Array>{
+export async function deflateEncode(data: Uint8Array, codec?: string): Promise<Uint8Array> {
     return await streamDecode(streamEncode(data).pipeThrough(new CompressionStream(codec ?? COMPRESS_CODEC)));
 }
 
@@ -26,6 +26,6 @@ export async function deflateEncode(data:Uint8Array, codec?:string):Promise<Uint
 * const decode = await deflateDecode(encode);
 * ```
 */
-export async function deflateDecode(data:Uint8Array, codec?:string):Promise<Uint8Array>{
+export async function deflateDecode(data: Uint8Array, codec?: string): Promise<Uint8Array> {
     return await streamDecode(streamEncode(data).pipeThrough(new DecompressionStream(codec ?? COMPRESS_CODEC)));
 }

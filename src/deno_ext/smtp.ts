@@ -27,10 +27,10 @@ export interface MailMessage {
 * });
 * ```
 */
-export async function smtpSend(path:string, message:MailMessage):Promise<void>{
+export async function smtpSend(path: string, message: MailMessage): Promise<void> {
     const {protocol, hostname, port, username, password} = new URL(path);
 
-    if(protocol !== "smtp:" && protocol !== "smtps:"){
+    if(protocol !== "smtp:" && protocol !== "smtps:") {
         throw new Error(protocol);
     }
 
@@ -51,7 +51,7 @@ export async function smtpSend(path:string, message:MailMessage):Promise<void>{
         bcc: message.bcc,
         subject: message.title,
         text: message.body,
-        attachments: <typeof smtp.options.attachments>message.files?.map(({name, body}) => ({filename: name, content: body}))
+        attachments: <typeof smtp.options.attachments> message.files?.map(({name, body}) => ({filename: name, content: body}))
     });
 
     smtp.close();

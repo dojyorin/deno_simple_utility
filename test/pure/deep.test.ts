@@ -11,7 +11,7 @@ const sample = {
 
 Deno.test({
     name: "Deep: Freeze",
-    fn(){
+    fn() {
         const freeze = deepFreeze(structuredClone(sample));
 
         const desc = Object.getOwnPropertyDescriptor(freeze.aaa.bbb, "ccc");
@@ -22,7 +22,7 @@ Deno.test({
 
 Deno.test({
     name: "Deep: Seal",
-    fn(){
+    fn() {
         const seal = deepSeal(structuredClone(sample));
 
         const desc = Object.getOwnPropertyDescriptor(seal.aaa.bbb, "ccc");

@@ -16,7 +16,7 @@ const hashResult = new Uint8Array([
 
 Deno.test({
     name: "Crypto: Random",
-    fn(){
+    fn() {
         const {byteLength} = cryptoRandom(16);
 
         assertEquals(byteLength, 16);
@@ -25,7 +25,7 @@ Deno.test({
 
 Deno.test({
     name: "Crypto: Hash",
-    async fn(){
+    async fn() {
         const hash = await cryptoHash(sample, "SHA-512");
 
         assertEquals(hash, hashResult);
@@ -34,7 +34,7 @@ Deno.test({
 
 Deno.test({
     name: "Crypto: Encrypt and Decrypt",
-    async fn(){
+    async fn() {
         const key1 = await cryptoGenerateEncryptKey();
         const key2 = await cryptoGenerateEncryptKey();
 
@@ -47,7 +47,7 @@ Deno.test({
 
 Deno.test({
     name: "Crypto: Sign and Verify",
-    async fn(){
+    async fn() {
         const {key, pub} = await cryptoGenerateSignKey();
         const signature = await cryptoSign(sample, key);
         const verify = await cryptoVerify(sample, pub, signature);

@@ -8,7 +8,7 @@ const samples = [{
 
 Deno.test({
     name: "Minipack: Encode and Decode",
-    fn(){
+    fn() {
         const encode = minipackEncode(samples);
         const decode = minipackDecode(encode);
 

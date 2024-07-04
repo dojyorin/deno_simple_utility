@@ -12,7 +12,7 @@ import {primitiveParseX} from "../pure/primitive.ts";
 * }]);
 * ```
 */
-export function csvEncode<T extends Record<keyof T, string | number | boolean>>(data:T[], bom?:boolean):string{
+export function csvEncode<T extends Record<keyof T, string | number | boolean>>(data: T[], bom?: boolean): string {
     return stringify(data, {
         bom: bom,
         columns: Object.keys(data[0])
@@ -32,19 +32,19 @@ export function csvEncode<T extends Record<keyof T, string | number | boolean>>(
 * });
 * ```
 */
-export function csvDecode<T extends Record<keyof T, string | number | boolean>>(data:string, def:T):T[]{
+export function csvDecode<T extends Record<keyof T, string | number | boolean>>(data: string, def: T): T[] {
     const csv = parse(data, {
         skipFirstRow: true,
         trimLeadingSpace: true
     });
 
-    const records:T[] = [];
+    const records: T[] = [];
 
-    for(const element of csv){
-        const props:Partial<T> = {};
+    for(const element of csv) {
+        const props: Partial<T> = {};
         type K = keyof T;
 
-        for(const [k, v] of Object.entries(element)){
+        for(const [k, v] of Object.entries(element)) {
             props[<K>k] = <T[K]>primitiveParseX(v, def[<K>k]);
         }
 

@@ -9,12 +9,12 @@ interface TaskMessage<T extends unknown> {
 /**
 * Content of processing run by worker thread.
 */
-export type TaskAction<T extends unknown, K extends unknown> = (message:T) => TaskMessage<K> | Promise<TaskMessage<K>>;
+export type TaskAction<T extends unknown, K extends unknown> = (message: T) => TaskMessage<K> | Promise<TaskMessage<K>>;
 
 /**
 * Run registered `TaskAction` in worker thread.
 */
-export type TaskContext<T extends unknown, K extends unknown> = (message:T, transfers?:Transferable[]) => Promise<K>;
+export type TaskContext<T extends unknown, K extends unknown> = (message: T, transfers?: Transferable[]) => Promise<K>;
 
 /**
 * Register `TaskAction` and return reusable task execution context.
@@ -22,7 +22,7 @@ export type TaskContext<T extends unknown, K extends unknown> = (message:T, tran
 * `import` can only use "syntax", not "declaration".
 * @example
 * ```ts
-* const task = workerTask<number, number>(async(data)=>{
+* const task = workerTask<number, number>(async (data) => {
 *     const {delay} = await import("https://deno.land/std/async/mod.ts");
 *     await delay(data);
 *     return {
@@ -33,33 +33,33 @@ export type TaskContext<T extends unknown, K extends unknown> = (message:T, tran
 * const result2 = await task(20);
 * ```
 */
-export function workerTask<T extends unknown, K extends unknown>(task:TaskAction<T, K>):TaskContext<T, K>{
+export function workerTask<T extends unknown, K extends unknown>(task: TaskAction<T, K>): TaskContext<T, K> {
     const script = /*js*/`
-        globalThis.onmessage = async({data})=>{
-            const {message, transfers} = await(${task.toString()})(data);
+        globalThis.onmessage = async ({data}) => {
+            const {message, transfers} = await (${task.toString()})(data);
             globalThis.postMessage(message, {
                 transfer: transfers
             });
         };
     `;
 
-    return (message, transfers)=>{
-        return new Promise<K>((res, rej)=>{
+    return (message, transfers) => {
+        return new Promise<K>((res, rej) => {
             const worker = new Worker(`data:text/javascript;base64,${base64Encode(textEncode(script))}`, {
                 type: "module"
             });
 
-            worker.onmessage = ({data})=>{
+            worker.onmessage = ({data}) => {
                 res(data);
                 worker.terminate();
             };
 
-            worker.onerror = (e)=>{
+            worker.onerror = (e) => {
                 rej(e);
                 worker.terminate();
             };
 
-            worker.onmessageerror = (e)=>{
+            worker.onmessageerror = (e) => {
                 rej(e);
                 worker.terminate();
             };

@@ -12,7 +12,7 @@ const sampleBin = new Uint8Array([
 
 Deno.test({
     name: "Text: UTF-8 Encode and Decode",
-    fn(){
+    fn() {
         const encode = textEncode(sampleText);
         const decode = textDecode(encode);
 
@@ -22,7 +22,7 @@ Deno.test({
 
 Deno.test({
     name: "Text: HEX Encode and Decode",
-    fn(){
+    fn() {
         const encode = textHexEncode(sampleBin);
         const decode = textHexDecode(encode);
 
@@ -32,7 +32,7 @@ Deno.test({
 
 Deno.test({
     name: "Text: Trim",
-    fn(){
+    fn() {
         const result = textPurgeSuperfluous(sampleText);
 
         assertEquals(result, "Lorem ipsum dolor sit amet.");
@@ -41,7 +41,7 @@ Deno.test({
 
 Deno.test({
     name: "Text: Fix Width",
-    fn(){
+    fn() {
         const result = textFixWidth("１＋１＝２");
 
         assertEquals(result, "1+1=2");
@@ -50,7 +50,7 @@ Deno.test({
 
 Deno.test({
     name: "Text: Clean Up",
-    fn(){
+    fn() {
         const result = textGetReady("１  ＋  １  ＝  ２  ");
 
         assertEquals(result, "1 + 1 = 2");
@@ -59,7 +59,7 @@ Deno.test({
 
 Deno.test({
     name: "Text: Segment",
-    fn(){
+    fn() {
         const {length} = textSplitBySegment("😄😁😆😅😂");
 
         assertEquals(length, 5);
@@ -68,7 +68,7 @@ Deno.test({
 
 Deno.test({
     name: "Text: Pad 0",
-    fn(){
+    fn() {
         const pad = textPadZero(8);
 
         assertEquals(pad, "08");

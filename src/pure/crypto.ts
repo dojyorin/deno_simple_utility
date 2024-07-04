@@ -15,16 +15,16 @@ const CURVE_DSA = Object.freeze<EcKeyAlgorithm & EcdsaParams>({
     hash: "SHA-256"
 });
 
-async function generateKey(alg:EcKeyAlgorithm, usage:KeyUsage[]){
+async function generateKey(alg: EcKeyAlgorithm, usage: KeyUsage[]): Promise<PubKey> {
     const {publicKey, privateKey} = await crypto.subtle.generateKey(alg, true, usage);
 
-    return <PubKey>{
+    return {
         pub: new Uint8Array(await crypto.subtle.exportKey("spki", publicKey)),
         key: new Uint8Array(await crypto.subtle.exportKey("pkcs8", privateKey))
     };
 }
 
-async function deriveKey(pub:Uint8Array, key:Uint8Array){
+async function deriveKey(pub: Uint8Array, key: Uint8Array): Promise<CryptoKey> {
     return await crypto.subtle.deriveKey({
         name: CURVE_KEX.name,
         public: await crypto.subtle.importKey("spki", pub, CURVE_KEX, false, [])
@@ -41,7 +41,7 @@ async function deriveKey(pub:Uint8Array, key:Uint8Array){
 * const random = cryptoRandom(16);
 * ```
 */
-export function cryptoRandom(n:number):Uint8Array{
+export function cryptoRandom(n: number): Uint8Array {
     return crypto.getRandomValues(new Uint8Array(n));
 }
 
@@ -54,7 +54,7 @@ export function cryptoRandom(n:number):Uint8Array{
 * const hash = await cryptoHash(bin);
 * ```
 */
-export async function cryptoHash(data:Uint8Array, alg?:string):Promise<Uint8Array>{
+export async function cryptoHash(data: Uint8Array, alg?: string): Promise<Uint8Array> {
     return new Uint8Array(await crypto.subtle.digest(alg ?? "SHA-256", data));
 }
 
@@ -68,7 +68,7 @@ export async function cryptoHash(data:Uint8Array, alg?:string):Promise<Uint8Arra
 * const key2 = await cryptoGenerateEncryptKey();
 * ```
 */
-export async function cryptoGenerateEncryptKey():Promise<PubKey>{
+export async function cryptoGenerateEncryptKey(): Promise<PubKey> {
     return await generateKey(CURVE_KEX, ["deriveKey"]);
 }
 
@@ -81,7 +81,7 @@ export async function cryptoGenerateEncryptKey():Promise<PubKey>{
 * const {pub, key} = await cryptoGenerateSignKey();
 * ```
 */
-export async function cryptoGenerateSignKey():Promise<PubKey>{
+export async function cryptoGenerateSignKey(): Promise<PubKey> {
     return await generateKey(CURVE_DSA, ["sign", "verify"]);
 }
 
@@ -98,8 +98,8 @@ export async function cryptoGenerateSignKey():Promise<PubKey>{
 * const decrypt = await cryptoDecrypt(encrypt, key2.pub, key1.key);
 * ```
 */
-export async function cryptoEncrypt(data:Uint8Array, pub:Uint8Array, key:Uint8Array):Promise<Uint8Array>{
-    const aes = <AesGcmParams>{
+export async function cryptoEncrypt(data: Uint8Array, pub: Uint8Array, key: Uint8Array): Promise<Uint8Array> {
+    const aes: AesGcmParams = {
         name: AES_MODE,
         iv: cryptoRandom(12)
     };
@@ -120,8 +120,8 @@ export async function cryptoEncrypt(data:Uint8Array, pub:Uint8Array, key:Uint8Ar
 * const decrypt = await cryptoDecrypt(encrypt, key2.pub, key1.key);
 * ```
 */
-export async function cryptoDecrypt(data:Uint8Array, pub:Uint8Array, key:Uint8Array):Promise<Uint8Array>{
-    const aes = <AesGcmParams>{
+export async function cryptoDecrypt(data: Uint8Array, pub: Uint8Array, key: Uint8Array): Promise<Uint8Array> {
+    const aes: AesGcmParams = {
         name: AES_MODE,
         iv: data.subarray(0, 12)
     };
@@ -139,7 +139,7 @@ export async function cryptoDecrypt(data:Uint8Array, pub:Uint8Array, key:Uint8Ar
 * const verify = await cryptoVerify(bin, pub, sign);
 * ```
 */
-export async function cryptoSign(data:Uint8Array, key:Uint8Array):Promise<Uint8Array>{
+export async function cryptoSign(data: Uint8Array, key: Uint8Array): Promise<Uint8Array> {
     return new Uint8Array(await crypto.subtle.sign(CURVE_DSA, await crypto.subtle.importKey("pkcs8", key, CURVE_DSA, false, ["sign"]), data));
 }
 
@@ -153,6 +153,6 @@ export async function cryptoSign(data:Uint8Array, key:Uint8Array):Promise<Uint8A
 * const verify = await cryptoVerify(bin, pub, sign);
 * ```
 */
-export async function cryptoVerify(data:Uint8Array, pub:Uint8Array, sign:Uint8Array):Promise<boolean>{
+export async function cryptoVerify(data: Uint8Array, pub: Uint8Array, sign: Uint8Array): Promise<boolean> {
     return await crypto.subtle.verify(CURVE_DSA, await crypto.subtle.importKey("spki", pub, CURVE_DSA, false, ["verify"]), sign, data);
 }

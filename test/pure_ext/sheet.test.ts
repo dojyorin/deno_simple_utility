@@ -1,5 +1,5 @@
 import {assertEquals} from "../../deps.test.ts";
-import {type RawWorkBook, excelEncodeRaw, excelEncode, excelDecodeRaw, excelDecode} from "../../src/pure_ext/excel.ts";
+import {type RawWorkBook, sheetEncodeRaw, sheetEncode, sheetDecodeRaw, sheetDecode} from "../../src/pure_ext/sheet.ts";
 
 const sample1 = {
     "test": [
@@ -7,7 +7,7 @@ const sample1 = {
     ]
 };
 
-const sample2:RawWorkBook = {
+const sample2: RawWorkBook = {
     SheetNames: ["test"],
     Sheets: {
         "test": {
@@ -30,9 +30,9 @@ const sample2:RawWorkBook = {
 
 Deno.test({
     name: "EXCEL: Encode and Decode",
-    fn(){
-        const encode = excelEncode(sample1);
-        const decode = excelDecode(encode);
+    fn() {
+        const encode = sheetEncode(sample1);
+        const decode = sheetDecode(encode);
 
         assertEquals(decode, sample1);
     }
@@ -40,9 +40,9 @@ Deno.test({
 
 Deno.test({
     name: "EXCEL: Raw Encode and Decode",
-    fn(){
-        const encode = excelEncodeRaw(sample2);
-        const decode = excelDecodeRaw(encode);
+    fn() {
+        const encode = sheetEncodeRaw(sample2);
+        const decode = sheetDecodeRaw(encode);
 
         assertEquals(decode.Sheets, sample2.Sheets);
     }
