@@ -15,9 +15,9 @@ Deno.test({
         const result = new Promise<MailMessage>((res) => {
             server.bind((_, __, {headers, body}) => {
                 res({
-                    from: <string>headers.from,
-                    to: [<string>headers.to],
-                    title: <string>headers.subject,
+                    from: <string> headers.from,
+                    to: [<string> headers.to],
+                    title: <string> headers.subject,
                     body: body ?? ""
                 });
             });

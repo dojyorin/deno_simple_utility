@@ -107,10 +107,10 @@ export function sheetDecode(data: Uint8Array, cp?: number, pw?: string): Record<
     for(const [name, sheet] of Object.entries(Sheets)) {
         const rows: string[][] = [];
 
-        for(const row of <(RawWorkCell[] | undefined)[]>sheet["!data"] ?? []) {
+        for(const row of <(RawWorkCell[] | undefined)[]> sheet["!data"] ?? []) {
             const columns: string[] = [];
 
-            for(const column of <(RawWorkCell | undefined)[]>row ?? []) {
+            for(const column of <(RawWorkCell | undefined)[]> row ?? []) {
                 if(!column || column.t === "e" || column.v === undefined) {
                     columns.push("");
                 } else if(column.v instanceof Date) {

@@ -1,5 +1,5 @@
 import {createTransport} from "../../deps.ts";
-import {type DataMap} from "../pure/minipack.ts";
+import {type DataEntry} from "../pure/minipack.ts";
 
 /**
 * E-MAIL message.
@@ -11,7 +11,7 @@ export interface MailMessage {
     body: string;
     cc?: string[];
     bcc?: string[];
-    files?: DataMap[];
+    files?: DataEntry[];
 }
 
 /**

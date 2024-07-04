@@ -1,4 +1,4 @@
-interface ResponseType {
+interface ReturnTypeMap {
     "text": string;
     "json": unknown;
     "form": FormData;
@@ -29,7 +29,7 @@ export interface FetchInit extends Omit<RequestInit, "integrity" | "window"> {
 * const response = await fetchExtend("./asset", "byte");
 * ```
 */
-export async function fetchExtend<T extends keyof ResponseType>(path: string, type: T, option?: FetchInit): Promise<ResponseType[T]> {
+export async function fetchExtend<T extends keyof ReturnTypeMap>(path: string, type: T, option?: FetchInit): Promise<ReturnTypeMap[T]> {
     const u = new URL(path, globalThis?.location?.href);
     u.hash = "";
 
@@ -52,17 +52,17 @@ export async function fetchExtend<T extends keyof ResponseType>(path: string, ty
     });
 
     switch(type) {
-        case "text": return <ResponseType[T]>await response.text();
-        case "json": return <ResponseType[T]>await response.json();
-        case "form": return <ResponseType[T]>await response.formData();
-        case "byte": return <ResponseType[T]>new Uint8Array(await response.arrayBuffer());
-        case "buffer": return <ResponseType[T]>await response.arrayBuffer();
-        case "blob": return <ResponseType[T]>await response.blob();
-        case "stream": return <ResponseType[T]>(response.body ?? undefined);
-        case "ok": await response.body?.cancel(); return <ResponseType[T]>response.ok;
-        case "code": await response.body?.cancel(); return <ResponseType[T]>response.status;
-        case "header": await response.body?.cancel(); return <ResponseType[T]>response.headers;
-        case "response": return <ResponseType[T]>response;
+        case "text": return <ReturnTypeMap[T]> await response.text();
+        case "json": return <ReturnTypeMap[T]> await response.json();
+        case "form": return <ReturnTypeMap[T]> await response.formData();
+        case "byte": return <ReturnTypeMap[T]> new Uint8Array(await response.arrayBuffer());
+        case "buffer": return <ReturnTypeMap[T]> await response.arrayBuffer();
+        case "blob": return <ReturnTypeMap[T]> await response.blob();
+        case "stream": return <ReturnTypeMap[T]> (response.body ?? undefined);
+        case "ok": await response.body?.cancel(); return <ReturnTypeMap[T]> response.ok;
+        case "code": await response.body?.cancel(); return <ReturnTypeMap[T]> response.status;
+        case "header": await response.body?.cancel(); return <ReturnTypeMap[T]> response.headers;
+        case "response": return <ReturnTypeMap[T]> response;
         default: throw new Error();
     }
 }
