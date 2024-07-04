@@ -2,7 +2,7 @@ type WidenLiteral<T> = T extends string ? string : T extends number ? number : T
 type MaybeString = string | null | undefined;
 type TypeStrict<T extends unknown, U extends boolean> = U extends true ? T : T | undefined;
 
-interface TypeMap {
+interface PrimitiveTypeMap {
     "string": string;
     "number": number;
     "boolean": boolean;
@@ -24,15 +24,15 @@ function strictUndef(strict?: boolean) {
 * const value = primitiveParse("123", "number", true);
 * ```
 */
-export function primitiveParse<T extends keyof TypeMap, U extends boolean>(text: MaybeString, type: T, strict?: U): TypeStrict<TypeMap[T], U> {
+export function primitiveParse<T extends keyof PrimitiveTypeMap, U extends boolean>(text: MaybeString, type: T, strict?: U): TypeStrict<PrimitiveTypeMap[T], U> {
     if(text === undefined || text === null) {
-        return <TypeStrict<TypeMap[T], U>>strictUndef(strict);
+        return <TypeStrict<PrimitiveTypeMap[T], U>> strictUndef(strict);
     }
 
     switch(type) {
-        case "string": return <TypeStrict<TypeMap[T], U>>text.toString();
-        case "number": return <TypeStrict<TypeMap[T], U>>parseInt(text);
-        case "boolean": return <TypeStrict<TypeMap[T], U>>(text === "true");
+        case "string": return <TypeStrict<PrimitiveTypeMap[T], U>> text.toString();
+        case "number": return <TypeStrict<PrimitiveTypeMap[T], U>> parseInt(text);
+        case "boolean": return <TypeStrict<PrimitiveTypeMap[T], U>> (text === "true");
         default: throw new Error();
     }
 }
@@ -48,13 +48,13 @@ export function primitiveParse<T extends keyof TypeMap, U extends boolean>(text:
 */
 export function primitiveParseX<T extends string | number | boolean>(text: MaybeString, def: T): WidenLiteral<T> {
     if(text === undefined || text === null) {
-        return <WidenLiteral<T>>def;
+        return <WidenLiteral<T>> def;
     }
 
     switch(typeof def) {
-        case "string": return <WidenLiteral<T>>text.toString();
-        case "number": return <WidenLiteral<T>>parseInt(text);
-        case "boolean": return <WidenLiteral<T>>(text === "true");
+        case "string": return <WidenLiteral<T>> text.toString();
+        case "number": return <WidenLiteral<T>> parseInt(text);
+        case "boolean": return <WidenLiteral<T>> (text === "true");
         default: throw new Error();
     }
 }
