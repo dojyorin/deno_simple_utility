@@ -1,6 +1,6 @@
 import {Logger, ConsoleHandler, FileHandler, format} from "../../deps.ts";
 
-function logRecord(date:Date, level:string, message:string) {
+function logRecord(date: Date, level: string, message: string) {
     return `${format(date, "yyyy-MM-ddTHH:mm:ss")} [${level}] ${message}`;
 }
 
@@ -13,7 +13,7 @@ function logRecord(date:Date, level:string, message:string) {
 * const log = logEntry();
 * ```
 */
-export function logEntry(name?:string, path?:string):Logger {
+export function logEntry(name?: string, path?: string): Logger {
     const level = "INFO";
 
     const log = new Logger(name ?? "log", level, {

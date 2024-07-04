@@ -29,7 +29,7 @@ export interface FetchInit extends Omit<RequestInit, "integrity" | "window"> {
 * const response = await fetchExtend("./asset", "byte");
 * ```
 */
-export async function fetchExtend<T extends keyof ResponseType>(path:string, type:T, option?:FetchInit):Promise<ResponseType[T]> {
+export async function fetchExtend<T extends keyof ResponseType>(path: string, type: T, option?: FetchInit): Promise<ResponseType[T]> {
     const u = new URL(path, globalThis?.location?.href);
     u.hash = "";
 

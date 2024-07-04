@@ -1,14 +1,14 @@
 import {type Element, DOMParser} from "../../deps.ts";
 
-function selectedElement(elements:Element[], attribute:"checked" | "selected") {
+function selectedElement(elements: Element[], attribute: "checked" | "selected") {
     return elements.find(v => typeof v.getAttribute(attribute) === "string");
 }
 
-function getValue(element?:Element) {
+function getValue(element?: Element) {
     return element?.getAttribute("value") ?? "";
 }
 
-function extractValue(element?:Element) {
+function extractValue(element?: Element) {
     switch(element?.tagName) {
         case "SELECT": return getValue(selectedElement(element.getElementsByTagName("option"), "selected"));
         case "DATALIST": return getValue(selectedElement(element.getElementsByTagName("option"), "selected"));
@@ -27,7 +27,7 @@ function extractValue(element?:Element) {
 * const dom = domDecode("<div>foo</div>");
 * ```
 */
-export function domDecode(html:string):Element {
+export function domDecode(html: string): Element {
     const element = new DOMParser().parseFromString(html, "text/html")?.documentElement;
 
     if(!element) {
@@ -45,8 +45,8 @@ export function domDecode(html:string):Element {
 * const result = domValuesPerId(dom);
 * ```
 */
-export function domValuesPerId(element:Element):Record<string, string> {
-    const records:Record<string, string> = {};
+export function domValuesPerId(element: Element): Record<string, string> {
+    const records: Record<string, string> = {};
 
     for(const input of element.getElementsByTagName("INPUT")) {
         if(!input.id) {
@@ -76,7 +76,7 @@ export function domValuesPerId(element:Element):Record<string, string> {
 * const result = domValueById(dom, "foo");
 * ```
 */
-export function domValueById(element:Element, id:string):string {
+export function domValueById(element: Element, id: string): string {
     return extractValue(element.getElementById(id) ?? undefined);
 }
 
@@ -88,7 +88,7 @@ export function domValueById(element:Element, id:string):string {
 * const result = domElementsByName(dom, "foo");
 * ```
 */
-export function domElementsByName(element:Element, name:string):Element[] {
+export function domElementsByName(element: Element, name: string): Element[] {
     return element.getElementsByTagName("*").filter(v => v.getAttribute("name") === name);
 }
 
@@ -101,7 +101,7 @@ export function domElementsByName(element:Element, name:string):Element[] {
 * const result = domValuesByName(dom, "foo");
 * ```
 */
-export function domValuesByName(element:Element, name:string):string[] {
+export function domValuesByName(element: Element, name: string): string[] {
     return domElementsByName(element, name).map(v => extractValue(v));
 }
 
@@ -113,7 +113,7 @@ export function domValuesByName(element:Element, name:string):string[] {
 * const result = domValueByRadioActive(dom, "foo");
 * ```
 */
-export function domValueByRadioActive(element:Element, name:string):string {
+export function domValueByRadioActive(element: Element, name: string): string {
     const elements = domElementsByName(element, name);
 
     if(elements.some(v => v.tagName !== "INPUT" || v.getAttribute("type") !== "radio")) {

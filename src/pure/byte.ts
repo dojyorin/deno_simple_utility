@@ -5,7 +5,7 @@
 * const byte = byteConcat(new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6]));
 * ```
 */
-export function byteConcat(...sources:BufferSource[]):Uint8Array {
+export function byteConcat(...sources: BufferSource[]): Uint8Array {
     const output = new Uint8Array(sources.reduce((v, {byteLength}) => v + byteLength , 0));
 
     let i = 0;

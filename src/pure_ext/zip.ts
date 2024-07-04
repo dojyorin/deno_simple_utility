@@ -14,7 +14,7 @@ import {type DataMap} from "../pure/minipack.ts";
 * const files = await zipDecode(zip);
 * ```
 */
-export async function zipEncode(files:DataMap[], pw?:string, weak?:boolean):Promise<Uint8Array> {
+export async function zipEncode(files: DataMap[], pw?: string, weak?: boolean): Promise<Uint8Array> {
     const zip = new ZipWriter(new Uint8ArrayWriter(), {
         password: pw,
         zipCrypto: weak
@@ -42,8 +42,8 @@ export async function zipEncode(files:DataMap[], pw?:string, weak?:boolean):Prom
 * const files = await zipDecode(zip);
 * ```
 */
-export async function zipDecode(archive:Uint8Array, pw?:string, encode?:string):Promise<DataMap[]> {
-    const files:DataMap[] = [];
+export async function zipDecode(archive: Uint8Array, pw?: string, encode?: string): Promise<DataMap[]> {
+    const files: DataMap[] = [];
     const zip = new ZipReader(new Uint8ArrayReader(archive), {
         useWebWorkers: false,
         filenameEncoding: encode,

@@ -27,7 +27,7 @@ export interface MailMessage {
 * });
 * ```
 */
-export async function smtpSend(path:string, message:MailMessage):Promise<void> {
+export async function smtpSend(path: string, message: MailMessage): Promise<void> {
     const {protocol, hostname, port, username, password} = new URL(path);
 
     if(protocol !== "smtp:" && protocol !== "smtps:") {

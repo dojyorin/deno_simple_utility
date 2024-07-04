@@ -7,7 +7,7 @@
 * const decode = textDecode(encode);
 * ```
 */
-export function textEncode(data:string):Uint8Array {
+export function textEncode(data: string): Uint8Array {
     return new TextEncoder().encode(data);
 }
 
@@ -20,7 +20,7 @@ export function textEncode(data:string):Uint8Array {
 * const decode = textDecode(encode);
 * ```
 */
-export function textDecode(data:Uint8Array, codec?:string):string {
+export function textDecode(data: Uint8Array, codec?: string): string {
     return new TextDecoder(codec).decode(data);
 }
 
@@ -33,7 +33,7 @@ export function textDecode(data:Uint8Array, codec?:string):string {
 * const decode = textHexDecode(encode);
 * ```
 */
-export function textHexEncode(data:Uint8Array):string {
+export function textHexEncode(data: Uint8Array): string {
     return Array.from(data, v => textPadZero(v, 2, 16)).join("");
 }
 
@@ -46,7 +46,7 @@ export function textHexEncode(data:Uint8Array):string {
 * const decode = textHexDecode(encode);
 * ```
 */
-export function textHexDecode(data:string):Uint8Array {
+export function textHexDecode(data: string): Uint8Array {
     return new Uint8Array(data.match(/[0-9a-fA-F]{2}/g)?.map(v => parseInt(v, 16)) ?? []);
 }
 
@@ -57,7 +57,7 @@ export function textHexDecode(data:string):Uint8Array {
 * const format = textPurgeSuperfluous("  Lorem ipsum\r dolor   sit  \r\r amet. ");
 * ```
 */
-export function textPurgeSuperfluous(data:string):string {
+export function textPurgeSuperfluous(data: string): string {
     return data.trim().replace(/\r/g, "").replace(/ +/g, " ").replace(/\t+/g, "\t").replace(/\n+/g, "\n").replace(/^ /mg, "").replace(/ $/mg, "");
 }
 
@@ -68,7 +68,7 @@ export function textPurgeSuperfluous(data:string):string {
 * const format = textFixWidth("１＋１＝２");
 * ```
 */
-export function textFixWidth(data:string):string {
+export function textFixWidth(data: string): string {
     return Object.entries({
         "ｳﾞ": "ヴ",
         "ｶﾞ": "ガ", "ｷﾞ": "ギ", "ｸﾞ": "グ", "ｹﾞ": "ゲ", "ｺﾞ": "ゴ",
@@ -107,7 +107,7 @@ export function textFixWidth(data:string):string {
 * const format = textGetReady("１  ＋  １  ＝  ２  ");
 * ```
 */
-export function textGetReady(data:string):string {
+export function textGetReady(data: string): string {
     return textPurgeSuperfluous(textFixWidth(data));
 }
 
@@ -119,7 +119,7 @@ export function textGetReady(data:string):string {
 * const emojis = textSplitBySegment("😀😃😄😁😆😅😂🤣");
 * ```
 */
-export function textSplitBySegment(data:string):string[] {
+export function textSplitBySegment(data: string): string[] {
     return Array.from(new Intl.Segmenter().segment(data), ({segment}) => segment);
 }
 
@@ -131,6 +131,6 @@ export function textSplitBySegment(data:string):string[] {
 * const pad = textPadZero(8);
 * ```
 */
-export function textPadZero(data:number, digit?:number, radix?:number):string {
+export function textPadZero(data: number, digit?: number, radix?: number): string {
     return data.toString(radix).padStart(digit ?? 2, "0");
 }

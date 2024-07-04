@@ -9,12 +9,12 @@ interface TaskMessage<T extends unknown> {
 /**
 * Content of processing run by worker thread.
 */
-export type TaskAction<T extends unknown, K extends unknown> = (message:T) => TaskMessage<K> | Promise<TaskMessage<K>>;
+export type TaskAction<T extends unknown, K extends unknown> = (message: T) => TaskMessage<K> | Promise<TaskMessage<K>>;
 
 /**
 * Run registered `TaskAction` in worker thread.
 */
-export type TaskContext<T extends unknown, K extends unknown> = (message:T, transfers?:Transferable[]) => Promise<K>;
+export type TaskContext<T extends unknown, K extends unknown> = (message: T, transfers?: Transferable[]) => Promise<K>;
 
 /**
 * Register `TaskAction` and return reusable task execution context.
@@ -33,7 +33,7 @@ export type TaskContext<T extends unknown, K extends unknown> = (message:T, tran
 * const result2 = await task(20);
 * ```
 */
-export function workerTask<T extends unknown, K extends unknown>(task:TaskAction<T, K>):TaskContext<T, K> {
+export function workerTask<T extends unknown, K extends unknown>(task: TaskAction<T, K>): TaskContext<T, K> {
     const script = /*js*/`
         globalThis.onmessage = async ({data}) => {
             const {message, transfers} = await (${task.toString()})(data);

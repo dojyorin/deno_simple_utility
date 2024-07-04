@@ -8,7 +8,7 @@ interface TypeMap {
     "boolean": boolean;
 }
 
-function strictUndef(strict?:boolean) {
+function strictUndef(strict?: boolean) {
     if(strict){
         throw new Error();
     }
@@ -24,7 +24,7 @@ function strictUndef(strict?:boolean) {
 * const value = primitiveParse("123", "number", true);
 * ```
 */
-export function primitiveParse<T extends keyof TypeMap, U extends boolean>(text:MaybeString, type:T, strict?:U):TypeStrict<TypeMap[T], U> {
+export function primitiveParse<T extends keyof TypeMap, U extends boolean>(text: MaybeString, type: T, strict?: U): TypeStrict<TypeMap[T], U> {
     if(text === undefined || text === null) {
         return <TypeStrict<TypeMap[T], U>>strictUndef(strict);
     }
@@ -46,7 +46,7 @@ export function primitiveParse<T extends keyof TypeMap, U extends boolean>(text:
 * const value = primitiveParseX("123", 0);
 * ```
 */
-export function primitiveParseX<T extends string | number | boolean>(text:MaybeString, def:T):WidenLiteral<T> {
+export function primitiveParseX<T extends string | number | boolean>(text: MaybeString, def: T): WidenLiteral<T> {
     if(text === undefined || text === null) {
         return <WidenLiteral<T>>def;
     }

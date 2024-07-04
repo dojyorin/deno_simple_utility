@@ -3,7 +3,7 @@
 */
 export type Opt<T> = Partial<Record<keyof T, unknown>>;
 
-function hasObject(data:Record<string | number | symbol, unknown>, key:string) {
+function hasObject(data: Record<string | number | symbol, unknown>, key: string) {
     return Object.hasOwn(data, key) && typeof data[key] === "object" && data[key] !== null;
 }
 
@@ -18,7 +18,7 @@ function hasObject(data:Record<string | number | symbol, unknown>, key:string) {
 * });
 * ```
 */
-export function deepFreeze<T extends Opt<T>>(data:T):Readonly<T> {
+export function deepFreeze<T extends Opt<T>>(data: T): Readonly<T> {
     Object.freeze(data);
 
     for(const key in data) {
@@ -41,7 +41,7 @@ export function deepFreeze<T extends Opt<T>>(data:T):Readonly<T> {
 * });
 * ```
 */
-export function deepSeal<T extends Opt<T>>(data:T):T {
+export function deepSeal<T extends Opt<T>>(data: T): T {
     Object.seal(data);
 
     for(const key in data) {

@@ -7,7 +7,7 @@ import {type Opt} from "../pure/deep.ts";
 * const json = await jsonRead("./data.json");
 * ```
 */
-export async function jsonRead<T extends Opt<T>>(path:string):Promise<T> {
+export async function jsonRead<T extends Opt<T>>(path: string): Promise<T> {
     return JSON.parse(await Deno.readTextFile(path));
 }
 
@@ -20,7 +20,7 @@ export async function jsonRead<T extends Opt<T>>(path:string):Promise<T> {
 * });
 * ```
 */
-export async function jsonWrite<T extends Opt<T>>(path:string, data:T):Promise<void> {
+export async function jsonWrite<T extends Opt<T>>(path: string, data: T): Promise<void> {
     await Deno.writeTextFile(path, JSON.stringify(data, undefined, 4));
 }
 
@@ -34,7 +34,7 @@ export async function jsonWrite<T extends Opt<T>>(path:string, data:T):Promise<v
 * const json = await jsonLoad("./data.json", data);
 * ```
 */
-export async function jsonLoad<T extends Opt<T>>(path:string, def:T):Promise<T> {
+export async function jsonLoad<T extends Opt<T>>(path: string, def: T): Promise<T> {
     try {
         return await jsonRead<T>(path);
     } catch(e) {

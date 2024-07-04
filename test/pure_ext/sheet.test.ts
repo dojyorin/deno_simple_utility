@@ -7,7 +7,7 @@ const sample1 = {
     ]
 };
 
-const sample2:RawWorkBook = {
+const sample2: RawWorkBook = {
     SheetNames: ["test"],
     Sheets: {
         "test": {

@@ -1,7 +1,7 @@
 import {assertEquals, delay, smtpTest} from "../../deps.test.ts";
 import {type MailMessage, smtpSend} from "../../src/deno_ext/smtp.ts";
 
-const sample:MailMessage = {
+const sample: MailMessage = {
     from: "from@example.com",
     to: ["to@example.com"],
     title: "Test title",

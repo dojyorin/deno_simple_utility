@@ -1,6 +1,6 @@
 import {textPadZero} from "./text.ts";
 
-function dateFormat(date:string) {
+function dateFormat(date: string) {
     const [y, m, d, h, mi, s] = date.split(/[/ :TZ_.-]/i).map(v => parseInt(v));
 
     return new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, mi ?? 0, s ?? 0);
@@ -14,7 +14,7 @@ function dateFormat(date:string) {
 * await delay(1000);
 * ```
 */
-export async function delay(time:number):Promise<number> {
+export async function delay(time: number): Promise<number> {
     const t0 = performance.now();
     await new Promise<void>(done => setTimeout(done, time));
     const t1 = performance.now();
@@ -32,7 +32,7 @@ export async function delay(time:number):Promise<number> {
 * const date = timeDecode(time);
 * ```
 */
-export function timeEncode(dt?:Date | string):number {
+export function timeEncode(dt?: Date | string): number {
     return Math.floor((dt instanceof Date ? dt : typeof dt === "string" ? dateFormat(dt) : new Date()).getTime() / 1000);
 }
 
@@ -46,7 +46,7 @@ export function timeEncode(dt?:Date | string):number {
 * const date = timeDecode(time);
 * ```
 */
-export function timeDecode(dt?:number | string):Date {
+export function timeDecode(dt?: number | string): Date {
     switch(typeof dt) {
         case "string": return dateFormat(dt);
         case "number": return new Date(dt * 1000);
@@ -62,7 +62,7 @@ export function timeDecode(dt?:number | string):Date {
 * const format = timeFormatSerialize();
 * ```
 */
-export function timeFormatSerialize(dt?:Date | number | string, split?:boolean):string {
+export function timeFormatSerialize(dt?: Date | number | string, split?: boolean): string {
     const ss = split ? "/" : "";
     const sc = split ? ":" : "";
     const date = dt instanceof Date ? dt : timeDecode(dt);

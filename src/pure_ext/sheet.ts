@@ -15,8 +15,8 @@ set_cptable(excelcp);
 * const enc = sheetEncodeRaw(book);
 * ```
 */
-export function sheetEncodeRaw(book:RawWorkBook, cp?:number, pw?:string):Uint8Array {
-    const buf:ArrayBuffer = sheetWrite(book, {
+export function sheetEncodeRaw(book: RawWorkBook, cp?: number, pw?: string): Uint8Array {
+    const buf: ArrayBuffer = sheetWrite(book, {
         type: "array",
         compression: true,
         cellStyles: true,
@@ -37,14 +37,14 @@ export function sheetEncodeRaw(book:RawWorkBook, cp?:number, pw?:string):Uint8Ar
 * const enc = sheetEncode(book);
 * ```
 */
-export function sheetEncode(sheets:Record<string, string[][]>, cp?:number, pw?:string):Uint8Array {
-    const book:Record<string, RawWorkSheet> = {};
+export function sheetEncode(sheets: Record<string, string[][]>, cp?: number, pw?: string): Uint8Array {
+    const book: Record<string, RawWorkSheet> = {};
 
     for(const [name, sheet] of Object.entries(sheets)) {
-        const rows:RawWorkCell[][] = [];
+        const rows: RawWorkCell[][] = [];
 
         for(const row of sheet) {
-            const columns:RawWorkCell[] = [];
+            const columns: RawWorkCell[] = [];
 
             for(const column of row) {
                 columns.push({
@@ -78,7 +78,7 @@ export function sheetEncode(sheets:Record<string, string[][]>, cp?:number, pw?:s
 * const enc = sheetEncodeRaw(book);
 * ```
 */
-export function sheetDecodeRaw(data:Uint8Array, cp?:number, pw?:string):RawWorkBook {
+export function sheetDecodeRaw(data: Uint8Array, cp?: number, pw?: string): RawWorkBook {
     return sheetRead(data, {
         type: "array",
         dense: true,
@@ -99,16 +99,16 @@ export function sheetDecodeRaw(data:Uint8Array, cp?:number, pw?:string):RawWorkB
 * const enc = sheetEncode(book);
 * ```
 */
-export function sheetDecode(data:Uint8Array, cp?:number, pw?:string):Record<string, string[][]> {
+export function sheetDecode(data: Uint8Array, cp?: number, pw?: string): Record<string, string[][]> {
     const {Sheets} = sheetDecodeRaw(data, cp, pw);
 
-    const book:Record<string, string[][]> = {};
+    const book: Record<string, string[][]> = {};
 
     for(const [name, sheet] of Object.entries(Sheets)) {
-        const rows:string[][] = [];
+        const rows: string[][] = [];
 
         for(const row of <(RawWorkCell[] | undefined)[]>sheet["!data"] ?? []) {
-            const columns:string[] = [];
+            const columns: string[] = [];
 
             for(const column of <(RawWorkCell | undefined)[]>row ?? []) {
                 if(!column || column.t === "e" || column.v === undefined) {
