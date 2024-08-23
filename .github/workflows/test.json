@@ -45,7 +45,7 @@
                 }
             }, {
                 "name": "run test",
-                "run": "deno test -A ./mod.test.ts"
+                "run": "deno test -A --parallel --doc ./test"
             }]
         }
     }
