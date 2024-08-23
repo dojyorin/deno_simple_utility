@@ -45,6 +45,7 @@ export async function zipEncode(files: DataEntry[], pw?: string, weak?: boolean)
 export async function zipDecode(archive: Uint8Array, pw?: string, encode?: string): Promise<DataEntry[]> {
     const files: DataEntry[] = [];
     const zip = new ZipReader(new Uint8ArrayReader(archive), {
+        checkPasswordOnly: false,
         useWebWorkers: false,
         filenameEncoding: encode,
         password: pw

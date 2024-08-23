@@ -44,7 +44,7 @@ Export without external modules have fewer features than full, but not susceptib
 Can be used from browser via [esm.sh](https://esm.sh).
 
 ```html
-<script>
+<script async type="module">
     import {fetchExtend} from "https://esm.sh/gh/dojyorin/deno_simple_utility@version/mod.pure.ts?bundle&target=esnext";
 </script>
 ```
